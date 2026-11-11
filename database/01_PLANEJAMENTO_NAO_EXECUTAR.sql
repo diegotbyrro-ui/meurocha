@@ -1,0 +1,13 @@
+-- PLATAFORMA ROCHA R1 - APENAS RASCUNHO PARA REVISAO
+-- NAO EXECUTAR. NAO FOI AUDITADO NO PROJETO CONVITEROCHA REAL.
+-- NENHUM SQL FAZ PARTE DO INSTALADOR.
+-- Proposta de entidades futuras:
+-- rocha_empreendimentos (catalogo e destaque do site)
+-- rocha_arquivos (metadados e versoes; binarios no Supabase Storage privado)
+-- rocha_corretores (cadastro canônico e vinculos com salao_leads)
+-- rocha_eventos (ciclos reutilizaveis do modulo Convites Rocha)
+-- rocha_inscricoes_evento (relacionamento evento x corretor e cota)
+-- rocha_simulacoes (versoes de propostas e tabela utilizada)
+-- rocha_audit_log (acoes e usuario)
+-- Preservar: public.salao_leads e public.salao_brokerages sem alteracoes.
+-- Escopo de RLS, GRANT, MFA, OTP, storage e backup depende de auditoria real.
