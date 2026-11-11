@@ -1,0 +1,701 @@
+{
+  "schema": 1,
+  "generatedAt": "2026-11-11T13:41:20.665Z",
+  "source": "https://meurocha.com.br",
+  "coreRoutes": [
+    "/home",
+    "/rocha",
+    "/imoveis",
+    "/contato",
+    "/imoveis/easy-rota-do-mar",
+    "/imoveis/easy-serraria",
+    "/imoveis/vistas-do-sino",
+    "/imoveis/eco-vitta"
+  ],
+  "pages": [
+    {
+      "route": "/assistencia-tecnica",
+      "staticPath": "/espelho/assistencia-tecnica/index.html",
+      "source": "https://meurocha.com.br/assistencia-tecnica",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/atendimento-rocha",
+      "staticPath": "/espelho/atendimento-rocha/index.html",
+      "source": "https://meurocha.com.br/atendimento-rocha",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog",
+      "staticPath": "/espelho/blog/index.html",
+      "source": "https://meurocha.com.br/blog",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/10/3-motivos-para-sair-do-aluguel",
+      "staticPath": "/espelho/blog-leitura/10/3-motivos-para-sair-do-aluguel/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/10/3-motivos-para-sair-do-aluguel",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/10/home",
+      "staticPath": "/espelho/blog-leitura/10/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/10/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/11/4-questionamentos-sobre-subsidio-para-o-minha-casa-minha-vida",
+      "staticPath": "/espelho/blog-leitura/11/4-questionamentos-sobre-subsidio-para-o-minha-casa-minha-vida/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/11/4-questionamentos-sobre-subsidio-para-o-minha-casa-minha-vida",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/11/home",
+      "staticPath": "/espelho/blog-leitura/11/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/11/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/12/4-dicas-para-quem-deseja-adquirir-o-primeiro-imovel",
+      "staticPath": "/espelho/blog-leitura/12/4-dicas-para-quem-deseja-adquirir-o-primeiro-imovel/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/12/4-dicas-para-quem-deseja-adquirir-o-primeiro-imovel",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/12/home",
+      "staticPath": "/espelho/blog-leitura/12/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/12/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/14/3-duvidas-de-quem-quer-financiar-o-seu-imovel-no-quotminha-casa-minha-vidaquot",
+      "staticPath": "/espelho/blog-leitura/14/3-duvidas-de-quem-quer-financiar-o-seu-imovel-no-quotminha-casa-minha-vidaquot/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/14/3-duvidas-de-quem-quer-financiar-o-seu-imovel-no-quotminha-casa-minha-vidaquot",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/14/home",
+      "staticPath": "/espelho/blog-leitura/14/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/14/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/16/como-utilizar-o-fgts-para-comprar-um-imovel-no-programa-minha-casa-minha-vida",
+      "staticPath": "/espelho/blog-leitura/16/como-utilizar-o-fgts-para-comprar-um-imovel-no-programa-minha-casa-minha-vida/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/16/como-utilizar-o-fgts-para-comprar-um-imovel-no-programa-minha-casa-minha-vida",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/16/home",
+      "staticPath": "/espelho/blog-leitura/16/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/16/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/17/4-dificuldades-para-se-cadastrar-no-mcmv-e-como-resolve-las",
+      "staticPath": "/espelho/blog-leitura/17/4-dificuldades-para-se-cadastrar-no-mcmv-e-como-resolve-las/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/17/4-dificuldades-para-se-cadastrar-no-mcmv-e-como-resolve-las",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/17/home",
+      "staticPath": "/espelho/blog-leitura/17/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/17/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/18/como-fazer-um-planejamento-financeiro-para-comprar-um-apartamento",
+      "staticPath": "/espelho/blog-leitura/18/como-fazer-um-planejamento-financeiro-para-comprar-um-apartamento/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/18/como-fazer-um-planejamento-financeiro-para-comprar-um-apartamento",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/18/home",
+      "staticPath": "/espelho/blog-leitura/18/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/18/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/19/3-vantagens-de-morar-no-bairro-da-santa-amelia",
+      "staticPath": "/espelho/blog-leitura/19/3-vantagens-de-morar-no-bairro-da-santa-amelia/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/19/3-vantagens-de-morar-no-bairro-da-santa-amelia",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/19/home",
+      "staticPath": "/espelho/blog-leitura/19/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/19/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/20/home",
+      "staticPath": "/espelho/blog-leitura/20/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/20/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/20/saiba-tudo-sobre-composicao-de-renda-para-adquirir-um-mcmv",
+      "staticPath": "/espelho/blog-leitura/20/saiba-tudo-sobre-composicao-de-renda-para-adquirir-um-mcmv/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/20/saiba-tudo-sobre-composicao-de-renda-para-adquirir-um-mcmv",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/21/entenda-os-novos-juros-da-caixa-para-financiamento-imobiliario",
+      "staticPath": "/espelho/blog-leitura/21/entenda-os-novos-juros-da-caixa-para-financiamento-imobiliario/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/21/entenda-os-novos-juros-da-caixa-para-financiamento-imobiliario",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/21/home",
+      "staticPath": "/espelho/blog-leitura/21/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/21/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/23/ganha-pouco-e-quer-comprar-um-ape-novo-veja-estas-dicas",
+      "staticPath": "/espelho/blog-leitura/23/ganha-pouco-e-quer-comprar-um-ape-novo-veja-estas-dicas/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/23/ganha-pouco-e-quer-comprar-um-ape-novo-veja-estas-dicas",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/23/home",
+      "staticPath": "/espelho/blog-leitura/23/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/23/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/24/home",
+      "staticPath": "/espelho/blog-leitura/24/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/24/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/24/pontos-importantes-para-ter-atencao-ao-assinar-um-contrato-imobiliario",
+      "staticPath": "/espelho/blog-leitura/24/pontos-importantes-para-ter-atencao-ao-assinar-um-contrato-imobiliario/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/24/pontos-importantes-para-ter-atencao-ao-assinar-um-contrato-imobiliario",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/25/home",
+      "staticPath": "/espelho/blog-leitura/25/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/25/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/25/por-que-agora-e-o-melhor-momento-para-comprar-um-ape-financiado",
+      "staticPath": "/espelho/blog-leitura/25/por-que-agora-e-o-melhor-momento-para-comprar-um-ape-financiado/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/25/por-que-agora-e-o-melhor-momento-para-comprar-um-ape-financiado",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/26/home",
+      "staticPath": "/espelho/blog-leitura/26/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/26/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/26/tudo-o-que-voce-precisa-saber-sobre-itbi-e-assinatura-de-imovel-no-cartorio",
+      "staticPath": "/espelho/blog-leitura/26/tudo-o-que-voce-precisa-saber-sobre-itbi-e-assinatura-de-imovel-no-cartorio/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/26/tudo-o-que-voce-precisa-saber-sobre-itbi-e-assinatura-de-imovel-no-cartorio",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/27/entenda-porque-o-financiamento-e-mais-vantajoso-do-que-pagar-um-aluguel",
+      "staticPath": "/espelho/blog-leitura/27/entenda-porque-o-financiamento-e-mais-vantajoso-do-que-pagar-um-aluguel/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/27/entenda-porque-o-financiamento-e-mais-vantajoso-do-que-pagar-um-aluguel",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/27/home",
+      "staticPath": "/espelho/blog-leitura/27/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/27/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/4/financie-seu-sonho",
+      "staticPath": "/espelho/blog-leitura/4/financie-seu-sonho/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/4/financie-seu-sonho",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/4/home",
+      "staticPath": "/espelho/blog-leitura/4/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/4/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/47/5-dicas-de-seguranca-para-quem-mora-em-apartamento",
+      "staticPath": "/espelho/blog-leitura/47/5-dicas-de-seguranca-para-quem-mora-em-apartamento/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/47/5-dicas-de-seguranca-para-quem-mora-em-apartamento",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/47/home",
+      "staticPath": "/espelho/blog-leitura/47/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/47/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/5/home",
+      "staticPath": "/espelho/blog-leitura/5/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/5/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/5/vantagens-de-comprar-um-imovel-novo",
+      "staticPath": "/espelho/blog-leitura/5/vantagens-de-comprar-um-imovel-novo/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/5/vantagens-de-comprar-um-imovel-novo",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/67/entenda-como-funciona-o-programa-casa-verde-e-amarela",
+      "staticPath": "/espelho/blog-leitura/67/entenda-como-funciona-o-programa-casa-verde-e-amarela/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/67/entenda-como-funciona-o-programa-casa-verde-e-amarela",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/67/home",
+      "staticPath": "/espelho/blog-leitura/67/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/67/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/68/4-pontos-para-prestar-atencao-ao-escolher-o-imovel-ideal-em-maceio",
+      "staticPath": "/espelho/blog-leitura/68/4-pontos-para-prestar-atencao-ao-escolher-o-imovel-ideal-em-maceio/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/68/4-pontos-para-prestar-atencao-ao-escolher-o-imovel-ideal-em-maceio",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/68/home",
+      "staticPath": "/espelho/blog-leitura/68/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/68/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/69/home",
+      "staticPath": "/espelho/blog-leitura/69/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/69/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/69/quais-as-faixas-de-renda-do-casa-verde-e-amarela-e-em-qual-eu-me-encaixo",
+      "staticPath": "/espelho/blog-leitura/69/quais-as-faixas-de-renda-do-casa-verde-e-amarela-e-em-qual-eu-me-encaixo/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/69/quais-as-faixas-de-renda-do-casa-verde-e-amarela-e-em-qual-eu-me-encaixo",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/70/home",
+      "staticPath": "/espelho/blog-leitura/70/home/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/70/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog-leitura/70/saiba-quais-sao-os-documentos-necessarios-para-se-cadastrar-no-casa-verde-e-amarela",
+      "staticPath": "/espelho/blog-leitura/70/saiba-quais-sao-os-documentos-necessarios-para-se-cadastrar-no-casa-verde-e-amarela/index.html",
+      "source": "https://meurocha.com.br/blog-leitura/70/saiba-quais-sao-os-documentos-necessarios-para-se-cadastrar-no-casa-verde-e-amarela",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog/1/home",
+      "staticPath": "/espelho/blog/1/home/index.html",
+      "source": "https://meurocha.com.br/blog/1/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog/1/pages",
+      "staticPath": "/espelho/blog/1/pages/index.html",
+      "source": "https://meurocha.com.br/blog/1/pages",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog/2/home",
+      "staticPath": "/espelho/blog/2/home/index.html",
+      "source": "https://meurocha.com.br/blog/2/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog/2/pages",
+      "staticPath": "/espelho/blog/2/pages/index.html",
+      "source": "https://meurocha.com.br/blog/2/pages",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog/3/home",
+      "staticPath": "/espelho/blog/3/home/index.html",
+      "source": "https://meurocha.com.br/blog/3/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/blog/3/pages",
+      "staticPath": "/espelho/blog/3/pages/index.html",
+      "source": "https://meurocha.com.br/blog/3/pages",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/contato",
+      "staticPath": "/espelho/contato/index.html",
+      "source": "https://meurocha.com.br/contato",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/fale-com-dpo",
+      "staticPath": "/espelho/fale-com-dpo/index.html",
+      "source": "https://meurocha.com.br/fale-com-dpo",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/home",
+      "staticPath": "/espelho/home/index.html",
+      "source": "https://meurocha.com.br/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/imoveis",
+      "staticPath": "/espelho/imoveis/index.html",
+      "source": "https://meurocha.com.br/imoveis",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/imoveis/antonio-rocha",
+      "staticPath": "/espelho/imoveis/antonio-rocha/index.html",
+      "source": "https://meurocha.com.br/imoveis/antonio-rocha",
+      "title": "Antônio Rocha - Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/imoveis/easy-rota-do-mar",
+      "staticPath": "/espelho/imoveis/easy-rota-do-mar/index.html",
+      "source": "https://meurocha.com.br/imoveis/easy-rota-do-mar",
+      "title": "Easy Rota Do Mar - Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/imoveis/easy-serraria",
+      "staticPath": "/espelho/imoveis/easy-serraria/index.html",
+      "source": "https://meurocha.com.br/imoveis/easy-serraria",
+      "title": "Easy Serraria - Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/imoveis/eco-vitta",
+      "staticPath": "/espelho/imoveis/eco-vitta/index.html",
+      "source": "https://meurocha.com.br/imoveis/eco-vitta",
+      "title": "Eco Vittá - Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/imoveis/home",
+      "staticPath": "/espelho/imoveis/home/index.html",
+      "source": "https://meurocha.com.br/imoveis/home",
+      "title": "- Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/imoveis/reserva-do-parque-2",
+      "staticPath": "/espelho/imoveis/reserva-do-parque-2/index.html",
+      "source": "https://meurocha.com.br/imoveis/reserva-do-parque-2",
+      "title": "Reserva Do Parque 2 - Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/imoveis/residencial-antonio-rocha",
+      "staticPath": "/espelho/imoveis/residencial-antonio-rocha/index.html",
+      "source": "https://meurocha.com.br/imoveis/residencial-antonio-rocha",
+      "title": "- Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/imoveis/residencial-milano-2",
+      "staticPath": "/espelho/imoveis/residencial-milano-2/index.html",
+      "source": "https://meurocha.com.br/imoveis/residencial-milano-2",
+      "title": "- Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/imoveis/residencial-porto-milazzo",
+      "staticPath": "/espelho/imoveis/residencial-porto-milazzo/index.html",
+      "source": "https://meurocha.com.br/imoveis/residencial-porto-milazzo",
+      "title": "- Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/imoveis/residencial-reserva-do-parque",
+      "staticPath": "/espelho/imoveis/residencial-reserva-do-parque/index.html",
+      "source": "https://meurocha.com.br/imoveis/residencial-reserva-do-parque",
+      "title": "- Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/imoveis/residencial-varandas-do-parque",
+      "staticPath": "/espelho/imoveis/residencial-varandas-do-parque/index.html",
+      "source": "https://meurocha.com.br/imoveis/residencial-varandas-do-parque",
+      "title": "- Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/imoveis/varandas-do-parque-1",
+      "staticPath": "/espelho/imoveis/varandas-do-parque-1/index.html",
+      "source": "https://meurocha.com.br/imoveis/varandas-do-parque-1",
+      "title": "Varandas Do Parque 1 - Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/imoveis/varandas-do-parque-2",
+      "staticPath": "/espelho/imoveis/varandas-do-parque-2/index.html",
+      "source": "https://meurocha.com.br/imoveis/varandas-do-parque-2",
+      "title": "Varandas Do Parque 2 - Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/imoveis/vistas-do-sino",
+      "staticPath": "/espelho/imoveis/vistas-do-sino/index.html",
+      "source": "https://meurocha.com.br/imoveis/vistas-do-sino",
+      "title": "Vistas Do Sino - Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/leitura/27/entenda-porque-o-financiamento-e-mais-vantajoso-do-que-pagar-um-aluguel",
+      "staticPath": "/espelho/leitura/27/entenda-porque-o-financiamento-e-mais-vantajoso-do-que-pagar-um-aluguel/index.html",
+      "source": "https://meurocha.com.br/leitura/27/entenda-porque-o-financiamento-e-mais-vantajoso-do-que-pagar-um-aluguel",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/leitura/27/home",
+      "staticPath": "/espelho/leitura/27/home/index.html",
+      "source": "https://meurocha.com.br/leitura/27/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/leitura/4/financie-seu-sonho",
+      "staticPath": "/espelho/leitura/4/financie-seu-sonho/index.html",
+      "source": "https://meurocha.com.br/leitura/4/financie-seu-sonho",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/leitura/4/home",
+      "staticPath": "/espelho/leitura/4/home/index.html",
+      "source": "https://meurocha.com.br/leitura/4/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/leitura/47/5-dicas-de-seguranca-para-quem-mora-em-apartamento",
+      "staticPath": "/espelho/leitura/47/5-dicas-de-seguranca-para-quem-mora-em-apartamento/index.html",
+      "source": "https://meurocha.com.br/leitura/47/5-dicas-de-seguranca-para-quem-mora-em-apartamento",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/leitura/47/home",
+      "staticPath": "/espelho/leitura/47/home/index.html",
+      "source": "https://meurocha.com.br/leitura/47/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/leitura/5/home",
+      "staticPath": "/espelho/leitura/5/home/index.html",
+      "source": "https://meurocha.com.br/leitura/5/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/leitura/5/vantagens-de-comprar-um-imovel-novo",
+      "staticPath": "/espelho/leitura/5/vantagens-de-comprar-um-imovel-novo/index.html",
+      "source": "https://meurocha.com.br/leitura/5/vantagens-de-comprar-um-imovel-novo",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/leitura/69/home",
+      "staticPath": "/espelho/leitura/69/home/index.html",
+      "source": "https://meurocha.com.br/leitura/69/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/leitura/69/quais-as-faixas-de-renda-do-casa-verde-e-amarela-e-em-qual-eu-me-encaixo",
+      "staticPath": "/espelho/leitura/69/quais-as-faixas-de-renda-do-casa-verde-e-amarela-e-em-qual-eu-me-encaixo/index.html",
+      "source": "https://meurocha.com.br/leitura/69/quais-as-faixas-de-renda-do-casa-verde-e-amarela-e-em-qual-eu-me-encaixo",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/leitura/70/home",
+      "staticPath": "/espelho/leitura/70/home/index.html",
+      "source": "https://meurocha.com.br/leitura/70/home",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/leitura/70/saiba-quais-sao-os-documentos-necessarios-para-se-cadastrar-no-casa-verde-e-amarela",
+      "staticPath": "/espelho/leitura/70/saiba-quais-sao-os-documentos-necessarios-para-se-cadastrar-no-casa-verde-e-amarela/index.html",
+      "source": "https://meurocha.com.br/leitura/70/saiba-quais-sao-os-documentos-necessarios-para-se-cadastrar-no-casa-verde-e-amarela",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/privacidade",
+      "staticPath": "/espelho/privacidade/index.html",
+      "source": "https://meurocha.com.br/privacidade",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "route": "/rocha",
+      "staticPath": "/espelho/rocha/index.html",
+      "source": "https://meurocha.com.br/rocha",
+      "title": "Rocha Empreendimentos",
+      "desktop": true,
+      "mobile": true
+    }
+  ],
+  "assetsCount": 25,
+  "assetBytes": 972214,
+  "warning": "Espelho visual: formularios e backend da origem NAO replicados.",
+  "resourceWarnings": []
+}

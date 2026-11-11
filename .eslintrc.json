@@ -6,6 +6,8 @@
   "ignorePatterns": [
     ".next",
     "node_modules",
-    "next-env.d.ts"
+    "next-env.d.ts",
+    "apps/conviterocha/**",
+    "public/espelho/**"
   ]
 }
