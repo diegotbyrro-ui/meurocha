@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <defs>
+    <linearGradient id="official-rocha-monogram-color" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff6571" stop-opacity=".24"/>
+      <stop offset="1" stop-color="#de263e" stop-opacity=".09"/>
+    </linearGradient>
+    <linearGradient id="ray" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e83c47" stop-opacity="0"/>
+      <stop offset=".40" stop-color="#e83c47" stop-opacity=".12"/>
+      <stop offset=".75" stop-color="#ff795e" stop-opacity=".82"/>
+      <stop offset=".88" stop-color="#ffd2a0" stop-opacity="1"/>
+      <stop offset="1" stop-color="#ff805e" stop-opacity=".20"/>
+    </linearGradient>
+    <filter id="glow" x="-15%" y="-400%" width="130%" height="900%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+  </defs>
+  <!-- Marca-d'agua EXATA extraida de public/assets/img/icone-r.png. -->
+  <!-- Icone oficial incorporado no SVG como mascara para preservar a forma da logo. -->
+  <mask id="rocha-official-r-mask" maskUnits="userSpaceOnUse"
+        x="58" y="48" width="320" height="395">
+    <image x="58" y="48" width="320" height="395" preserveAspectRatio="xMidYMid meet"
+           href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAlCAYAAABVjVnMAAADQElEQVRYCaWXTYhOURzG3zsZNJOoMaJkslAsEKKsNBNlwYil1FgYpnxkP2bWkoWFhaSUQkJJsZAs2CCKkskszCQaIuMrTT7m8Tt35rzv/Tjn3Pu+bj33nPP//5/nuR/n3nNvJOlApVJZV6mol7bEFomiL2AIvADXwd0oiiZpy28Y/wKd4JE0SdMI9A7iftBU2nnKSB8grQe0jRhbjh6j0VHKvGakJ5C2gN+1mBWsp9UYGmsKzdMmugjpaDpWj6mt1Ud0loTMM/dEuylurlSiSyFScU7zqbmGOVqeLX92+guhGzzP5+wZlW3V57HlIXJOJo1j3AU+u/Oljc1sn+U09wvrJaSdgCtQ1shVp20u48w9TpZoBaO9YDAZbaBfr7GxUDe72Uy2Gw0YWsoG20m2gTOulvXT47UYvapG6usscpaXu3/6wb02M/1bufrkvdaEy7jMGcNTK7tT4JBLpCA25sqXNDZULWXXwyU/7hIKxEZduTqMDV1d7Fowv+MS88SccwPj6JyH4AnrCImb8EY8Bdmw+/XLhJkJHtQ3aTQBZw/4GeZpOHsU1THkPtAORsMiyZlq+vHifzDM0b6qUbaDgPkC2QRWAx6brEForIdwTrs5upX1So2nSPH62YHILoBTyCyb03k499Oc+GNgYcooO6gR9AyBVjBQi2VNfGP1w2MlMnkNA/Pohbe0icziHYEr6bjP0MbN55K437oH2sOO09m8gQYht4Cn+Zw1crX6BKf4TO1R5cXj62XW4cXgfT7vMrUx89USv16tvL91C+s7AivBRsAza4XLtLoKJ/I7Tmf8onqNQBvo8df4DkTH/sPYiMaTZQbtyfrM40u0PWheLGheEGoCt4trk1fArN3x55Pbv5yYehGZC4bK1dsDiJ/peS7nEsti/He4nL/BrwjwDRaNu4TcMS0jfpkDzvuEz8AsHOpMijLeDP6EefaMbasTSY247xfQWQzm5AgEiB/286xZto1/j2pyeQG9RXhrrcLdo4YDy4qHxmbt1tqqWpqsCySdk6FKmO5Q1wwyq1LI2OT0BiyIJaaMzatRO7LiRWM45gNiJH3wheYcLH+R7FiJ1FZk4svDXQV4xRYZJvM68w8OajlbI3sW1gAAAABJRU5ErkJggg=="/>
+  </mask>
+  <rect id="rocha-official-r-watermark" x="58" y="48" width="320" height="395"
+        fill="url(#official-rocha-monogram-color)" mask="url(#rocha-official-r-mask)"/>
+  <!-- The quiet, red architectural ribbon crossing the lower section. -->
+  <path d="M270 374C565 480 891 453 1128 388S1511 261 1690 260" fill="none" stroke="#ff7b6b" stroke-width="12" opacity=".17" filter="url(#glow)"/>
+  <path d="M270 374C565 480 891 453 1128 388S1511 261 1690 260" fill="none" stroke="url(#ray)" stroke-width="1.8" opacity=".90"/>
+  <path d="M235 401C589 494 894 471 1179 413S1525 330 1650 308" fill="none" stroke="#ff5f67" stroke-opacity=".10" stroke-width="30"/>
+  <!-- Geometric contours on the right, behind the social links. -->
+  <g fill="none" stroke="#f8a17e" stroke-opacity=".29" stroke-width="1.25">
+    <path d="M1530-70l-134 157q-20 25 10 25h236"/>
+    <path d="M1594-63l-130 175q-18 25 15 25h172"/>
+    <path d="M1674 139l-158 106q-24 16 8 16h161"/>
+  </g>
+</svg>
