@@ -1,0 +1,92 @@
+/* ROCHA R12 — Nossos Imoveis: visual premium + LED rotativo.
+   Escopo: apenas a secao .imoveisHome; nenhum layout, imagem ou JS alterado. */
+@property --rocha-r12-led-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* Preserva o painel original, refinando as cores da marca Rocha. */
+.imoveisHome .bg:before {
+  background:
+    linear-gradient(32deg, rgba(195,27,47,.43) 0%, rgba(158,28,47,.16) 12%, transparent 33%),
+    radial-gradient(ellipse at 94% 10%, rgba(178,33,50,.32), transparent 46%),
+    linear-gradient(112deg, #252427 0%, #303034 55%, #38272c 100%);
+  border-radius: 3px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.055), 0 4px 22px rgba(34,23,28,.09);
+}
+
+/* Pequeno elemento diagonal vermelho ao lado do titulo. */
+.imoveisHome .infoImoveis .titulo h2 {
+  position: relative;
+  padding-left: 25px;
+}
+.imoveisHome .infoImoveis .titulo h2:before {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 52px;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%) skew(-18deg);
+  border-radius: 1px;
+  background: linear-gradient(180deg, #ec4254, #a91c31);
+  box-shadow: 0 0 12px rgba(221,38,62,.23);
+  pointer-events: none;
+}
+
+/* Cartao real do Easy Rota do Mar: preserva interacoes e fotos do Owl. */
+.imoveisHome .imovelDestaque {
+  position: relative;
+  isolation: isolate;
+  border-radius: 5px;
+  box-shadow:
+    0 10px 24px rgba(18,14,18,.22),
+    0 0 0 1px rgba(177,35,51,.40),
+    0 0 17px rgba(191,34,57,.13);
+}
+
+/* Uma faixa de luz se desloca ao longo do perimetro, sem cobrir o conteudo.
+   mask-composite recorta o centro; pointer-events mantem o carrossel clicavel. */
+.imoveisHome .imovelDestaque:before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  z-index: 8;
+  border-radius: 8px;
+  padding: 3px;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--rocha-r12-led-angle),
+    rgba(154,26,43,.15) 0deg,
+    rgba(170,31,49,.20) 266deg,
+    rgba(203,36,57,.58) 308deg,
+    #ed4056 331deg,
+    #fff0f2 342deg,
+    #fe697a 352deg,
+    rgba(154,26,43,.15) 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: rocha-r12-led-volta 5.5s linear infinite;
+  filter: drop-shadow(0 0 3px rgba(255,69,91,.46));
+}
+
+@keyframes rocha-r12-led-volta {
+  to { --rocha-r12-led-angle: 360deg; }
+}
+
+@media (max-width: 767px) {
+  .imoveisHome .infoImoveis .titulo h2 { padding-left: 22px; }
+  .imoveisHome .infoImoveis .titulo h2:before { height: 43px; width: 7px; }
+  .imoveisHome .imovelDestaque:before { inset: -2px; padding: 2px; border-radius: 7px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .imoveisHome .imovelDestaque:before {
+    animation: none;
+    background: linear-gradient(110deg, #ac233b, #d34155);
+  }
+}
