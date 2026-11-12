@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <defs>
+    <linearGradient id="monogram" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fd5161" stop-opacity=".24"/>
+      <stop offset="1" stop-color="#9d071d" stop-opacity=".06"/>
+    </linearGradient>
+    <linearGradient id="ray" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e83c47" stop-opacity="0"/>
+      <stop offset=".40" stop-color="#e83c47" stop-opacity=".12"/>
+      <stop offset=".75" stop-color="#ff795e" stop-opacity=".82"/>
+      <stop offset=".88" stop-color="#ffd2a0" stop-opacity="1"/>
+      <stop offset="1" stop-color="#ff805e" stop-opacity=".20"/>
+    </linearGradient>
+    <filter id="glow" x="-15%" y="-400%" width="130%" height="900%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+  </defs>
+  <!-- Subtle architectural R watermark, stylized as geometric shapes. -->
+  <g fill="url(#monogram)" stroke="#fb5265" stroke-opacity=".13" stroke-width="1">
+    <path d="M58 64h116c94 0 151 55 151 127 0 55-34 97-95 119l119 141H228L116 304v147H58zM116 120v131h56c58 0 88-22 88-64 0-41-30-67-88-67z" fill-rule="evenodd"/>
+    <path d="M58 64L235 246" fill="none" stroke-opacity=".09"/>
+  </g>
+  <!-- The quiet, red architectural ribbon crossing the lower section. -->
+  <path d="M270 374C565 480 891 453 1128 388S1511 261 1690 260" fill="none" stroke="#ff7b6b" stroke-width="12" opacity=".17" filter="url(#glow)"/>
+  <path d="M270 374C565 480 891 453 1128 388S1511 261 1690 260" fill="none" stroke="url(#ray)" stroke-width="1.8" opacity=".90"/>
+  <path d="M235 401C589 494 894 471 1179 413S1525 330 1650 308" fill="none" stroke="#ff5f67" stroke-opacity=".10" stroke-width="30"/>
+  <!-- Geometric contours on the right, behind the social links. -->
+  <g fill="none" stroke="#f8a17e" stroke-opacity=".29" stroke-width="1.25">
+    <path d="M1530-70l-134 157q-20 25 10 25h236"/>
+    <path d="M1594-63l-130 175q-18 25 15 25h172"/>
+    <path d="M1674 139l-158 106q-24 16 8 16h161"/>
+  </g>
+</svg>
