@@ -107,3 +107,77 @@ footer .apoio {
   footer .menuFooter a,
   footer .social a { transition: none; }
 }
+
+/* ROCHA R16 - rodape cinematico fiel a proposta visual aprovada.
+   Somente footer da home: logo vetorial discreto, profundidade e luz curva.
+   Nao altera Instagram, botoes, links, barra fixa ou LED da R12. */
+footer {
+  background-color: #47050e;
+  background-image:
+    radial-gradient(ellipse 32% 60% at 48% 0%, rgba(242,70,81,.24) 0%, rgba(176,25,43,.085) 45%, transparent 83%),
+    radial-gradient(ellipse 28% 70% at 91% 85%, rgba(190,20,39,.19) 0%, transparent 90%),
+    url("/assets/img/rocha-r16-footer-art.svg"),
+    linear-gradient(112deg, #42040e 0%, #630a15 24%, #750b19 46%, #580711 76%, #37040b 100%);
+  background-position: center, center, center, center;
+  background-size: cover, cover, cover, cover;
+  background-repeat: no-repeat;
+  border-top: 1px solid rgba(239,106,112,.24);
+  box-shadow: inset 0 1px 0 rgba(255,175,161,.055);
+}
+
+/* Camada de luz/volume sutil. Mantida atras dos links clicaveis. */
+footer::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.027) 0%, transparent 27%, rgba(17,0,6,.10) 100%),
+    radial-gradient(ellipse 36% 38% at 63% 2%, rgba(255,111,116,.10), transparent 88%);
+}
+footer::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,195,164,.20) 35%, rgba(251,123,111,.29) 62%, transparent);
+}
+footer > .container { position: relative; z-index: 1; }
+
+/* Hierarquia original preservada, mas com contraste e acabamento editorial. */
+footer h3 {
+  text-shadow: 0 2px 4px rgba(26,0,6,.20);
+  letter-spacing: .1px;
+}
+footer .marcaFooter h4 { text-shadow: 0 2px 12px rgba(12,0,4,.26); }
+footer .marcaFooter img { filter: drop-shadow(0 3px 9px rgba(29,0,6,.11)); }
+footer .apoio { border-top-color: rgba(255,219,205,.32); }
+footer .social a { box-shadow: inset 0 1px 0 rgba(255,255,255,.055); }
+
+@media (min-width: 992px) {
+  footer > .container > .row:first-child > .col-lg-4,
+  footer > .container > .row:first-child > .col-lg-3:not(.marcaFooter),
+  footer > .container > .row:first-child > .col-lg-2 {
+    border-left-color: rgba(255,222,205,.14);
+  }
+}
+@media (max-width: 991px) {
+  footer {
+    background-position: center, center, 38% center, center;
+    background-size: cover, cover, auto 100%, cover;
+  }
+}
+@media (max-width: 575px) {
+  footer {
+    background-image:
+      radial-gradient(ellipse at 50% 0%, rgba(205,46,60,.24), transparent 70%),
+      linear-gradient(150deg, #500611 0%, #710b17 54%, #3e050d 100%);
+    background-size: cover, cover;
+    background-position: center, center;
+  }
+}
