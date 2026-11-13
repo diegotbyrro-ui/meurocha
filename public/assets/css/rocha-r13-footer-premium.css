@@ -8,7 +8,7 @@ footer {
   background-image:
     radial-gradient(ellipse 45% 55% at 49% 2%, rgba(214, 39, 50, .47), transparent 78%),
     radial-gradient(ellipse 40% 75% at 86% 90%, rgba(193, 24, 39, .30), transparent 82%),
-    url("/assets/img/rocha-r14-footer-art.svg"),
+    url("/assets/img/rocha-r15-footer-art.svg"),
     linear-gradient(112deg, #4e0510 0%, #790c18 43%, #620711 74%, #42040c 100%);
   background-position: center center, center center, center center, center center;
   background-size: cover, cover, cover, cover;
