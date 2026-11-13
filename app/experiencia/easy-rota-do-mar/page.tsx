@@ -3,8 +3,8 @@ import EasyRotaClient from './EasyRotaClient';
 import './easy-rota.css';
 
 export const metadata: Metadata = {
-  title: 'Easy Rota do Mar | Experiência Interativa — Homologação Rocha',
-  description: 'Protótipo de apresentação interativa do Easy Rota do Mar, para revisão interna e homologação da Rocha Empreendimentos.',
+  title: 'Easy Rota do Mar | Experiência Imobiliária — Homologação Rocha',
+  description: 'Apresentação imobiliária navegável do Easy Rota do Mar, baseada na referência em vídeo para validação da Rocha Empreendimentos.',
   robots: { index: false, follow: false, nocache: true },
 };
 
