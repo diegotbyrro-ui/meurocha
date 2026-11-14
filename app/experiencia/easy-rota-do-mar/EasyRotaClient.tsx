@@ -294,6 +294,7 @@ export default function EasyRotaClient() {
         <div className="erm23-brandFrame"><Brand /></div>
         <div className="erm23-waveDivider" aria-hidden="true" />
         <h1 className="erm23-headline">O caminho mais curto entre a Serraria e o mar.</h1>
+        <p className="erm30-centralSlogan">VIVA ALÉM DO COMUM</p>
       </div>
       <div className="erm23-entryArea">
         <button type="button" className="erm23-startButton" onClick={() => start('localizacao')} aria-label="Iniciar experiência Easy Rota do Mar">
@@ -303,7 +304,7 @@ export default function EasyRotaClient() {
         </button>
         <p className="erm23-entryNote">Descubra o Easy Rota do Mar em uma apresentação exclusiva.</p>
       </div>
-      <footer className="erm23-splashFooter"><span>VIVA ALÉM DO COMUM</span><span>AMBIENTE DE HOMOLOGAÇÃO</span></footer>
+
     </section>}
 
     {started && centralMenuOpen && <section className="erm25-centralMenu" aria-label="Menu principal da experiência Easy Rota do Mar">

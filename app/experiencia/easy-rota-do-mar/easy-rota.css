@@ -777,3 +777,47 @@
   .erm23 .erm25-pattern {background-size:350px 73px;opacity:.25;}
   .erm23 .erm25-centralMenu::after {background-size:350px 73px;opacity:.13;height:24%;}
 }
+
+
+/* ROCHA R30 — PADRAO EASY INTEGRAL DIRETO DO BOOK (Y SEM RECORTE),
+   SLOGAN CENTRAL E SEM RODAPE DE HOMOLOGACAO NA ABERTURA.
+   Os modulos da plataforma e o menu central permanecem funcionais. */
+.erm23 .erm20-splash.erm23-splash {
+  grid-template-rows:auto minmax(260px,1fr) auto;
+}
+.erm23 .erm30-centralSlogan {
+  display:block;
+  margin:clamp(17px,2.2vh,27px) 0 0;
+  color:#b7e7ef;
+  font-family:var(--erm24-type-ui);
+  font-size:clamp(11px,.85vw,13px);
+  line-height:1.4;
+  font-weight:650;
+  letter-spacing:.20em;
+  text-align:center;
+  text-transform:uppercase;
+  text-shadow:0 1px 10px rgba(0,196,223,.10);
+}
+.erm23 .erm20-splash.erm23-splash::after {
+  background-image:url('/experiencia/easy-rota-do-mar/erm-pattern-book-r30.png');
+  background-size:520px 108px;
+  background-repeat:repeat;
+  background-position:center bottom;
+  opacity:.34;
+  /* Esmaece tambem as pontas, para nao exibir um pedaco de letra na borda da tela. */
+  -webkit-mask-image:radial-gradient(ellipse 80% 98% at 50% 100%,#000 0%,#000 69%,transparent 100%);
+  mask-image:radial-gradient(ellipse 80% 98% at 50% 100%,#000 0%,#000 69%,transparent 100%);
+}
+.erm23 .erm25-pattern,
+.erm23 .erm25-centralMenu::after {
+  background-image:url('/experiencia/easy-rota-do-mar/erm-pattern-book-r30.png');
+  background-size:520px 108px;
+  background-repeat:repeat;
+}
+@media(max-width:740px){
+  .erm23 .erm20-splash.erm23-splash{grid-template-rows:auto minmax(260px,1fr) auto;}
+  .erm23 .erm30-centralSlogan{font-size:10px;letter-spacing:.15em;margin-top:16px;}
+  .erm23 .erm20-splash.erm23-splash::after,
+  .erm23 .erm25-pattern,
+  .erm23 .erm25-centralMenu::after {background-size:350px 73px;}
+}

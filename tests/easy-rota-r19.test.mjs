@@ -172,7 +172,7 @@ test('R24: somente duas familias de tipografia e rodape coerente', () => {
   assert.match(css, /\.erm23 \.erm23-splashFooter\s*\{[^}]*font-size:\s*clamp/s);
   assert.match(css, /\.erm23 \.erm23-splashFooter > span\s*\{[^}]*font-family:\s*inherit/s);
   assert.doesNotMatch(css, /Century Gothic|Times New Roman|Arial/);
-  assert.match(client, /<span>VIVA ALÉM DO COMUM<\/span><span>AMBIENTE DE HOMOLOGAÇÃO<\/span>/);
+  assert.match(client, /className="erm30-centralSlogan">VIVA ALÉM DO COMUM<\/p>/);
 });
 
 // R25: menu central após a escolha da trilha, sem modificar os módulos internos.
@@ -334,4 +334,33 @@ test('R29: preserva CTA de onda, escolha de som, menu de sete módulos e interio
   const r29=css.slice(css.lastIndexOf('ROCHA R29'));
   assert.match(r29,/Apenas splash e menu central/);
   assert.doesNotMatch(r29,/erm20-panel|erm20-sidebar|erm20-bottomTabs/);
+});
+
+
+// R30 — ajuste final da abertura solicitado nos prints.
+test('R30: slogan central imediatamente abaixo do texto do empreendimento', () => {
+  const splash=client.slice(client.indexOf('{!started &&'),client.indexOf('{started && centralMenuOpen &&'));
+  assert.match(splash,/<h1 className="erm23-headline">O caminho mais curto entre a Serraria e o mar\.<\/h1>\s*<p className="erm30-centralSlogan">VIVA ALÉM DO COMUM<\/p>/);
+  assert.equal((splash.match(/VIVA ALÉM DO COMUM/g)||[]).length,1);
+  assert.doesNotMatch(splash,/className="erm23-splashFooter"/);
+});
+test('R30: remove qualquer texto de homologação na abertura e mantém menu', () => {
+  const splash=client.slice(client.indexOf('{!started &&'),client.indexOf('{started && centralMenuOpen &&'));
+  const menu=client.slice(client.indexOf('{started && centralMenuOpen &&'),client.indexOf('{started && !centralMenuOpen &&'));
+  assert.doesNotMatch(splash,/AMBIENTE DE HOMOLOGAÇÃO/);
+  assert.match(splash,/erm-rocha-assinatura\.png/);
+  assert.match(splash,/TOQUE PARA INICIAR A EXPERIÊNCIA/);
+  assert.match(menu,/sections\.map\(\(item, index\)/);
+});
+test('R30: nova imagem anti-recorte é usada nas duas telas com transparência', () => {
+  const png=readFileSync(join(assetDir,'erm-pattern-book-r30.png'));
+  assert.equal(png.subarray(0,8).toString('hex'),'89504e470d0a1a0a');
+  assert.equal(png.readUInt32BE(16),520);
+  assert.equal(png.readUInt32BE(20),108);
+  assert.equal(png[25],6,'A nova textura deve manter o canal alfa');
+  assert.ok(png.length>1000);
+  const r30=css.slice(css.lastIndexOf('ROCHA R30'));
+  assert.equal((r30.match(/erm-pattern-book-r30\.png/g)||[]).length,2,'Uma entrada para splash e uma regra compartilhada das duas camadas do menu');
+  assert.match(r30,/font-family:var\(--erm24-type-ui\)/);
+  assert.doesNotMatch(r30,/erm20-sidebar|erm20-panel|erm20-bottomTabs/);
 });
