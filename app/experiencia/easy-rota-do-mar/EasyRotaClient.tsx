@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type ChangeEvent } from 'react';
 
-type Section = 'localizacao' | 'lazer' | 'plantas' | 'imagens' | 'videos' | 'ficha' | 'institucional';
+type Section = 'localizacao' | 'lazer' | 'plantas' | 'imagens' | 'videos' | 'ficha' | 'institucional' | 'simulacao';
 type TypeKey = 'slim' | 'premium' | 'master' | 'spazzio';
 type Look = 'diurna' | 'entardecer' | 'noturna';
 type Group = 'todos' | 'acessos' | 'lazer' | 'conveniencia' | 'estrutura';
@@ -10,7 +10,8 @@ type Group = 'todos' | 'acessos' | 'lazer' | 'conveniencia' | 'estrutura';
 type Facility = { number: number; name: string; category: Exclude<Group, 'todos'>; image?: string };
 const media = (id: string) => `/api/experiencia/easy-rota-do-mar/media/${id}`;
 const official = 'https://meurocha.com.br/imoveis/easy-rota-do-mar';
-const palette = { dark: '#762D39', deep: '#4E202D', accent: '#BE6859', light: '#F8F2E8' };
+const palette = { dark: '#003D66', deep: '#00213D', accent: '#00DAF4', light: '#EDF9FF' };
+const BRAND_ASSETS = '/experiencia/easy-rota-do-mar/';
 const sections: { id: Section; label: string; glyph: string }[] = [
   { id: 'localizacao', label: 'Localização', glyph: '⌖' },
   { id: 'lazer', label: 'Lazer', glyph: '▦' },
@@ -20,6 +21,39 @@ const sections: { id: Section; label: string; glyph: string }[] = [
   { id: 'ficha', label: 'Ficha Técnica', glyph: '▤' },
   { id: 'institucional', label: 'Institucional', glyph: '♙' },
 ];
+type MenuKey = 'visao' | 'localizacao' | 'entorno' | 'empreendimento' | 'masterplan' | 'plantas' | 'galeria' | 'videos' | 'diferenciais' | 'simulacao';
+const platformMenu: { id: MenuKey; label: string; icon: string; section: Section; sub: string }[] = [
+  { id: 'visao', label: 'Visão Geral', icon: 'home', section: 'localizacao', sub: 'ultratour' },
+  { id: 'localizacao', label: 'Localização', icon: 'pin', section: 'localizacao', sub: 'mapa' },
+  { id: 'entorno', label: 'Entorno', icon: 'building', section: 'localizacao', sub: 'entorno' },
+  { id: 'empreendimento', label: 'Empreendimento', icon: 'building', section: 'ficha', sub: 'ficha' },
+  { id: 'masterplan', label: 'Masterplan', icon: 'layers', section: 'lazer', sub: 'implantacao' },
+  { id: 'plantas', label: 'Plantas', icon: 'floor', section: 'plantas', sub: 'tipologias' },
+  { id: 'galeria', label: 'Galeria de Imagens', icon: 'image', section: 'imagens', sub: 'apartamentos' },
+  { id: 'videos', label: 'Vídeos', icon: 'play', section: 'videos', sub: 'perspectivas' },
+  { id: 'diferenciais', label: 'Diferenciais', icon: 'star', section: 'lazer', sub: 'espacos' },
+  { id: 'simulacao', label: 'Simulação', icon: 'calculator', section: 'simulacao', sub: 'simulacao' },
+];
+const globalTabs: { label: string; icon: string; section: Section; sub: string; menu: MenuKey }[] = [
+  { label: 'Utilização', icon: 'pin', section: 'localizacao', sub: 'ultratour', menu: 'visao' },
+  { label: 'Entorno', icon: 'building', section: 'localizacao', sub: 'entorno', menu: 'entorno' },
+  { label: 'Masterplan', icon: 'layers', section: 'lazer', sub: 'implantacao', menu: 'masterplan' },
+  { label: 'Plantas', icon: 'floor', section: 'plantas', sub: 'tipologias', menu: 'plantas' },
+  { label: 'Mídias', icon: 'play', section: 'imagens', sub: 'apartamentos', menu: 'galeria' },
+];
+function UiIcon({ name, size = 20 }: { name: string; size?: number }) {
+  const common = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const, 'aria-hidden': true as const };
+  if (name === 'home') return <svg {...common}><path d="m3 10 9-7 9 7v10h-6v-6H9v6H3z"/></svg>;
+  if (name === 'pin') return <svg {...common}><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>;
+  if (name === 'building') return <svg {...common}><path d="M4 21V6l8-3v18M12 9h8v12M2 21h20M7 9h2m-2 4h2m-2 4h2m6-4h2m-2 4h2"/></svg>;
+  if (name === 'layers') return <svg {...common}><path d="m12 2 9 5-9 5-9-5 9-5Zm-9 10 9 5 9-5M3 17l9 5 9-5"/></svg>;
+  if (name === 'floor') return <svg {...common}><rect x="2" y="2" width="20" height="20" rx="1"/><path d="M10 2v9h12M2 12h8v10M10 17h7m0-6v11"/></svg>;
+  if (name === 'image') return <svg {...common}><rect x="2" y="3" width="20" height="18" rx="2"/><circle cx="8" cy="9" r="2"/><path d="m3 19 6-6 4 4 3-3 6 5"/></svg>;
+  if (name === 'play') return <svg {...common}><circle cx="12" cy="12" r="10"/><path d="m10 7 7 5-7 5z"/></svg>;
+  if (name === 'star') return <svg {...common}><path d="m12 2 3.1 6.3 7 1-5 4.8 1.2 7-6.3-3.3-6.3 3.3 1.2-7-5-4.8 7-1z"/></svg>;
+  if (name === 'calculator') return <svg {...common}><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8M8 11h2m4 0h2m-8 4h2m4 0h2m-8 4h8"/></svg>;
+  return <svg {...common}><circle cx="12" cy="12" r="9"/></svg>;
+}
 const subtabs: Record<Section, { id: string; label: string }[]> = {
   localizacao: [{ id: 'ultratour', label: 'Ultratour' }, { id: 'entorno', label: 'Entorno' }, { id: 'rotas', label: 'Rotas' }, { id: 'mapa', label: 'Mapa' }],
   lazer: [{ id: 'implantacao', label: 'Masterplan' }, { id: 'espacos', label: 'Ambientes' }],
@@ -28,6 +62,7 @@ const subtabs: Record<Section, { id: string; label: string }[]> = {
   videos: [{ id: 'perspectivas', label: 'Perspectivas animadas' }, { id: 'empreendimento', label: 'Empreendimento' }, { id: 'shorts', label: 'Short vídeos' }],
   ficha: [{ id: 'ficha', label: 'Ficha técnica' }],
   institucional: [{ id: 'historia', label: 'Nossa história' }],
+  simulacao: [{ id: 'simulacao', label: 'Simulação' }],
 };
 const types: Record<TypeKey, { name: string; area: string; rooms: string; description: string; parking: string; image: string; endings: number[] }> = {
   slim: { name: 'Slim', area: '39,19 m²', rooms: '2 quartos', description: 'Ambientes funcionais para uma rotina prática.', parking: '1 vaga', image: 'slim', endings: [1, 8] },
@@ -113,18 +148,20 @@ function SectionBanner({ title, caption }: { title: string; caption?: string }) 
 }
 
 export default function EasyRotaClient() {
-  const [started, setStarted] = useState(false);
+  const [started, setStarted] = useState(true);
   const [soundPrompt, setSoundPrompt] = useState(false);
   const [soundOn, setSoundOn] = useState(false);
   const [volume, setVolume] = useState(35);
   const audio = useRef<AudioContext | null>(null);
   const [section, setSection] = useState<Section>('localizacao');
+  const [selectedNav, setSelectedNav] = useState<MenuKey>('visao');
+  const [mobileSlide, setMobileSlide] = useState(0);
+  const [tilted, setTilted] = useState(false);
   const [tab, setTab] = useState('ultratour');
   const [menuOpen, setMenuOpen] = useState(false);
   const [help, setHelp] = useState(false);
   const [tower, setTower] = useState<'norte' | 'sul'>('norte');
   const [look, setLook] = useState<Look>('diurna');
-  const [height, setHeight] = useState(12);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState(50);
   const [poiGroup, setPoiGroup] = useState('Principais');
@@ -152,8 +189,17 @@ export default function EasyRotaClient() {
   }, [soundOn, volume]);
   const goto = (s: Section, sub?: string) => {
     tone(); setSection(s); setTab(sub || subtabs[s][0].id); setMenuOpen(false); setOpenLightbox(false);
+    const target = platformMenu.find((n) => n.section === s && n.sub === (sub || subtabs[s][0].id));
+    if (target) setSelectedNav(target.id);
   };
   const start = () => { setStarted(true); setSoundPrompt(true); };
+  const goMenu = (n: typeof platformMenu[number]) => { goto(n.section, n.sub); setSelectedNav(n.id); };
+  const goGlobal = (n: typeof globalTabs[number]) => { goto(n.section, n.sub); setSelectedNav(n.menu); };
+  const fullScreen = () => {
+    if (typeof document === 'undefined') return;
+    if (document.fullscreenElement) { void document.exitFullscreen().catch(() => setHelp(true)); return; }
+    if (document.documentElement.requestFullscreen) void document.documentElement.requestFullscreen().catch(() => setHelp(true));
+  };
   const setSound = (enabled: boolean) => { setSoundOn(enabled); setSoundPrompt(false); };
   const feature = facilities.find((p) => p.number === facility) || facilities[0];
   const filtered = facilities.filter((p) => amenityGroup === 'todos' || p.category === amenityGroup);
@@ -175,12 +221,10 @@ export default function EasyRotaClient() {
     return () => window.removeEventListener('keydown', onKey);
   }, [openLightbox, images.length]);
 
-  const changeTab = (idx: number) => { const tabs = subtabs[section]; chooseTab(tabs[(idx + tabs.length) % tabs.length].id); };
-  const currentTabIndex = subtabs[section].findIndex((t) => t.id === tab);
-  const heroPhoto = look === 'diurna' ? 'hero' : look === 'entardecer' ? 'fachada' : 'hero';
+  const heroPhoto = `${BRAND_ASSETS}erm-vista-aerea.webp`;
   const showLiveMarker = 'Reprodução visual baseada no vídeo. Imagem 360° e orientação geográfica real exigem arquivos próprios de captura.';
 
-  return <main className="erm20" style={{ '--erm-dark': palette.dark, '--erm-deep': palette.deep, '--erm-accent': palette.accent, '--erm-cream': palette.light } as CSSProperties}>
+  return <main className="erm20 erm21" style={{ '--erm-dark': palette.dark, '--erm-deep': palette.deep, '--erm-accent': palette.accent, '--erm-cream': palette.light } as CSSProperties}>
     {!started && <div className="erm20-splash">
       <Brand /><div className="erm20-splashLinks" aria-label="Acesso aos módulos">
         {sections.map((s) => <button key={s.id} onClick={() => { setSection(s.id); setTab(subtabs[s.id][0].id); start(); }} type="button"><span className="erm20-splashGlyph">{s.glyph}</span>{s.label}</button>)}
@@ -190,41 +234,52 @@ export default function EasyRotaClient() {
     </div>}
 
     {started && <div className="erm20-shell">
-      <button className="erm20-mobileMenu" type="button" aria-label="Abrir ou fechar menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((v) => !v)}>☰ <span>Easy Rota do Mar</span></button>
+      <button className="erm20-mobileMenu" type="button" aria-label="Abrir ou fechar menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((v) => !v)}><span className="erm21-menuGlyph">☰</span><Brand compact /></button>
       {menuOpen && <button className="erm20-shade" type="button" aria-label="Fechar menu" onClick={() => setMenuOpen(false)} />}
       <aside className={`erm20-sidebar ${menuOpen ? 'isOpen' : ''}`}>
         <button type="button" className="erm20-brandLink" onClick={() => { setStarted(false); setMenuOpen(false); }} aria-label="Voltar à entrada"><Brand /></button>
         <nav className="erm20-sideNav" aria-label="Menu principal da plataforma">
-          {sections.map((s) => <button type="button" key={s.id} onClick={() => goto(s.id)} className={section === s.id ? 'active' : ''} aria-current={section === s.id ? 'page' : undefined}><span>{s.glyph}</span>{s.label}</button>)}
+          {platformMenu.map((n) => <button type="button" key={n.id} onClick={() => goMenu(n)} className={selectedNav === n.id ? 'active' : ''} aria-current={selectedNav === n.id ? 'page' : undefined}><span><UiIcon name={n.icon} size={17}/></span>{n.label}</button>)}
         </nav>
         <div className="erm20-sideTools">
           <label className="erm20-volume"><span className="erm20-srOnly">Volume do áudio de interface</span><input type="range" min="0" max="100" value={volume} onChange={(e: ChangeEvent<HTMLInputElement>) => setVolume(Number(e.target.value))} /></label>
-          <div className="erm20-toolIcons"><button onClick={() => { setStarted(false); setMenuOpen(false); }} aria-label="Página inicial" type="button">⌂</button><button onClick={() => setSoundOn((s) => !s)} aria-label={soundOn ? 'Desligar som' : 'Ligar som'} title="Som de interface" type="button">{soundOn ? '◖))' : '◖×'}</button><button type="button" aria-label="Ajuda" onClick={() => setHelp(true)}>◇</button></div>
+          <div className="erm20-toolIcons"><button onClick={() => goto('localizacao','ultratour')} aria-label="Visão geral" type="button"><UiIcon name="home" size={20}/></button><button onClick={fullScreen} aria-label="Tela cheia" type="button">⛶</button><button type="button" aria-label="Ajuda" onClick={() => setHelp(true)}>ⓘ</button></div>
         </div>
       </aside>
 
       <section className="erm20-main">
+        {!(section === 'localizacao' && tab === 'ultratour') && <nav className="erm21-subTabs" aria-label="Abas da seção">{subtabs[section].map((t) => <button key={t.id} type="button" className={tab === t.id ? 'active' : ''} onClick={() => chooseTab(t.id)}>{t.label}</button>)}</nav>}
         <div className="erm20-panel" key={section}>
           {section === 'localizacao' && <div className="erm20-content erm20-location">
             {tab === 'ultratour' && <div className="erm20-immersive" role="region" aria-label="Visão aérea de referência do empreendimento">
-              <div className={`erm20-immersivePhoto look-${look}`} style={{ transform: `scale(${zoom})`, '--pan': `${pan}%` } as CSSProperties}><Photo id={heroPhoto} alt="Imagem geral ilustrativa do Easy Rota do Mar" className="erm20-immersiveImage" /></div>
-              <div className="erm20-immersiveTint" /><Brand compact />
-              <div className="erm20-viewControls"><strong>Vista Geral {look === 'diurna' ? 'Diurna' : look === 'entardecer' ? 'Entardecer' : 'Noturna'}</strong><div><button className={tower === 'norte' ? 'active' : ''} onClick={() => setTower('norte')} type="button">Torre Norte</button><button className={tower === 'sul' ? 'active' : ''} onClick={() => setTower('sul')} type="button">Torre Sul</button></div></div>
+              <div className={`erm20-immersivePhoto look-${look} ${tilted ? 'erm21-tilted' : ''}`} style={{ transform: `scale(${zoom}) ${tilted ? 'perspective(850px) rotateX(7deg)' : ''}`, '--pan': `${pan}%` } as CSSProperties}><img src={heroPhoto} alt="Vista aérea da região do Easy Rota do Mar, extraída do book oficial" className="erm20-immersiveImage" /></div>
+              <div className="erm20-immersiveTint" /><div className="erm21-geoCaption">REGIÃO DA SERRARIA • MACEIÓ/AL</div>
+              <div className="erm20-viewControls"><strong>Visão Geral do Entorno</strong><div><button className={tower === 'norte' ? 'active' : ''} onClick={() => setTower('norte')} type="button">Torre Norte</button><button className={tower === 'sul' ? 'active' : ''} onClick={() => setTower('sul')} type="button">Torre Sul</button></div></div>
               <div className="erm20-categoryList">{['Principais', 'Gastronomia', 'Educação', 'Compras', 'Serviços', 'Saúde', 'Esporte'].map((c) => <button type="button" onClick={() => setPoiGroup(c)} className={poiGroup === c ? 'active' : ''} key={c}><span>•</span>{c}</button>)}</div>
-              <div className="erm20-sceneLabel"><span>⌖</span><b>Easy Rota do Mar</b><small>Região da Serraria · Maceió</small></div>
-              <div className="erm20-height">{[16, 14, 12, 10].map((h) => <button key={h} type="button" className={height === h ? 'active' : ''} onClick={() => setHeight(h)} title="Nível de navegação visual de referência">{h}°</button>)}</div>
+              <div className="erm20-sceneLabel"><span>⌖</span><b>easy <em>ROTA DO MAR</em></b><small>EMPREENDIMENTO ROCHA</small></div>
+              <div className="erm20-height"><span className="erm21-north">N ↑</span><button type="button" aria-label="Ampliar vista" onClick={() => setZoom((z) => Math.min(1.7, +(z+.1).toFixed(2)))}>+</button><button type="button" aria-label="Reduzir vista" onClick={() => setZoom((z) => Math.max(1, +(z-.1).toFixed(2)))}>−</button><button type="button" onClick={() => setTilted((v)=>!v)} className={tilted ? 'active' : ''} aria-pressed={tilted} title="Inclinar fotografia para visualização ilustrativa, sem modelo 3D">3D*</button></div>
               <div className="erm20-miniPlan"><div className="erm20-miniPlanHead">N <span>TORRE {tower === 'norte' ? 'NORTE' : 'SUL'}</span></div><div className="erm20-miniPlanCells">{Array.from({ length: 8 }, (_, i) => <button key={i} type="button" className={selectedEnding === i + 1 ? 'active' : ''} title={`Terminação ${String(i+1).padStart(2, '0')}: ${types[endingToType[i+1]].name}`} onClick={() => { setSelectedEnding(i+1); setSelectedType(endingToType[i+1]); goto('plantas', 'plantas'); }}>{String(i+1).padStart(2, '0')}<span>{types[endingToType[i+1]].name}</span></button>)}</div></div>
-              <div className="erm20-dayControls"><button type="button" className={look === 'diurna' ? 'active' : ''} onClick={() => setLook('diurna')} title="Dia">☼</button><button type="button" className={look === 'entardecer' ? 'active' : ''} onClick={() => setLook('entardecer')} title="Fim de tarde">◕</button><button type="button" className={look === 'noturna' ? 'active' : ''} onClick={() => setLook('noturna')} title="Noite">☾</button></div>
-              <div className="erm20-zoom"><button type="button" aria-label="Aumentar zoom" onClick={() => setZoom((z) => Math.min(1.7, +(z+.1).toFixed(2)))}>+</button><button type="button" aria-label="Diminuir zoom" onClick={() => setZoom((z) => Math.max(1, +(z-.1).toFixed(2)))}>−</button></div>
+              <div className="erm20-dayControls"><button type="button" className={look === 'diurna' ? 'active' : ''} onClick={() => setLook('diurna')} title="Filtro de dia">☼</button><button type="button" className={look === 'entardecer' ? 'active' : ''} onClick={() => setLook('entardecer')} title="Filtro de entardecer">◕</button><button type="button" className={look === 'noturna' ? 'active' : ''} onClick={() => setLook('noturna')} title="Filtro de noite">☾</button><button type="button" onClick={fullScreen} title="Tela cheia">⛶</button></div>
+              <div className="erm21-viewModes"><button type="button" className="active" aria-pressed="true" title="Foto aérea do book oficial"><UiIcon name="image" size={20}/>Aérea</button><button type="button" onClick={() => setHelp(true)} title="Tour 360° depende de captura real"><span>360°</span><small>Em breve</small></button><button type="button" onClick={() => goto('localizacao','mapa')}><UiIcon name="pin" size={20}/>Mapa</button></div>
               <input className="erm20-pan" aria-label="Explorar horizontalmente a imagem" type="range" min="0" max="100" value={pan} onChange={(e: ChangeEvent<HTMLInputElement>) => setPan(Number(e.target.value))} />
-              <span className="erm20-sceneDisclaimer" title={showLiveMarker}>VISÃO ILUSTRATIVA · 360° REAL PENDENTE</span>
+              <span className="erm20-sceneDisclaimer" title={showLiveMarker}>FOTO DO BOOK OFICIAL • MARCADORES ILUSTRATIVOS • 3D NÃO GEORREFERENCIADO</span>
+            </div>}
+            {tab === 'ultratour' && <div className="erm21-mobileOverview" aria-label="Visão geral do empreendimento no celular">
+              <div className="erm21-mobileHero">
+                <img src={`${BRAND_ASSETS}${mobileSlide === 0 ? 'erm-fachada.webp' : 'erm-praia.webp'}`} alt={mobileSlide === 0 ? 'Fachada do Easy Rota do Mar no book oficial' : 'Foto de praia do book oficial'}/>
+                <button type="button" className="erm21-mobilePrev" aria-label="Foto anterior" onClick={() => setMobileSlide((i)=>(i+1)%2)}>‹</button>
+                <button type="button" className="erm21-mobileNext" aria-label="Próxima foto" onClick={() => setMobileSlide((i)=>(i+1)%2)}>›</button>
+              </div>
+              <h1>O CAMINHO MAIS CURTO<br/>ENTRE A SERRARIA E O MAR</h1>
+              <div className="erm21-mobileDots" aria-label="Selecionar imagem">{[0,1].map((i)=><button type="button" key={i} aria-label={`Imagem ${i+1}`} aria-pressed={mobileSlide===i} className={mobileSlide===i?'active':''} onClick={()=>setMobileSlide(i)}/>)}</div>
+              <div className="erm21-shortcuts">{platformMenu.filter((n)=>['localizacao','masterplan','plantas','galeria','videos','diferenciais'].includes(n.id)).map((n)=><button type="button" key={n.id} onClick={()=>goMenu(n)}><UiIcon name={n.icon} size={28}/><span>{n.label === 'Galeria de Imagens' ? 'Galeria' : n.label}</span></button>)}</div>
             </div>}
             {tab === 'entorno' && <div className="erm20-nearby"><SectionBanner title="ENTORNO" caption="Explore o que faz parte do dia a dia"/><div className="erm20-nearbyHero"><Photo id="hero" alt="Visão ilustrativa da região do empreendimento"/><Brand compact /></div><div className="erm20-nearbyLinks">{['Serviços', 'Comércio', 'Educação', 'Mobilidade', 'Bem-estar', 'Lazer', 'Conveniência', 'Gastronomia'].map((x) => <button key={x} onClick={() => { setMapChoice(x); chooseTab('mapa'); }} type="button">{x}</button>)}</div><p className="erm20-disclaimer">Mapa e pontos de interesse serão georreferenciados após conferência do endereço e das coordenadas oficiais.</p></div>}
             {tab === 'rotas' && <div className="erm20-mapFrame"><SectionBanner title="ROTAS" caption="Visualização do entorno"/><div className="erm20-mapGrid"><div className="erm20-mapIllustration"><div className="erm20-road roadA"/><div className="erm20-road roadB"/><div className="erm20-road roadC"/><div className="erm20-mapPin">⌖<span>EASY ROTA DO MAR</span></div></div><div className="erm20-mapDetails"><h2>O caminho que conecta você a novos momentos.</h2><p>Explore a localização na Serraria, em Maceió, e consulte rotas reais no serviço de mapas.</p><a href="https://www.google.com/maps/search/?api=1&query=Easy%20Rota%20do%20Mar%20Macei%C3%B3" target="_blank" rel="noopener noreferrer">ABRIR MAPA EXTERNO ↗</a><small>Não exibimos tempos ou distâncias não verificados.</small></div></div></div>}
             {tab === 'mapa' && <div className="erm20-mapFrame"><SectionBanner title="MAPA" caption="Pontos de interesse próximos"/><div className="erm20-mapGrid"><div className="erm20-mapIllustration"><div className="erm20-road roadA"/><div className="erm20-road roadB"/><div className="erm20-road roadC"/><div className="erm20-mapPin">⌖<span>EASY ROTA DO MAR</span></div></div><div className="erm20-mapDetails"><div className="erm20-mapCats">{['Mobilidade', 'Educação', 'Comércio', 'Serviços'].map((x) => <button key={x} className={mapChoice === x ? 'active' : ''} type="button" onClick={() => setMapChoice(x)}>{x}</button>)}</div><h3>{mapChoice}</h3><p>Os marcadores definitivos serão inseridos após a validação dos endereços e distâncias pela Rocha.</p><a href="https://www.google.com/maps/search/?api=1&query=Easy%20Rota%20do%20Mar%20Macei%C3%B3" target="_blank" rel="noopener noreferrer">CONFERIR NO GOOGLE MAPS ↗</a></div></div></div>}
           </div>}
 
-          {section === 'lazer' && <div className="erm20-content erm20-leisure"><SectionBanner title="MASTERPLAN" caption="Um lugar completo para viver"/><div className="erm20-masterVisual"><div className="erm20-masterRing"><div className="erm20-towerIllustration one">TORRE NORTE</div><div className="erm20-facilityIllustration"><span>LAZER</span><span>CONVIVÊNCIA</span><span>ESTRUTURA</span><span>SERVIÇOS</span></div><div className="erm20-towerIllustration two">TORRE SUL</div></div><small>ILUSTRAÇÃO DE ORGANIZAÇÃO · NÃO REPRESENTA POSIÇÕES OU DIMENSÕES REAIS</small></div><div className="erm20-masterLower"><div className="erm20-masterIndex"><div className="erm20-masterFilters">{(['todos','acessos','lazer','conveniencia','estrutura'] as Group[]).map((g) => <button key={g} type="button" className={amenityGroup === g ? 'active' : ''} onClick={() => setAmenityGroup(g)}>{groupNames[g]}</button>)}</div><div className="erm20-facilities">{filtered.map((p) => <button key={p.number} type="button" className={facility === p.number ? 'active' : ''} onClick={() => setFacility(p.number)}><b>{String(p.number).padStart(2, '0')}</b><span>{p.name}</span></button>)}</div></div><div className="erm20-masterPreview" aria-live="polite"><Photo id={feature.image || 'hero'} alt={`Imagem ilustrativa: ${feature.name}`}/><div><span>{String(feature.number).padStart(2, '0')} · {groupNames[feature.category]}</span><h3>{feature.name}</h3><small>{feature.image ? 'Perspectiva ilustrativa do material oficial' : 'Imagem de referência do empreendimento'}</small></div></div></div><p className="erm20-disclaimer">A implantação georreferenciada e os pontos posicionados exatamente na planta dependem da conversão e revisão do arquivo mestre original.</p></div>}
+          {section === 'lazer' && <div className="erm20-content erm20-leisure"><SectionBanner title="MASTERPLAN" caption="Um lugar completo para viver"/><div className="erm20-masterVisual erm21-realMaster"><img src={`${BRAND_ASSETS}erm-implantacao.webp`} alt="Implantação do Easy Rota do Mar extraída do book oficial"/><small>IMPLANTAÇÃO DO BOOK OFICIAL · CLIQUE NOS AMBIENTES ABAIXO PARA CONHECER</small></div><div className="erm20-masterLower"><div className="erm20-masterIndex"><div className="erm20-masterFilters">{(['todos','acessos','lazer','conveniencia','estrutura'] as Group[]).map((g) => <button key={g} type="button" className={amenityGroup === g ? 'active' : ''} onClick={() => setAmenityGroup(g)}>{groupNames[g]}</button>)}</div><div className="erm20-facilities">{filtered.map((p) => <button key={p.number} type="button" className={facility === p.number ? 'active' : ''} onClick={() => setFacility(p.number)}><b>{String(p.number).padStart(2, '0')}</b><span>{p.name}</span></button>)}</div></div><div className="erm20-masterPreview" aria-live="polite"><Photo id={feature.image || 'hero'} alt={`Imagem ilustrativa: ${feature.name}`}/><div><span>{String(feature.number).padStart(2, '0')} · {groupNames[feature.category]}</span><h3>{feature.name}</h3><small>{feature.image ? 'Perspectiva ilustrativa do material oficial' : 'Imagem de referência do empreendimento'}</small></div></div></div><p className="erm20-disclaimer">A implantação georreferenciada e os pontos posicionados exatamente na planta dependem da conversão e revisão do arquivo mestre original.</p></div>}
 
           {section === 'plantas' && <div className="erm20-content erm20-plans">
             {tab === 'tipologias' && <><div className="erm20-plansTitle"><SectionBanner title="PAVIMENTO TIPO"/><h2>ESCOLHA O ESPAÇO QUE COMBINA COM VOCÊ.</h2></div><div className="erm20-floorPlan"><div className="erm20-planUpper"><div className="erm20-floorBuilding">{Array.from({ length: 8 }, (_, i) => { const t=endingToType[i+1]; return <button type="button" key={i} onClick={() => { setType(t); chooseTab('plantas'); }} title={`Terminação ${i+1}: ${types[t].name}`} className={`unit unit-${t}`}><span>{String(i+1).padStart(2,'0')}</span><b>{types[t].name.toUpperCase()}</b></button>; })}<div className="erm20-floorCore">CIRCULAÇÃO</div></div></div><div className="erm20-floorTypes">{typeKeys.map((t) => <button type="button" key={t} onClick={() => { setType(t); chooseTab('plantas'); }}><span className="erm20-swatch"/><h3>{types[t].name}</h3><strong>{types[t].area}</strong><small>{types[t].rooms}</small></button>)}</div></div></>}
@@ -237,9 +292,14 @@ export default function EasyRotaClient() {
 
           {section === 'ficha' && <div className="erm20-content erm20-spec"><SectionBanner title="FICHA TÉCNICA"/><div className="erm20-specHero"><Photo id="fachada" alt="Perspectiva da fachada do Easy Rota do Mar"/><div><span>CONHEÇA O PROJETO</span><h2>Um empreendimento pensado para viver <em>além do comum.</em></h2><div><b>02</b><small>Torres</small><b>208</b><small>Unidades</small><b>04</b><small>Tipologias</small></div></div></div><div className="erm20-specColumns">{typeKeys.map((k)=><article key={k}><h3>{types[k].name}</h3><strong>{types[k].area}</strong><p>{types[k].rooms}</p><p>{types[k].parking}</p><p>Terminações {types[k].endings.map((x)=>String(x).padStart(2,'0')).join(' e ')}</p><button type="button" onClick={()=>{setType(k);goto('plantas','plantas');}}>VER PLANTA ↗</button></article>)}</div><p className="erm20-disclaimer">Projeto de referência para homologação: 2 blocos, 208 apartamentos e 4 tipologias. Vagas, dados comerciais e disponibilidade devem ser confirmados com a Rocha.</p></div>}
 
+          {section === 'simulacao' && <div className="erm20-content erm21-simulation">
+            <SectionBanner title="SIMULAÇÃO" caption="Apresentação em homologação"/>
+            <div className="erm21-simulationBox"><UiIcon name="calculator" size={46}/><h2>Simulação financeira</h2><p>O painel visual está preparado para receber parâmetros comerciais aprovados pela Rocha. Nenhum preço, condição ou disponibilidade foi inventado nesta versão.</p><a href={official} rel="noopener noreferrer" target="_blank">CONHECER O EMPREENDIMENTO NO SITE OFICIAL ↗</a></div>
+          </div>}
+
           {section === 'institucional' && <div className="erm20-content erm20-institutional"><div className="erm20-institutionalHero"><Photo id="fachada" alt="Empreendimento Rocha Empreendimentos"/><div><SectionBanner title="INSTITUCIONAL"/><span className="erm20-overline">ROCHA EMPREENDIMENTOS · DESDE 2009</span><h2>HÁ HISTÓRIAS QUE SÓ O TEMPO CONSEGUE CONSTRUIR.</h2><p>Projetos que acompanham novos capítulos. O Easy Rota do Mar faz parte dessa trajetória de construir possibilidades em Alagoas.</p><div className="erm20-institutionalMetrics"><div><b>2009</b><small>Início da trajetória</small></div><div><b>17</b><small>Anos em 2026</small></div><div><b>208</b><small>Unidades Easy Rota do Mar</small></div></div><h3>Viva além do comum.</h3><p>Conheça os empreendimentos e iniciativas da Rocha.</p><a href="https://meurocha.com.br" target="_blank" rel="noopener noreferrer">SITE OFICIAL ↗</a><div className="erm20-rochaSignature">ROCHA <small>EMPREENDIMENTOS</small></div></div></div></div>}
         </div>
-        <nav className="erm20-bottomTabs" aria-label="Navegação da seção">{subtabs[section].map((t,i)=><button type="button" key={t.id} className={tab===t.id?'active':''} aria-current={tab===t.id?'page':undefined} onClick={()=>chooseTab(t.id)}>{t.label}</button>)}{subtabs[section].length>1&&<div className="erm20-bottomArrows"><button type="button" onClick={()=>changeTab(currentTabIndex-1)} aria-label="Aba anterior">‹</button><button type="button" onClick={()=>changeTab(currentTabIndex+1)} aria-label="Próxima aba">›</button></div>}</nav>
+        <nav className="erm20-bottomTabs" aria-label="Módulos principais">{globalTabs.map((n)=><button key={n.label} className={section===n.section && (n.sub===tab || (n.menu==='plantas' && section==='plantas') || (n.menu==='galeria' && section==='imagens') || (n.menu==='masterplan' && section==='lazer')) ? 'active' : ''} type="button" onClick={()=>goGlobal(n)}><UiIcon name={n.icon} size={25}/><span>{n.label}</span></button>)}</nav>
       </section>
     </div>}
 
