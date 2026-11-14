@@ -336,3 +336,80 @@
  .erm22 .erm22-splashCard,.erm22 .erm22-splashTop,.erm22 .erm22-splashOrb,.erm22 .erm22-storyImage,.erm22 .erm22-storyContent .erm20-brand,.erm22 .erm22-splashLinks button{animation:none!important;transform:none!important;filter:none!important}
  .erm22 .erm22-splashLinks button{transition:none}
 }
+
+
+/* ROCHA R23 - PORTAL SINGLE-CTA | Apenas entrada. A plataforma interna R22 e preservada. */
+.erm23 .erm20-splash.erm23-splash {
+  position:relative;isolation:isolate;display:grid;grid-template-rows:auto minmax(260px,1fr) auto auto;
+  width:100%;min-height:100svh;gap:0;overflow:hidden;padding:0;
+  background:radial-gradient(ellipse at 50% 52%,#0a5c85 0%,#003a5e 37%,#002d4c 62%,#001c37 100%);
+  color:#f7fdff;text-align:center;
+}
+.erm23-splash:before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle at 50% 41%,transparent 18%,#001b36bd 86%),
+  repeating-linear-gradient(90deg,transparent 0 85px,#32c7e30a 86px 87px,transparent 88px 140px);
+}
+.erm23-backgroundGrid{position:absolute;inset:0;z-index:-1;opacity:.48;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent 0 32px,#41ccdd0b 33px 36px,transparent 37px 74px),
+  repeating-linear-gradient(90deg,transparent 0 42px,#41ccdd0b 44px 47px,transparent 48px 112px);
+  mask-image:radial-gradient(ellipse at 53% 53%,transparent 14%,#0007 80%);
+}
+.erm23-backgroundGlow{position:absolute;z-index:-1;top:8%;left:50%;width:min(100vw,850px);height:min(75vw,660px);transform:translateX(-50%);
+  background:radial-gradient(ellipse,#0fd8ef1a 0%,#0a83bf0b 49%,transparent 71%);pointer-events:none;animation:erm23-breathe 8s ease-in-out infinite alternate}
+.erm23-waveTop{position:absolute;left:-10%;top:11%;width:120%;height:28%;border-bottom:1px solid #4be5f251;
+  border-radius:50%;transform:rotate(-3deg);box-shadow:0 8px 35px #01cfff0a;pointer-events:none;animation:erm23-wave 12s ease-in-out infinite alternate}
+.erm23-splashHeader{position:relative;z-index:2;display:flex;justify-content:flex-end;align-items:flex-start;min-height:114px;padding:25px clamp(22px,5.5vw,92px) 0;width:100%}
+.erm23-rochaSignature{display:flex;align-items:center;justify-content:center;width:clamp(130px,12.2vw,196px);min-height:58px;
+  padding:8px 12px;border-radius:10px;background:#ffffff04;border:1px solid #d9fbff10;transition:background .25s,transform .25s}
+.erm23-rochaSignature:hover{background:#ffffff0d;transform:translateY(-2px)}
+.erm23-rochaSignature img{display:block;width:100%;height:auto;max-height:65px;object-fit:contain;filter:drop-shadow(0 2px 4px #0004)}
+.erm23-centerStage{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;align-self:stretch;
+  gap:0;max-width:min(750px,94%);margin:0 auto;transform:translateY(-1.6vh);animation:erm23-reveal 1.05s cubic-bezier(.22,.67,.26,1) both}
+.erm23-topCaption{margin:0 0 30px;color:#81dfed;font-size:clamp(9px,.76vw,12px);letter-spacing:.55em;font-weight:650}
+.erm23-brandFrame{position:relative;width:min(610px,78vw);min-height:176px;display:flex;justify-content:center;align-items:center;filter:drop-shadow(0 20px 26px #00101f40)}
+.erm23-brandFrame:before{content:'';position:absolute;z-index:-1;inset:-36px -44px;border-radius:50%;
+  background:radial-gradient(ellipse,#42e5ff0b,transparent 72%);pointer-events:none}
+.erm23-splash .erm23-brandFrame .erm20-brand{width:100%!important;min-height:0!important;max-width:100%!important;padding:0!important;display:flex;align-items:center;flex-direction:column;justify-content:center}
+.erm23-splash .erm23-brandFrame .erm20-brand img{display:block;width:100%!important;max-width:560px;height:auto!important;max-height:185px!important;object-fit:contain;mix-blend-mode:normal!important;filter:none!important}
+.erm23-splash .erm23-brandFrame .erm20-brand>small{display:none!important}
+.erm23-splash .erm23-brandFrame .erm20-brandFallback{color:#fff}
+.erm23-waveDivider{margin:22px 0 24px;width:min(400px,70vw);height:10px;opacity:.88;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='10' viewBox='0 0 80 10'%3E%3Cpath d='M0 5Q10 -1 20 5T40 5T60 5T80 5' fill='none' stroke='%2358eaff' stroke-width='1.6'/%3E%3C/svg%3E")}
+.erm23-headline{font:400 clamp(17px,1.6vw,25px)/1.4 Georgia,'Times New Roman',serif;color:#effcff;letter-spacing:.025em;max-width:650px;margin:0}
+.erm23-brandCaption{margin:15px 0 0;color:#8ad6e8;font-size:clamp(9px,.77vw,11px);font-weight:650;letter-spacing:.26em}
+.erm23-entryArea{position:relative;z-index:2;display:flex;align-items:center;flex-direction:column;gap:13px;padding:10px 20px 36px;animation:erm23-reveal .9s .5s both}
+.erm23-startButton{position:relative;display:flex;align-items:center;justify-content:center;gap:16px;min-width:min(430px,100%);min-height:67px;
+  padding:11px 24px;border:1px solid #6efbffb8;border-radius:12px;color:#00223c;
+  background:linear-gradient(107deg,#8cf8ff,#3ce6f4 38%,#00c6e7);box-shadow:0 8px 35px #00cdef30,0 0 0 5px #00cbee12,inset 0 2px 0 #eaffff7e;
+  font-size:clamp(12px,1vw,14px);font-weight:800;letter-spacing:.055em;cursor:pointer;transition:transform .24s,border-color .24s,box-shadow .24s}
+.erm23-startButton:hover{transform:translateY(-4px) scale(1.025);border-color:#fff;box-shadow:0 16px 48px #01e7ff4e,0 0 0 7px #05d6ff16,inset 0 2px 0 #fff9}
+.erm23-startButton:focus-visible{outline:3px solid #fff;outline-offset:5px}
+.erm23-startButton .erm23-startIcon{width:42px;height:42px;display:grid;place-items:center;background:#003c5966;color:#fff;border-radius:50%;box-shadow:inset 0 0 0 1px #ffffff77}
+.erm23-startButton>svg{flex-shrink:0;transition:transform .24s}.erm23-startButton:hover>svg{transform:translateX(5px)}
+.erm23-entryNote{margin:0;color:#abd6e1;font-size:11px;line-height:1.6;letter-spacing:.04em}
+.erm23-splashFooter{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;padding:0 clamp(24px,4.2vw,70px) 26px;color:#72aabf;
+  font-size:9px;letter-spacing:.17em;font-weight:650;text-align:left}
+.erm23-splashFooter span+span{text-align:right}
+@keyframes erm23-reveal{from{opacity:0;transform:translateY(22px) scale(.97);filter:blur(6px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes erm23-breathe{from{opacity:.6;transform:translateX(-50%) scale(.92)}to{opacity:1;transform:translateX(-50%) scale(1.12)}}
+@keyframes erm23-wave{from{transform:rotate(-3deg) translateY(0)}to{transform:rotate(-1deg) translateY(18px)}}
+@media(max-width:740px){
+  .erm23 .erm20-splash.erm23-splash{grid-template-rows:auto minmax(330px,1fr) auto auto;min-height:100svh;overflow:hidden;padding:0;gap:0}
+  .erm23-splashHeader{min-height:100px;padding:20px 22px 0}
+  .erm23-rochaSignature{width:128px;min-height:46px;padding:5px 7px}
+  .erm23-centerStage{max-width:92%;transform:none;padding-top:0}
+  .erm23-topCaption{margin-bottom:24px;font-size:9px;letter-spacing:.4em}
+  .erm23-brandFrame{width:min(85vw,480px);min-height:115px}
+  .erm23-splash .erm23-brandFrame .erm20-brand img{max-height:124px!important}
+  .erm23-waveDivider{margin:17px 0 22px;width:70vw}
+  .erm23-headline{font-size:clamp(18px,5vw,23px);line-height:1.4}
+  .erm23-brandCaption{font-size:9px;letter-spacing:.18em;line-height:1.9}
+  .erm23-entryArea{padding:12px 18px 26px;gap:13px;width:100%}
+  .erm23-startButton{min-width:0;width:100%;max-width:440px;min-height:66px;padding:10px 13px;font-size:clamp(10px,3vw,13px);gap:9px}
+  .erm23-startButton .erm23-startIcon{width:38px;height:38px;min-width:38px}
+  .erm23-entryNote{font-size:10px;text-align:center}
+  .erm23-splashFooter{justify-content:center;flex-wrap:wrap;gap:7px 15px;padding:0 15px 15px;font-size:8px;text-align:center}
+  .erm23-splashFooter span+span{text-align:center}
+}
+@media(max-width:360px){.erm23-splashHeader{min-height:70px;padding-top:8px}.erm23-topCaption{margin-bottom:12px}.erm23-headline{font-size:16px}.erm23-brandCaption{font-size:8px}.erm23-entryArea{padding-bottom:12px}.erm23-startButton{min-height:57px}.erm23-brandFrame{min-height:105px}.erm23-waveDivider{margin:10px 0}}
+@media(prefers-reduced-motion:reduce){.erm23 .erm23-centerStage,.erm23 .erm23-entryArea,.erm23 .erm23-waveTop,.erm23 .erm23-backgroundGlow{animation:none!important;filter:none!important;transform:none!important}.erm23-startButton,.erm23-startButton>svg,.erm23-rochaSignature{transition:none!important}}

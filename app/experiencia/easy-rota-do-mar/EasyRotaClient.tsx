@@ -21,18 +21,6 @@ const sections: { id: Section; label: string; glyph: string }[] = [
   { id: 'ficha', label: 'Ficha Técnica', glyph: '▤' },
   { id: 'institucional', label: 'Institucional', glyph: '♙' },
 ];
-// Mapa exaustivo: o tipo Section inclui 'simulacao', mesmo que a abertura exiba apenas sete secoes.
-// Record<Section, string> impede acessos a chaves ausentes durante o typecheck.
-const splashIcons: Record<Section, string> = {
-  localizacao: 'pin',
-  lazer: 'waves',
-  plantas: 'floor',
-  imagens: 'image',
-  videos: 'play',
-  ficha: 'calculator',
-  institucional: 'building',
-  simulacao: 'calculator',
-};
 type MenuKey = 'visao' | 'localizacao' | 'entorno' | 'empreendimento' | 'masterplan' | 'plantas' | 'galeria' | 'videos' | 'diferenciais' | 'simulacao';
 const platformMenu: { id: MenuKey; label: string; icon: string; section: Section; sub: string }[] = [
   { id: 'visao', label: 'Visão Geral', icon: 'home', section: 'localizacao', sub: 'ultratour' },
@@ -263,36 +251,34 @@ export default function EasyRotaClient() {
   const heroPhoto = `${BRAND_ASSETS}erm-vista-aerea.webp`;
   const showLiveMarker = 'Reprodução visual baseada no vídeo. Imagem 360° e orientação geográfica real exigem arquivos próprios de captura.';
 
-  return <main className="erm20 erm21 erm22" style={{ '--erm-dark': palette.dark, '--erm-deep': palette.deep, '--erm-accent': palette.accent, '--erm-cream': palette.light } as CSSProperties}>
+  return <main className="erm20 erm21 erm22 erm23" style={{ '--erm-dark': palette.dark, '--erm-deep': palette.deep, '--erm-accent': palette.accent, '--erm-cream': palette.light } as CSSProperties}>
     <audio ref={music} src={`${BRAND_ASSETS}erm-ambiente-original.mp3`} loop preload="none" aria-hidden="true" />
-    {!started && <div className="erm20-splash erm22-splash" aria-label="Abertura Easy Rota do Mar">
-      <div className="erm22-splashPattern" aria-hidden="true" />
-      <div className="erm22-splashOrb erm22-orbOne" aria-hidden="true" />
-      <div className="erm22-splashOrb erm22-orbTwo" aria-hidden="true" />
-      <div className="erm22-splashTop"><span className="erm22-tinyDot" /> APRESENTAÇÃO IMOBILIÁRIA INTERATIVA <span>·</span> EASY ROTA DO MAR</div>
-      <div className="erm22-splashCard">
-        <div className="erm22-splashStory">
-          <div className="erm22-storyImage" role="img" aria-label="Fachada ilustrativa do Easy Rota do Mar, retirada do book oficial" />
-          <div className="erm22-storyShade" aria-hidden="true" />
-          <div className="erm22-storyContent">
-            <span className="erm22-storyKicker"><UiIcon name="sparkle" size={15}/> UMA NOVA FORMA DE DESCOBRIR SEU LUGAR</span>
-            <Brand />
-            <div className="erm22-storyWave" aria-hidden="true" />
-            <h1>O caminho mais curto entre a Serraria e o mar.</h1>
-            <p>Explore cada detalhe do empreendimento em uma experiência interativa.</p>
-            <div className="erm22-storyPills"><span><UiIcon name="building" size={16}/> 2 torres</span><span><UiIcon name="floor" size={16}/> 4 tipologias</span><span><UiIcon name="waves" size={17}/> Lazer completo</span></div>
-          </div>
-        </div>
-        <div className="erm22-splashSelection">
-          <div className="erm22-selectionHeader"><span className="erm22-menuEyebrow"><span className="erm22-tinyDot"/> ESCOLHA POR ONDE COMEÇAR</span><h2>Sua experiência começa aqui.</h2><p>Selecione um tema para explorar o Easy Rota do Mar.</p></div>
-          <nav className="erm20-splashLinks erm22-splashLinks" aria-label="Acesso aos sete módulos">
-            {sections.map((item, index) => <button key={item.id} type="button" style={{ '--erm-delay': `${index * 78}ms` } as CSSProperties} onClick={() => start(item.id)}><span className="erm22-splashGlyph"><UiIcon name={splashIcons[item.id]} size={22}/></span><span className="erm22-splashText">{item.label}</span><span className="erm22-menuArrow"><UiIcon name="arrow" size={18}/></span></button>)}
-          </nav>
-          <p className="erm22-audioHint"><UiIcon name="music" size={17}/> Ao entrar, você escolhe ativar ou não a trilha sonora original.</p>
-        </div>
+    {!started && <section className="erm20-splash erm23-splash" aria-label="Abertura Easy Rota do Mar">
+      <div className="erm23-backgroundGrid" aria-hidden="true" />
+      <div className="erm23-backgroundGlow" aria-hidden="true" />
+      <div className="erm23-waveTop" aria-hidden="true" />
+      <header className="erm23-splashHeader">
+        <a className="erm23-rochaSignature" href="https://meurocha.com.br" target="_blank" rel="noopener noreferrer" aria-label="Conheça a Rocha Empreendimentos no site oficial">
+          <img src={`${BRAND_ASSETS}erm-rocha-assinatura.png`} alt="Rocha Empreendimentos" width={198} height={78} />
+        </a>
+      </header>
+      <div className="erm23-centerStage">
+        <p className="erm23-topCaption">APRESENTA</p>
+        <div className="erm23-brandFrame"><Brand /></div>
+        <div className="erm23-waveDivider" aria-hidden="true" />
+        <h1 className="erm23-headline">O caminho mais curto entre a Serraria e o mar.</h1>
+        <p className="erm23-brandCaption">UMA EXPERIÊNCIA IMOBILIÁRIA INTERATIVA</p>
       </div>
-      <div className="erm22-splashBottom"><span>ROCHA EMPREENDIMENTOS <i /> VIVA ALÉM DO COMUM</span><span>EXPERIÊNCIA IMOBILIÁRIA · AMBIENTE DE HOMOLOGAÇÃO</span></div>
-    </div>}
+      <div className="erm23-entryArea">
+        <button type="button" className="erm23-startButton" onClick={() => start('localizacao')} aria-label="Iniciar experiência Easy Rota do Mar">
+          <span className="erm23-startIcon"><UiIcon name="play" size={26}/></span>
+          <span>TOQUE PARA INICIAR A EXPERIÊNCIA</span>
+          <UiIcon name="arrow" size={21}/>
+        </button>
+        <p className="erm23-entryNote">Descubra o Easy Rota do Mar em uma apresentação exclusiva.</p>
+      </div>
+      <footer className="erm23-splashFooter"><span>VIVA ALÉM DO COMUM</span><span>AMBIENTE DE HOMOLOGAÇÃO</span></footer>
+    </section>}
 
     {started && <div className="erm20-shell">
       <button className="erm20-mobileMenu" type="button" aria-label="Abrir ou fechar menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((v) => !v)}><span className="erm21-menuGlyph">☰</span><Brand compact /></button>
@@ -364,7 +350,7 @@ export default function EasyRotaClient() {
       </section>
     </div>}
 
-    {soundPrompt && <div className="erm20-modalBackdrop erm22-audioBackdrop"><div className="erm20-modal erm22-audioModal" role="dialog" aria-modal="true" aria-labelledby="erm20-soundTitle" aria-describedby="erm22-soundDescription"><button className="erm22-modalBack" type="button" onClick={()=>setSoundPrompt(false)} aria-label="Voltar para o menu">×</button><div className="erm22-modalIcon"><UiIcon name="music" size={31}/></div><span className="erm22-modalEyebrow">SUA EXPERIÊNCIA, SEU RITMO</span><h2 id="erm20-soundTitle">Como deseja explorar?</h2><p id="erm22-soundDescription">Uma trilha instrumental original e discreta pode acompanhar sua visita. Você poderá desligá-la a qualquer momento.</p><button ref={soundYesButton} type="button" className="erm22-modalPrimary" onClick={()=>setSound(true)}><UiIcon name="music" size={19}/> ENTRAR COM MÚSICA <UiIcon name="arrow" size={18}/></button><button type="button" className="erm22-modalSecondary" onClick={()=>setSound(false)}><UiIcon name="mute" size={19}/> ENTRAR SEM MÚSICA <UiIcon name="arrow" size={18}/></button><small>Áudio opcional · Sem reprodução automática · Volume ajustável</small></div></div>}
+    {soundPrompt && <div className="erm20-modalBackdrop erm22-audioBackdrop"><div className="erm20-modal erm22-audioModal" role="dialog" aria-modal="true" aria-labelledby="erm20-soundTitle" aria-describedby="erm22-soundDescription"><button className="erm22-modalBack" type="button" onClick={()=>setSoundPrompt(false)} aria-label="Voltar para a abertura">×</button><div className="erm22-modalIcon"><UiIcon name="music" size={31}/></div><span className="erm22-modalEyebrow">SUA EXPERIÊNCIA, SEU RITMO</span><h2 id="erm20-soundTitle">Deseja iniciar com música?</h2><p id="erm22-soundDescription">Uma trilha instrumental original e discreta pode acompanhar sua visita. Você poderá desligá-la a qualquer momento.</p><button ref={soundYesButton} type="button" className="erm22-modalPrimary" onClick={()=>setSound(true)}><UiIcon name="music" size={19}/> ENTRAR COM MÚSICA <UiIcon name="arrow" size={18}/></button><button type="button" className="erm22-modalSecondary" onClick={()=>setSound(false)}><UiIcon name="mute" size={19}/> ENTRAR SEM MÚSICA <UiIcon name="arrow" size={18}/></button><small>Áudio opcional · Sem reprodução automática · Volume ajustável</small></div></div>}
     {help && <div className="erm20-modalBackdrop"><div className="erm20-modal" role="dialog" aria-modal="true" aria-labelledby="erm20-helpTitle"><span>◇</span><h2 id="erm20-helpTitle">SOBRE ESTA EXPERIÊNCIA</h2><p>Réplica estrutural de homologação baseada na navegação apresentada em vídeo. Cores e empreendimento adaptados para o Easy Rota do Mar. Fotografia 360° real, mapa georreferenciado e vídeos originais serão adicionados após validação dos arquivos.</p><button type="button" onClick={()=>setHelp(false)}>FECHAR</button><a href={official} target="_blank" rel="noopener noreferrer">CONSULTAR MATERIAL OFICIAL ↗</a></div></div>}
     {openLightbox && image && <div className="erm20-lightbox" role="dialog" aria-modal="true" aria-label={`Imagem ampliada ${image.name}`}><button type="button" className="erm20-closeLightbox" onClick={()=>setOpenLightbox(false)} aria-label="Fechar imagem ampliada">×</button><button type="button" aria-label="Imagem anterior" onClick={()=>setImageIndex((i)=>(i+images.length-1)%images.length)}>‹</button><Photo id={image.id} alt={image.name} fit="contain"/><button type="button" aria-label="Próxima imagem" onClick={()=>setImageIndex((i)=>(i+1)%images.length)}>›</button><span>{image.name}</span></div>}
     <span className="erm20-srOnly" aria-live="polite">{started ? `Seção ${sections.find((s)=>s.id===section)?.label}, aba ${subtabs[section].find((t)=>t.id===tab)?.label}` : 'Tela inicial'}</span>

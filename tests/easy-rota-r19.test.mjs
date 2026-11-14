@@ -27,7 +27,7 @@ test('R21: navegacao inferior com cinco modulos do Modelo 3', () => {
   assert.match(client,/goGlobal\(n\)/);
 });
 test('R21: identidade azul marinho e ciano, isolada no escopo erm21', () => {
-  assert.match(client,/className="erm20 erm21(?: erm22)?"/);
+  assert.match(client,/className="erm20 erm21 erm22 erm23"/);
   assert.match(css,/R21 - MODELO 3/);
   assert.match(css,/\.erm21 \{?/);
   assert.match(css,/#00dafa/i);
@@ -85,16 +85,39 @@ test('R21: sem SQL, login, cotacoes ou API inventados', () => {
 });
 
 // R22: somente abertura premium, marca limpa e preferencias de trilha.
-test('R22: abertura premium na entrada e modulos originais preservados', () => {
-  assert.match(client,/const \[started, setStarted\] = useState\(false\)/);
-  for (const key of ['erm22-splashCard','erm22-splashStory','erm22-splashSelection','sections.map((item, index)'])
-    assert.ok(client.includes(key), key);
+test('R23: splash tem apenas um botao iniciar e nao revela os modulos', () => {
+  const splash=client.slice(client.indexOf('{!started &&'), client.indexOf('{started &&'));
+  assert.match(splash, /className="erm20-splash erm23-splash"/);
+  assert.match(splash, /<Brand \/>/);
+  assert.match(splash, /onClick=\{\(\) => start\('localizacao'\)\}/);
+  assert.match(splash, /TOQUE PARA INICIAR A EXPERIÊNCIA/);
+  assert.doesNotMatch(splash, /sections\.map|platformMenu\.map|erm22-splashSelection/);
+  assert.equal((splash.match(/<button /g) || []).length, 1, 'Um botao so na abertura');
 });
-test('R22: menus premium animados com icones', () => {
-  for (const icon of ['pin','waves','floor','image','play','calculator','building']) assert.ok(client.includes(`'${icon}'`) || client.includes(`${icon}:`),icon);
-  assert.match(css,/erm22-menuIn/);
-  assert.match(css,/erm22-cardIn/);
-  assert.match(css,/#1ee8fb/i);
+test('R23: assinatura Rocha discreta e transparente no topo direito', () => {
+  const file=join(assetDir, 'erm-rocha-assinatura.png');
+  assert.ok(existsSync(file));
+  const png=readFileSync(file);
+  assert.equal(png.subarray(0,8).toString('hex'),'89504e470d0a1a0a');
+  assert.equal(png[25],6,'Logo em PNG com alfa');
+  assert.match(client,/erm23-splashHeader/);
+  assert.match(client,/erm23-rochaSignature/);
+  assert.match(client,/erm-rocha-assinatura\.png/);
+  assert.match(css,/\.erm23-rochaSignature/);
+});
+test('R23: modal abre apos CTA e nao permite autoplay', () => {
+  assert.match(client,/const start = \(chosen: Section\) => \{ setPendingSection\(chosen\); setSoundPrompt\(true\)/);
+  assert.match(client,/Deseja iniciar com música\?/);
+  assert.match(client,/ENTRAR COM MÚSICA/);
+  assert.match(client,/ENTRAR SEM MÚSICA/);
+  assert.match(client,/setStarted\(true\)/);
+  assert.doesNotMatch(client,/<audio[^>]*autoPlay/i);
+});
+test('R23: os modulos internos de R22 permanecem completos', () => {
+  for (const s of ['erm20-sidebar','erm20-sideNav','erm20-panel','erm20-bottomTabs','platformMenu.map','globalTabs.map','openLightbox','toggleMusic']) assert.ok(client.includes(s),s);
+  assert.match(css,/\.erm23 \.erm20-splash\.erm23-splash/);
+  assert.match(css,/@media\(max-width:740px\)/);
+  assert.match(css, /prefers-reduced-motion:reduce/);
 });
 test('R22: marca transparente extraida do book', () => {
   const p=join(assetDir,'erm-logo-transparente.png');
@@ -127,13 +150,9 @@ test('R22: mobile e animacoes respeitam preferencia de movimento', () => {
   assert.doesNotMatch(css,/(?:^|\n)\s*(?:html|body)\s*\{/);
 });
 
-// R22 R2: regressao do erro TS2322/TS2339 observado no Windows ao tentar publicar R22 R1.
-test('R22 R2: icones de abertura cobrem todas as sections', () => {
-  const match = client.match(/const splashIcons: Record<Section, string> = \{([\s\S]*?)\n\};/);
-  assert.ok(match, 'O mapa de icones precisa ser tipado como Record<Section, string>');
-  for (const section of ['localizacao', 'lazer', 'plantas', 'imagens', 'videos', 'ficha', 'institucional', 'simulacao']) {
-    assert.match(match[1], new RegExp(`\\b${section}\\s*:\\s*'`), `Falta icone para ${section}`);
-  }
-  assert.match(client, /<UiIcon name=\{splashIcons\[item\.id\]\} size=\{22\}\/>/);
-  assert.doesNotMatch(client, /<UiIcon name=\{\{localizacao:/);
+test('R23: splash nao usa mapa de icones de modulo e preserva tipagem', () => {
+  assert.doesNotMatch(client, /splashIcons\[item\.id\]/);
+  assert.match(client,/type Section =/);
+  assert.match(client,/const sections:/);
+  assert.match(client,/const start = \(chosen: Section\)/);
 });
