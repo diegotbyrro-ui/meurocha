@@ -156,3 +156,20 @@ test('R23: splash nao usa mapa de icones de modulo e preserva tipagem', () => {
   assert.match(client,/const sections:/);
   assert.match(client,/const start = \(chosen: Section\)/);
 });
+
+// R24: escopo estrito - somente posicao da logo e consistencia tipografica.
+test('R24: cabecalho ocupa largura total e ancora marca Rocha no canto direito', () => {
+  assert.match(css, /\.erm23 \.erm20-splash\.erm23-splash\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/s);
+  assert.match(css, /\.erm23 \.erm23-splashHeader\s*\{[^}]*justify-content:\s*flex-end/s);
+  assert.match(css, /\.erm23 \.erm23-rochaSignature\s*\{[^}]*margin-left:\s*auto/s);
+  assert.match(client, /<header className="erm23-splashHeader">/);
+  assert.match(client, /erm-rocha-assinatura\.png/);
+});
+test('R24: somente duas familias de tipografia e rodape coerente', () => {
+  assert.match(css, /--erm24-type-ui:\s*'Segoe UI',\s*sans-serif/);
+  assert.match(css, /--erm24-type-editorial:\s*Georgia,\s*serif/);
+  assert.match(css, /\.erm23 \.erm23-splashFooter\s*\{[^}]*font-size:\s*clamp/s);
+  assert.match(css, /\.erm23 \.erm23-splashFooter > span\s*\{[^}]*font-family:\s*inherit/s);
+  assert.doesNotMatch(css, /Century Gothic|Times New Roman|Arial/);
+  assert.match(client, /<span>VIVA ALÉM DO COMUM<\/span><span>AMBIENTE DE HOMOLOGAÇÃO<\/span>/);
+});

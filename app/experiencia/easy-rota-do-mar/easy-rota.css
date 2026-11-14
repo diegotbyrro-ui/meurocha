@@ -1,7 +1,7 @@
 /* Rocha R20. Reconstrucao de interface baseada na gravacao fornecida pelo usuario.
  * Deliberadamente isolado em .erm20; nao altera o espelho nem outras paginas.
  */
-.erm20{--erm-dark:#003d66;--erm-deep:#00213d;--erm-accent:#00cce7;--erm-cream:#eaf9ff;--erm-ink:#38252a;--erm-border:#b8a69a;--erm-side:250px;--erm-bottom:76px;position:relative;isolation:isolate;min-height:100svh;width:100%;color:var(--erm-ink);background:#edfaff;font-family:'Century Gothic','Segoe UI',Arial,sans-serif;font-weight:400;letter-spacing:.01em;line-height:1.4;box-sizing:border-box}
+.erm20{--erm-dark:#003d66;--erm-deep:#00213d;--erm-accent:#00cce7;--erm-cream:#eaf9ff;--erm-ink:#38252a;--erm-border:#b8a69a;--erm-side:250px;--erm-bottom:76px;position:relative;isolation:isolate;min-height:100svh;width:100%;color:var(--erm-ink);background:#edfaff;font-family:'Segoe UI',sans-serif;font-weight:400;letter-spacing:.01em;line-height:1.4;box-sizing:border-box}
 .erm20 *{box-sizing:border-box}.erm20 button,.erm20 input{font:inherit}.erm20 button{cursor:pointer}.erm20 button:focus-visible,.erm20 a:focus-visible,.erm20 input:focus-visible{outline:3px solid var(--erm-accent);outline-offset:3px}.erm20 button:disabled{cursor:not-allowed;opacity:.38}.erm20 a{color:inherit}.erm20 h1,.erm20 h2,.erm20 h3,.erm20 p{margin:0}.erm20 h1,.erm20 h2,.erm20 h3{font-weight:400}.erm20-srOnly{position:absolute!important;clip:rect(0,0,0,0);width:1px;height:1px;overflow:hidden;white-space:nowrap}
 .erm20-brand{width:205px;min-height:143px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:13px 10px;background:var(--erm-deep);color:white;text-align:center;position:relative;box-shadow:0 4px 10px #261c1c12}.erm20-brand>img{width:100%;max-height:102px;object-fit:contain;object-position:center;mix-blend-mode:screen}.erm20-brand>small{background:var(--erm-accent);font-size:9px;line-height:1.4;letter-spacing:.19em;color:#fff;padding:3px 12px;margin-top:5px}.erm20-brandFallback{display:flex;flex-direction:column;line-height:1;justify-content:center;align-items:center;gap:5px;letter-spacing:.1em}.erm20-brandFallback b{font:700 28px Georgia,serif}.erm20-brandFallback strong{font:400 19px Georgia,serif;letter-spacing:.03em}.erm20-brandCompact{width:145px;min-height:90px;transform:none;box-shadow:0 4px 13px #0002}.erm20-brandCompact>img{max-height:55px}.erm20-brandCompact>small{font-size:6px}.erm20-brandCompact .erm20-brandFallback b{font-size:20px}.erm20-brandCompact .erm20-brandFallback strong{font-size:13px}
 .erm20-splash{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;padding:26px;background:#edfaff;background-image:radial-gradient(ellipse at 10% 40%,#dfd7cb70 0 1%,transparent 28%),radial-gradient(ellipse at 90% 65%,#e4ddd172 0 1%,transparent 35%),repeating-conic-gradient(from 22deg at 16% 84%,#ede9df55 0deg 12deg,transparent 12deg 42deg),repeating-conic-gradient(from 80deg at 94% 15%,#ece8dc55 0deg 13deg,transparent 13deg 45deg);background-size:100% 100%,100% 100%,380px 550px,430px 520px}.erm20-splash .erm20-brand{width:240px;min-height:165px}.erm20-splashLinks{display:flex;flex-direction:column;gap:6px;width:205px;margin-top:14px}.erm20-splashLinks button{height:33px;display:flex;align-items:center;border:0;background:var(--erm-accent);color:#fff;text-align:left;font-size:12px;padding:0;transition:background .15s,transform .15s}.erm20-splashLinks button:hover{background:var(--erm-dark);transform:translateX(3px)}.erm20-splashGlyph{width:36px;display:flex;align-items:center;justify-content:center;background:var(--erm-dark);height:100%;margin-right:12px;font-size:18px}.erm20-splashFooter{display:flex;gap:20px;margin-top:16px;color:var(--erm-dark);font-size:22px;align-items:center}.erm20-splashFooter span:nth-child(2){font:700 11px Georgia,serif;letter-spacing:.25em}.erm20-splashLabel{position:absolute;bottom:16px;left:0;right:0;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:#756e63}
@@ -24,7 +24,7 @@
  * R21 - MODELO 3 | Easy Rota do Mar | estilo fiel ao layout aprovado.
  * A estrutura modular R20 e preservada. Tudo estritamente em .erm21.
  * ====================================================================== */
-.erm21{--erm-side:214px;--erm-bottom:78px;--erm-ink:#0a3552;--erm-border:#36cbe3;--erm-cyan:#03e4fd;--erm-dark:#07385b;--erm-deep:#001c35;--erm-accent:#00dafa;--erm-cream:#edfaff;background:#001b32;color:#ebfaff;font-family:'Segoe UI',Arial,sans-serif;font-size:14px}
+.erm21{--erm-side:214px;--erm-bottom:78px;--erm-ink:#0a3552;--erm-border:#36cbe3;--erm-cyan:#03e4fd;--erm-dark:#07385b;--erm-deep:#001c35;--erm-accent:#00dafa;--erm-cream:#edfaff;background:#001b32;color:#ebfaff;font-family:'Segoe UI',sans-serif;font-size:14px}
 .erm21 button,.erm21 input,.erm21 a{transition:background-color .2s,border-color .2s,box-shadow .2s,color .2s,transform .2s}
 .erm21 button:focus-visible,.erm21 a:focus-visible,.erm21 input:focus-visible{outline:3px solid #60f6ff;outline-offset:3px}
 .erm21 .erm20-shell{height:100svh;min-height:625px;grid-template-columns:var(--erm-side) minmax(0,1fr);padding:12px;gap:8px;background:radial-gradient(circle at 72% -10%,#0774b28a,transparent 42%),linear-gradient(140deg,#00132a,#01365d 57%,#00192c)}
@@ -239,7 +239,7 @@
 .erm22-splashStory .erm20-brand>img{width:100%;height:auto;max-height:96px;object-position:left center}
 .erm22-splashStory .erm20-brand>small{margin-top:5px;font-size:8px!important;text-align:left}
 .erm22-storyWave{height:11px;width:min(310px,88%);margin:22px 0 15px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='10' viewBox='0 0 80 10'%3E%3Cpath d='M0 5Q10 -1 20 5T40 5T60 5T80 5' fill='none' stroke='%2330e8ff' stroke-width='1.8'/%3E%3C/svg%3E");opacity:.85}
-.erm22-storyContent h1{color:#fff;font:400 clamp(28px,3vw,43px)/1.13 Georgia,'Times New Roman',serif;text-shadow:0 3px 20px #0005;max-width:530px;letter-spacing:.015em}
+.erm22-storyContent h1{color:#fff;font:400 clamp(28px,3vw,43px)/1.13 Georgia,serif;text-shadow:0 3px 20px #0005;max-width:530px;letter-spacing:.015em}
 .erm22-storyContent p{font-size:14px;line-height:1.8;color:#d8f4ff;max-width:450px;margin:13px 0 21px}
 .erm22-storyPills{display:flex;gap:8px;flex-wrap:wrap}
 .erm22-storyPills>span{display:flex;gap:8px;align-items:center;font-size:11px;font-weight:650;color:#eafcff;padding:9px 11px;border:1px solid #a2ffff40;background:#00233e9c;border-radius:11px;backdrop-filter:blur(8px)}
@@ -268,7 +268,7 @@
 .erm22 .erm22-audioModal{position:relative;max-width:460px;width:100%;padding:40px 35px 30px;border-radius:22px;border:1px solid #41eaff80;background:linear-gradient(155deg,#073e60,#002d4c 64%,#001e37);color:#f0fbff;box-shadow:0 32px 110px #0009,0 0 55px #1fcdeb27;text-align:center}
 .erm22 .erm22-audioModal>span.erm22-modalEyebrow{display:block;background:none;color:#5eefff;width:auto;letter-spacing:.23em;font-size:10px;font-weight:700;padding:0;margin:8px 0}
 .erm22 .erm22-audioModal h2{font:400 32px/1.2 Georgia,serif;color:#fff;margin:11px 0}
-.erm22 .erm22-audioModal p{font:400 13px/1.7 'Segoe UI',Arial,sans-serif;color:#c0e2ee;margin:12px 0 25px}
+.erm22 .erm22-audioModal p{font:400 13px/1.7 'Segoe UI',sans-serif;color:#c0e2ee;margin:12px 0 25px}
 .erm22-modalIcon{width:72px;height:72px;margin:0 auto;display:grid;place-items:center;border-radius:18px;border:1px solid #3de9fb8c;background:#06537270;box-shadow:0 0 24px #02bfee38;color:#36ecff}
 .erm22 .erm22-audioModal button.erm22-modalBack{position:absolute;top:10px;right:13px;border:0;background:transparent;color:#b9eaf6;font-size:25px;width:32px;padding:0}
 .erm22 .erm22-audioModal button.erm22-modalPrimary,.erm22 .erm22-audioModal button.erm22-modalSecondary{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;height:54px;border-radius:12px;border:1px solid #45edff;font-weight:750;letter-spacing:.055em;font-size:12px;padding:0 16px;margin:10px 0}
@@ -375,7 +375,7 @@
 .erm23-splash .erm23-brandFrame .erm20-brandFallback{color:#fff}
 .erm23-waveDivider{margin:22px 0 24px;width:min(400px,70vw);height:10px;opacity:.88;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='10' viewBox='0 0 80 10'%3E%3Cpath d='M0 5Q10 -1 20 5T40 5T60 5T80 5' fill='none' stroke='%2358eaff' stroke-width='1.6'/%3E%3C/svg%3E")}
-.erm23-headline{font:400 clamp(17px,1.6vw,25px)/1.4 Georgia,'Times New Roman',serif;color:#effcff;letter-spacing:.025em;max-width:650px;margin:0}
+.erm23-headline{font:400 clamp(17px,1.6vw,25px)/1.4 Georgia,serif;color:#effcff;letter-spacing:.025em;max-width:650px;margin:0}
 .erm23-brandCaption{margin:15px 0 0;color:#8ad6e8;font-size:clamp(9px,.77vw,11px);font-weight:650;letter-spacing:.26em}
 .erm23-entryArea{position:relative;z-index:2;display:flex;align-items:center;flex-direction:column;gap:13px;padding:10px 20px 36px;animation:erm23-reveal .9s .5s both}
 .erm23-startButton{position:relative;display:flex;align-items:center;justify-content:center;gap:16px;min-width:min(430px,100%);min-height:67px;
@@ -413,3 +413,60 @@
 }
 @media(max-width:360px){.erm23-splashHeader{min-height:70px;padding-top:8px}.erm23-topCaption{margin-bottom:12px}.erm23-headline{font-size:16px}.erm23-brandCaption{font-size:8px}.erm23-entryArea{padding-bottom:12px}.erm23-startButton{min-height:57px}.erm23-brandFrame{min-height:105px}.erm23-waveDivider{margin:10px 0}}
 @media(prefers-reduced-motion:reduce){.erm23 .erm23-centerStage,.erm23 .erm23-entryArea,.erm23 .erm23-waveTop,.erm23 .erm23-backgroundGlow{animation:none!important;filter:none!important;transform:none!important}.erm23-startButton,.erm23-startButton>svg,.erm23-rochaSignature{transition:none!important}}
+
+/* ROCHA R24 — CABECALHO NO CANTO DIREITO E DUAS FAMILIAS TIPOGRAFICAS.
+   Corrige a grade centrada da abertura R23, sem tocar nos modulos internos. */
+.erm23 {
+  --erm24-type-ui: 'Segoe UI', sans-serif;
+  --erm24-type-editorial: Georgia, serif;
+  font-family: var(--erm24-type-ui);
+}
+.erm23 .erm20-splash.erm23-splash {
+  grid-template-columns: minmax(0, 1fr);
+  justify-content: stretch;
+  justify-items: stretch;
+}
+.erm23 .erm23-splashHeader {
+  grid-column: 1;
+  justify-self: stretch;
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+.erm23 .erm23-rochaSignature {
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+.erm23 .erm23-headline { font-family: var(--erm24-type-editorial); }
+.erm23 .erm23-topCaption,
+.erm23 .erm23-brandCaption,
+.erm23 .erm23-entryNote,
+.erm23 .erm23-startButton,
+.erm23 .erm23-splashFooter { font-family: var(--erm24-type-ui); }
+.erm23 .erm23-splashFooter {
+  grid-column: 1;
+  justify-self: stretch;
+  width: 100%;
+  font-size: clamp(10px, .76vw, 12px);
+  font-weight: 600;
+  letter-spacing: .13em;
+  line-height: 1.35;
+  color: #a9dfed;
+}
+.erm23 .erm23-splashFooter > span {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+@media (max-width: 740px) {
+  .erm23 .erm23-splashHeader { padding: 20px 22px 0; }
+  .erm23 .erm23-splashFooter {
+    font-size: 10px;
+    letter-spacing: .1em;
+    gap: 8px 14px;
+  }
+}
