@@ -21,6 +21,18 @@ const sections: { id: Section; label: string; glyph: string }[] = [
   { id: 'ficha', label: 'Ficha Técnica', glyph: '▤' },
   { id: 'institucional', label: 'Institucional', glyph: '♙' },
 ];
+// Mapa exaustivo: o tipo Section inclui 'simulacao', mesmo que a abertura exiba apenas sete secoes.
+// Record<Section, string> impede acessos a chaves ausentes durante o typecheck.
+const splashIcons: Record<Section, string> = {
+  localizacao: 'pin',
+  lazer: 'waves',
+  plantas: 'floor',
+  imagens: 'image',
+  videos: 'play',
+  ficha: 'calculator',
+  institucional: 'building',
+  simulacao: 'calculator',
+};
 type MenuKey = 'visao' | 'localizacao' | 'entorno' | 'empreendimento' | 'masterplan' | 'plantas' | 'galeria' | 'videos' | 'diferenciais' | 'simulacao';
 const platformMenu: { id: MenuKey; label: string; icon: string; section: Section; sub: string }[] = [
   { id: 'visao', label: 'Visão Geral', icon: 'home', section: 'localizacao', sub: 'ultratour' },
@@ -51,6 +63,12 @@ function UiIcon({ name, size = 20 }: { name: string; size?: number }) {
   if (name === 'image') return <svg {...common}><rect x="2" y="3" width="20" height="18" rx="2"/><circle cx="8" cy="9" r="2"/><path d="m3 19 6-6 4 4 3-3 6 5"/></svg>;
   if (name === 'play') return <svg {...common}><circle cx="12" cy="12" r="10"/><path d="m10 7 7 5-7 5z"/></svg>;
   if (name === 'star') return <svg {...common}><path d="m12 2 3.1 6.3 7 1-5 4.8 1.2 7-6.3-3.3-6.3 3.3 1.2-7-5-4.8 7-1z"/></svg>;
+  if (name === 'music') return <svg {...common}><path d="M8 18V5l12-3v13"/><circle cx="5" cy="18" r="3"/><circle cx="17" cy="15" r="3"/></svg>;
+  if (name === 'mute') return <svg {...common}><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="m16 9 5 6m0-6-5 6"/></svg>;
+  if (name === 'waves') return <svg {...common}><path d="M2 8c3-3 5 3 8 0s5 3 8 0 3 0 4-1M2 14c3-3 5 3 8 0s5 3 8 0 3 0 4-1M2 20c3-3 5 3 8 0s5 3 8 0 3 0 4-1"/></svg>;
+  if (name === 'shield') return <svg {...common}><path d="m12 22 1-.4C19 19 21 15 21 9V5L12 2 3 5v4c0 6 2 10 8 12.6z"/><path d="m8 12 3 3 5-6"/></svg>;
+  if (name === 'sparkle') return <svg {...common}><path d="m12 2 2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z"/></svg>;
+  if (name === 'arrow') return <svg {...common}><path d="M4 12h16m-6-6 6 6-6 6"/></svg>;
   if (name === 'calculator') return <svg {...common}><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8M8 11h2m4 0h2m-8 4h2m4 0h2m-8 4h8"/></svg>;
   return <svg {...common}><circle cx="12" cy="12" r="9"/></svg>;
 }
@@ -137,9 +155,9 @@ function Photo({ id, alt, className = '', fit = 'cover' }: { id: string; alt: st
 function Brand({ compact = false }: { compact?: boolean }) {
   const [logoFailed, setLogoFailed] = useState(false);
   return <div className={`erm20-brand ${compact ? 'erm20-brandCompact' : ''}`}>
-    {!logoFailed && <img src="/assets/img/logo_easy_rota_mar_r11.webp" alt="Easy Rota do Mar" onError={() => setLogoFailed(true)} />}
+    {!logoFailed && <img src={`${BRAND_ASSETS}erm-logo-transparente.png`} alt="Easy Rota do Mar" onError={() => setLogoFailed(true)} />}
     {logoFailed && <span className="erm20-brandFallback"><b>EASY</b><strong>ROTA DO MAR</strong></span>}
-    <small>ROCHA EMPREENDIMENTOS</small>
+    <small>ROCHA EMPREENDIMENTOS · VIVA ALÉM DO COMUM</small>
   </div>;
 }
 
@@ -148,8 +166,12 @@ function SectionBanner({ title, caption }: { title: string; caption?: string }) 
 }
 
 export default function EasyRotaClient() {
-  const [started, setStarted] = useState(true);
+  const [started, setStarted] = useState(false);
   const [soundPrompt, setSoundPrompt] = useState(false);
+  const [pendingSection, setPendingSection] = useState<Section>('localizacao');
+  const [audioError, setAudioError] = useState(false);
+  const music = useRef<HTMLAudioElement | null>(null);
+  const soundYesButton = useRef<HTMLButtonElement | null>(null);
   const [soundOn, setSoundOn] = useState(false);
   const [volume, setVolume] = useState(35);
   const audio = useRef<AudioContext | null>(null);
@@ -192,7 +214,16 @@ export default function EasyRotaClient() {
     const target = platformMenu.find((n) => n.section === s && n.sub === (sub || subtabs[s][0].id));
     if (target) setSelectedNav(target.id);
   };
-  const start = () => { setStarted(true); setSoundPrompt(true); };
+  const start = (chosen: Section) => { setPendingSection(chosen); setSoundPrompt(true); setAudioError(false); };
+  const playMusic = () => {
+    if (!music.current) return;
+    music.current.volume = Math.min(1, Math.max(0, volume / 100));
+    void music.current.play().catch(() => { setAudioError(true); setSoundOn(false); });
+  };
+  const toggleMusic = () => {
+    if (soundOn) { music.current?.pause(); setSoundOn(false); }
+    else { setSoundOn(true); setAudioError(false); playMusic(); }
+  };
   const goMenu = (n: typeof platformMenu[number]) => { goto(n.section, n.sub); setSelectedNav(n.id); };
   const goGlobal = (n: typeof globalTabs[number]) => { goto(n.section, n.sub); setSelectedNav(n.menu); };
   const fullScreen = () => {
@@ -200,7 +231,15 @@ export default function EasyRotaClient() {
     if (document.fullscreenElement) { void document.exitFullscreen().catch(() => setHelp(true)); return; }
     if (document.documentElement.requestFullscreen) void document.documentElement.requestFullscreen().catch(() => setHelp(true));
   };
-  const setSound = (enabled: boolean) => { setSoundOn(enabled); setSoundPrompt(false); };
+  const setSound = (enabled: boolean) => {
+    setSoundOn(enabled); setSoundPrompt(false); setStarted(true);
+    setSection(pendingSection); setTab(subtabs[pendingSection][0].id);
+    const target = platformMenu.find((n) => n.section === pendingSection && n.sub === subtabs[pendingSection][0].id);
+    setSelectedNav(target?.id || 'visao');
+    if (enabled) { setAudioError(false); playMusic(); } else { music.current?.pause(); }
+  };
+  useEffect(() => { if (music.current) music.current.volume = Math.min(1,Math.max(0,volume / 100)); }, [volume]);
+  useEffect(() => { if (soundPrompt) soundYesButton.current?.focus(); }, [soundPrompt]);
   const feature = facilities.find((p) => p.number === facility) || facilities[0];
   const filtered = facilities.filter((p) => amenityGroup === 'todos' || p.category === amenityGroup);
   const images = gallery.filter((p) => p.category === tab);
@@ -224,25 +263,47 @@ export default function EasyRotaClient() {
   const heroPhoto = `${BRAND_ASSETS}erm-vista-aerea.webp`;
   const showLiveMarker = 'Reprodução visual baseada no vídeo. Imagem 360° e orientação geográfica real exigem arquivos próprios de captura.';
 
-  return <main className="erm20 erm21" style={{ '--erm-dark': palette.dark, '--erm-deep': palette.deep, '--erm-accent': palette.accent, '--erm-cream': palette.light } as CSSProperties}>
-    {!started && <div className="erm20-splash">
-      <Brand /><div className="erm20-splashLinks" aria-label="Acesso aos módulos">
-        {sections.map((s) => <button key={s.id} onClick={() => { setSection(s.id); setTab(subtabs[s.id][0].id); start(); }} type="button"><span className="erm20-splashGlyph">{s.glyph}</span>{s.label}</button>)}
+  return <main className="erm20 erm21 erm22" style={{ '--erm-dark': palette.dark, '--erm-deep': palette.deep, '--erm-accent': palette.accent, '--erm-cream': palette.light } as CSSProperties}>
+    <audio ref={music} src={`${BRAND_ASSETS}erm-ambiente-original.mp3`} loop preload="none" aria-hidden="true" />
+    {!started && <div className="erm20-splash erm22-splash" aria-label="Abertura Easy Rota do Mar">
+      <div className="erm22-splashPattern" aria-hidden="true" />
+      <div className="erm22-splashOrb erm22-orbOne" aria-hidden="true" />
+      <div className="erm22-splashOrb erm22-orbTwo" aria-hidden="true" />
+      <div className="erm22-splashTop"><span className="erm22-tinyDot" /> APRESENTAÇÃO IMOBILIÁRIA INTERATIVA <span>·</span> EASY ROTA DO MAR</div>
+      <div className="erm22-splashCard">
+        <div className="erm22-splashStory">
+          <div className="erm22-storyImage" role="img" aria-label="Fachada ilustrativa do Easy Rota do Mar, retirada do book oficial" />
+          <div className="erm22-storyShade" aria-hidden="true" />
+          <div className="erm22-storyContent">
+            <span className="erm22-storyKicker"><UiIcon name="sparkle" size={15}/> UMA NOVA FORMA DE DESCOBRIR SEU LUGAR</span>
+            <Brand />
+            <div className="erm22-storyWave" aria-hidden="true" />
+            <h1>O caminho mais curto entre a Serraria e o mar.</h1>
+            <p>Explore cada detalhe do empreendimento em uma experiência interativa.</p>
+            <div className="erm22-storyPills"><span><UiIcon name="building" size={16}/> 2 torres</span><span><UiIcon name="floor" size={16}/> 4 tipologias</span><span><UiIcon name="waves" size={17}/> Lazer completo</span></div>
+          </div>
+        </div>
+        <div className="erm22-splashSelection">
+          <div className="erm22-selectionHeader"><span className="erm22-menuEyebrow"><span className="erm22-tinyDot"/> ESCOLHA POR ONDE COMEÇAR</span><h2>Sua experiência começa aqui.</h2><p>Selecione um tema para explorar o Easy Rota do Mar.</p></div>
+          <nav className="erm20-splashLinks erm22-splashLinks" aria-label="Acesso aos sete módulos">
+            {sections.map((item, index) => <button key={item.id} type="button" style={{ '--erm-delay': `${index * 78}ms` } as CSSProperties} onClick={() => start(item.id)}><span className="erm22-splashGlyph"><UiIcon name={splashIcons[item.id]} size={22}/></span><span className="erm22-splashText">{item.label}</span><span className="erm22-menuArrow"><UiIcon name="arrow" size={18}/></span></button>)}
+          </nav>
+          <p className="erm22-audioHint"><UiIcon name="music" size={17}/> Ao entrar, você escolhe ativar ou não a trilha sonora original.</p>
+        </div>
       </div>
-      <div className="erm20-splashFooter"><span>✧</span><span>ROCHA</span><span>◇</span></div>
-      <div className="erm20-splashLabel">Experiência imobiliária · Ambiente de homologação</div>
+      <div className="erm22-splashBottom"><span>ROCHA EMPREENDIMENTOS <i /> VIVA ALÉM DO COMUM</span><span>EXPERIÊNCIA IMOBILIÁRIA · AMBIENTE DE HOMOLOGAÇÃO</span></div>
     </div>}
 
     {started && <div className="erm20-shell">
       <button className="erm20-mobileMenu" type="button" aria-label="Abrir ou fechar menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((v) => !v)}><span className="erm21-menuGlyph">☰</span><Brand compact /></button>
       {menuOpen && <button className="erm20-shade" type="button" aria-label="Fechar menu" onClick={() => setMenuOpen(false)} />}
       <aside className={`erm20-sidebar ${menuOpen ? 'isOpen' : ''}`}>
-        <button type="button" className="erm20-brandLink" onClick={() => { setStarted(false); setMenuOpen(false); }} aria-label="Voltar à entrada"><Brand /></button>
+        <button type="button" className="erm20-brandLink" onClick={() => { music.current?.pause(); setSoundOn(false); setStarted(false); setMenuOpen(false); }} aria-label="Voltar à entrada"><Brand /></button>
         <nav className="erm20-sideNav" aria-label="Menu principal da plataforma">
           {platformMenu.map((n) => <button type="button" key={n.id} onClick={() => goMenu(n)} className={selectedNav === n.id ? 'active' : ''} aria-current={selectedNav === n.id ? 'page' : undefined}><span><UiIcon name={n.icon} size={17}/></span>{n.label}</button>)}
         </nav>
         <div className="erm20-sideTools">
-          <label className="erm20-volume"><span className="erm20-srOnly">Volume do áudio de interface</span><input type="range" min="0" max="100" value={volume} onChange={(e: ChangeEvent<HTMLInputElement>) => setVolume(Number(e.target.value))} /></label>
+          <div className="erm22-soundTools"><button type="button" className="erm22-soundToggle" onClick={toggleMusic} aria-label={soundOn ? "Desativar música ambiente" : "Ativar música ambiente"} aria-pressed={soundOn}><UiIcon name={soundOn ? "music" : "mute"} size={19}/><span>{soundOn ? "Trilha ligada" : "Trilha desligada"}</span></button><label className="erm20-volume"><span className="erm20-srOnly">Volume da trilha sonora</span><input type="range" min="0" max="100" value={volume} onChange={(e: ChangeEvent<HTMLInputElement>) => setVolume(Number(e.target.value))} aria-label="Volume da trilha sonora" /></label>{audioError && <small role="status">Seu navegador bloqueou o áudio. Toque novamente para ativar.</small>}</div>
           <div className="erm20-toolIcons"><button onClick={() => goto('localizacao','ultratour')} aria-label="Visão geral" type="button"><UiIcon name="home" size={20}/></button><button onClick={fullScreen} aria-label="Tela cheia" type="button">⛶</button><button type="button" aria-label="Ajuda" onClick={() => setHelp(true)}>ⓘ</button></div>
         </div>
       </aside>
@@ -303,7 +364,7 @@ export default function EasyRotaClient() {
       </section>
     </div>}
 
-    {soundPrompt && <div className="erm20-modalBackdrop"><div className="erm20-modal" role="dialog" aria-modal="true" aria-labelledby="erm20-soundTitle"><span>✦</span><h2 id="erm20-soundTitle">EXPERIÊNCIA COM SOM</h2><p>Esta apresentação oferece sons discretos de navegação. Como prefere continuar?</p><button type="button" onClick={()=>setSound(true)}>ATIVAR O SOM</button><button type="button" onClick={()=>setSound(false)}>CONTINUAR SEM SOM</button></div></div>}
+    {soundPrompt && <div className="erm20-modalBackdrop erm22-audioBackdrop"><div className="erm20-modal erm22-audioModal" role="dialog" aria-modal="true" aria-labelledby="erm20-soundTitle" aria-describedby="erm22-soundDescription"><button className="erm22-modalBack" type="button" onClick={()=>setSoundPrompt(false)} aria-label="Voltar para o menu">×</button><div className="erm22-modalIcon"><UiIcon name="music" size={31}/></div><span className="erm22-modalEyebrow">SUA EXPERIÊNCIA, SEU RITMO</span><h2 id="erm20-soundTitle">Como deseja explorar?</h2><p id="erm22-soundDescription">Uma trilha instrumental original e discreta pode acompanhar sua visita. Você poderá desligá-la a qualquer momento.</p><button ref={soundYesButton} type="button" className="erm22-modalPrimary" onClick={()=>setSound(true)}><UiIcon name="music" size={19}/> ENTRAR COM MÚSICA <UiIcon name="arrow" size={18}/></button><button type="button" className="erm22-modalSecondary" onClick={()=>setSound(false)}><UiIcon name="mute" size={19}/> ENTRAR SEM MÚSICA <UiIcon name="arrow" size={18}/></button><small>Áudio opcional · Sem reprodução automática · Volume ajustável</small></div></div>}
     {help && <div className="erm20-modalBackdrop"><div className="erm20-modal" role="dialog" aria-modal="true" aria-labelledby="erm20-helpTitle"><span>◇</span><h2 id="erm20-helpTitle">SOBRE ESTA EXPERIÊNCIA</h2><p>Réplica estrutural de homologação baseada na navegação apresentada em vídeo. Cores e empreendimento adaptados para o Easy Rota do Mar. Fotografia 360° real, mapa georreferenciado e vídeos originais serão adicionados após validação dos arquivos.</p><button type="button" onClick={()=>setHelp(false)}>FECHAR</button><a href={official} target="_blank" rel="noopener noreferrer">CONSULTAR MATERIAL OFICIAL ↗</a></div></div>}
     {openLightbox && image && <div className="erm20-lightbox" role="dialog" aria-modal="true" aria-label={`Imagem ampliada ${image.name}`}><button type="button" className="erm20-closeLightbox" onClick={()=>setOpenLightbox(false)} aria-label="Fechar imagem ampliada">×</button><button type="button" aria-label="Imagem anterior" onClick={()=>setImageIndex((i)=>(i+images.length-1)%images.length)}>‹</button><Photo id={image.id} alt={image.name} fit="contain"/><button type="button" aria-label="Próxima imagem" onClick={()=>setImageIndex((i)=>(i+1)%images.length)}>›</button><span>{image.name}</span></div>}
     <span className="erm20-srOnly" aria-live="polite">{started ? `Seção ${sections.find((s)=>s.id===section)?.label}, aba ${subtabs[section].find((t)=>t.id===tab)?.label}` : 'Tela inicial'}</span>
