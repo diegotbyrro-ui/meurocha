@@ -555,3 +555,67 @@
   .erm23 .erm25-centralContent,.erm23 .erm25-option,.erm23 .erm25-ambientWave{animation:none!important;filter:none!important}
   .erm23 .erm25-option,.erm23 .erm25-footerTools button{transition:none!important}
 }
+
+/* ROCHA R26 — GRAFISMO ORIGINAL DO BOOK EASY ROTA DO MAR.
+   Motivo geométrico 'easy' extraído da página institucional do book.
+   SOMENTE os fundos de entrada e menu central; módulos internos intactos. */
+.erm23 .erm20-splash.erm23-splash::after {
+  content:"";
+  position:absolute;
+  z-index:0;
+  pointer-events:none;
+  inset:auto 0 0;
+  height:52%;
+  background-image:url('/experiencia/easy-rota-do-mar/erm-pattern-book.png');
+  background-repeat:repeat;
+  background-position:center bottom;
+  background-size:390px 83px;
+  opacity:.43;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.30) 30%,#000 90%);
+  mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.30) 30%,#000 90%);
+}
+/* A identidade é o mesmo pattern, e não uma grade genérica. */
+.erm23 .erm23-backgroundGrid {
+  opacity:.12;
+}
+.erm23 .erm25-centralMenu::before {
+  opacity:.07;
+}
+.erm23 .erm25-pattern {
+  z-index:0;
+  opacity:.42;
+  background-image:url('/experiencia/easy-rota-do-mar/erm-pattern-book.png');
+  background-repeat:repeat;
+  background-size:390px 83px;
+  background-position:center bottom;
+  -webkit-mask-image:linear-gradient(to right,#000 0%,rgba(0,0,0,.65) 21%,transparent 40%,transparent 61%,rgba(0,0,0,.65) 81%,#000 100%);
+  mask-image:linear-gradient(to right,#000 0%,rgba(0,0,0,.65) 21%,transparent 40%,transparent 61%,rgba(0,0,0,.65) 81%,#000 100%);
+}
+.erm23 .erm25-centralMenu::after {
+  content:"";
+  position:absolute;
+  z-index:0;
+  pointer-events:none;
+  left:0;right:0;bottom:0;
+  height:29%;
+  background-image:url('/experiencia/easy-rota-do-mar/erm-pattern-book.png');
+  background-repeat:repeat;
+  background-size:390px 83px;
+  background-position:center bottom;
+  opacity:.17;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 100%);
+  mask-image:linear-gradient(to bottom,transparent 0%,#000 100%);
+}
+.erm23 .erm25-centralContent { z-index:2; }
+.erm23 .erm25-menuCredit { z-index:2; }
+/* Mantém marca e ações acima do novo pattern também em telas estreitas. */
+@media(max-width:740px) {
+  .erm23 .erm20-splash.erm23-splash::after {height:44%;background-size:275px 59px;opacity:.29;}
+  .erm23 .erm25-pattern {background-size:275px 59px;opacity:.24;}
+  .erm23 .erm25-centralMenu::after {height:24%;background-size:275px 59px;opacity:.13;}
+}
+@media(prefers-reduced-motion:reduce) {
+  .erm23 .erm20-splash.erm23-splash::after,
+  .erm23 .erm25-pattern,
+  .erm23 .erm25-centralMenu::after {animation:none!important;transition:none!important;}
+}

@@ -214,3 +214,21 @@ test('R25: tipografia, cores, responsividade e redução de movimento', () => {
   assert.match(css, /@media\(max-width:390px\)/);
   assert.match(css, /@media\(prefers-reduced-motion:reduce\)/);
 });
+
+test('R26: elimina somente a frase experiência imobiliária da tela inicial', () => {
+  const splash = client.slice(client.indexOf('{!started &&'), client.indexOf('{started &&'));
+  assert.doesNotMatch(splash, /UMA EXPERIÊNCIA IMOBILIÁRIA INTERATIVA/);
+  assert.match(splash, /O caminho mais curto entre a Serraria e o mar/);
+  assert.match(splash, /TOQUE PARA INICIAR A EXPERIÊNCIA/);
+  assert.match(client, /erm25-centralMenu/);
+});
+test('R26: aplica o pattern geométrico autêntico do book nas duas telas, sem novos menus', () => {
+  assert.match(css, /ROCHA R26/);
+  assert.match(css, /\.erm23 \.erm20-splash\.erm23-splash::after/);
+  assert.match(css, /\.erm23 \.erm25-pattern/);
+  assert.match(css, /erm-pattern-book\.png/g);
+  assert.match(css, /mask-image:linear-gradient/);
+  assert.match(css, /@media\(max-width:740px\)/);
+  const menu=client.slice(client.indexOf('{started && centralMenuOpen &&'),client.indexOf('{started && !centralMenuOpen &&'));
+  assert.match(menu, /sections\.map\(\(item, index\)/);
+});
