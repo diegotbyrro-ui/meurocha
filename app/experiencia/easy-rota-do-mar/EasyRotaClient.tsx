@@ -21,6 +21,14 @@ const sections: { id: Section; label: string; glyph: string }[] = [
   { id: 'ficha', label: 'Ficha Técnica', glyph: '▤' },
   { id: 'institucional', label: 'Institucional', glyph: '♙' },
 ];
+const centralMenuIcons: Record<Section, string> = {
+  localizacao: 'pin', lazer: 'waves', plantas: 'floor', imagens: 'image',
+  videos: 'play', ficha: 'file', institucional: 'building', simulacao: 'calculator',
+};
+const centralMenuTabs: Partial<Record<Section, string>> = {
+  localizacao: 'ultratour', lazer: 'implantacao', plantas: 'tipologias',
+  imagens: 'apartamentos', videos: 'perspectivas', ficha: 'ficha', institucional: 'historia',
+};
 type MenuKey = 'visao' | 'localizacao' | 'entorno' | 'empreendimento' | 'masterplan' | 'plantas' | 'galeria' | 'videos' | 'diferenciais' | 'simulacao';
 const platformMenu: { id: MenuKey; label: string; icon: string; section: Section; sub: string }[] = [
   { id: 'visao', label: 'Visão Geral', icon: 'home', section: 'localizacao', sub: 'ultratour' },
@@ -58,6 +66,7 @@ function UiIcon({ name, size = 20 }: { name: string; size?: number }) {
   if (name === 'sparkle') return <svg {...common}><path d="m12 2 2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z"/></svg>;
   if (name === 'arrow') return <svg {...common}><path d="M4 12h16m-6-6 6 6-6 6"/></svg>;
   if (name === 'calculator') return <svg {...common}><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8M8 11h2m4 0h2m-8 4h2m4 0h2m-8 4h8"/></svg>;
+  if (name === 'file') return <svg {...common}><path d="M6 2h9l4 4v16H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M14 2v5h5M8 12h8M8 16h8"/></svg>;
   return <svg {...common}><circle cx="12" cy="12" r="9"/></svg>;
 }
 const subtabs: Record<Section, { id: string; label: string }[]> = {
@@ -155,6 +164,7 @@ function SectionBanner({ title, caption }: { title: string; caption?: string }) 
 
 export default function EasyRotaClient() {
   const [started, setStarted] = useState(false);
+  const [centralMenuOpen, setCentralMenuOpen] = useState(false);
   const [soundPrompt, setSoundPrompt] = useState(false);
   const [pendingSection, setPendingSection] = useState<Section>('localizacao');
   const [audioError, setAudioError] = useState(false);
@@ -202,6 +212,14 @@ export default function EasyRotaClient() {
     const target = platformMenu.find((n) => n.section === s && n.sub === (sub || subtabs[s][0].id));
     if (target) setSelectedNav(target.id);
   };
+  const openCentralSection = (chosen: Section) => {
+    goto(chosen, centralMenuTabs[chosen] || subtabs[chosen][0].id);
+    setCentralMenuOpen(false);
+  };
+  const backToSplash = () => {
+    music.current?.pause(); setSoundOn(false); setAudioError(false);
+    setSoundPrompt(false); setCentralMenuOpen(false); setMenuOpen(false); setStarted(false);
+  };
   const start = (chosen: Section) => { setPendingSection(chosen); setSoundPrompt(true); setAudioError(false); };
   const playMusic = () => {
     if (!music.current) return;
@@ -220,7 +238,7 @@ export default function EasyRotaClient() {
     if (document.documentElement.requestFullscreen) void document.documentElement.requestFullscreen().catch(() => setHelp(true));
   };
   const setSound = (enabled: boolean) => {
-    setSoundOn(enabled); setSoundPrompt(false); setStarted(true);
+    setSoundOn(enabled); setSoundPrompt(false); setStarted(true); setCentralMenuOpen(true);
     setSection(pendingSection); setTab(subtabs[pendingSection][0].id);
     const target = platformMenu.find((n) => n.section === pendingSection && n.sub === subtabs[pendingSection][0].id);
     setSelectedNav(target?.id || 'visao');
@@ -228,6 +246,7 @@ export default function EasyRotaClient() {
   };
   useEffect(() => { if (music.current) music.current.volume = Math.min(1,Math.max(0,volume / 100)); }, [volume]);
   useEffect(() => { if (soundPrompt) soundYesButton.current?.focus(); }, [soundPrompt]);
+  useEffect(() => { if (centralMenuOpen && !soundPrompt) { document.getElementById('erm25-menu-first')?.focus(); } }, [centralMenuOpen, soundPrompt]);
   const feature = facilities.find((p) => p.number === facility) || facilities[0];
   const filtered = facilities.filter((p) => amenityGroup === 'todos' || p.category === amenityGroup);
   const images = gallery.filter((p) => p.category === tab);
@@ -280,7 +299,35 @@ export default function EasyRotaClient() {
       <footer className="erm23-splashFooter"><span>VIVA ALÉM DO COMUM</span><span>AMBIENTE DE HOMOLOGAÇÃO</span></footer>
     </section>}
 
-    {started && <div className="erm20-shell">
+    {started && centralMenuOpen && <section className="erm25-centralMenu" aria-label="Menu principal da experiência Easy Rota do Mar">
+      <div className="erm25-pattern" aria-hidden="true" />
+      <div className="erm25-ambientWave" aria-hidden="true" />
+      <div className="erm25-centralContent">
+        <div className="erm25-brand" aria-label="Easy Rota do Mar"><Brand /></div>
+        <nav className="erm25-options" aria-label="Escolha um módulo da plataforma">
+          {sections.map((item, index) => <button
+            key={item.id}
+            id={index === 0 ? 'erm25-menu-first' : undefined}
+            type="button"
+            className="erm25-option"
+            onClick={() => openCentralSection(item.id)}
+            style={{ animationDelay: `${0.14 + index * 0.065}s` }}
+          >
+            <span className="erm25-optionIcon"><UiIcon name={centralMenuIcons[item.id]} size={23}/></span>
+            <span className="erm25-optionLabel">{item.label}</span>
+            <span className="erm25-optionArrow" aria-hidden="true"><UiIcon name="arrow" size={17}/></span>
+          </button>)}
+        </nav>
+        <div className="erm25-footerTools" aria-label="Controles da experiência">
+          <button type="button" onClick={backToSplash} title="Voltar à abertura" aria-label="Voltar à tela inicial"><UiIcon name="home" size={23}/></button>
+          <button type="button" onClick={toggleMusic} aria-label={soundOn ? 'Desativar música' : 'Ativar música'} aria-pressed={soundOn} title={soundOn ? 'Desativar música' : 'Ativar música'}><UiIcon name={soundOn ? 'music' : 'mute'} size={23}/></button>
+          <button type="button" onClick={() => setHelp(true)} title="Informações sobre a experiência" aria-label="Informações sobre a experiência"><span aria-hidden="true">ⓘ</span></button>
+        </div>
+      </div>
+      <span className="erm25-menuCredit">ROCHA EMPREENDIMENTOS · VIVA ALÉM DO COMUM</span>
+    </section>}
+
+    {started && !centralMenuOpen && <div className="erm20-shell">
       <button className="erm20-mobileMenu" type="button" aria-label="Abrir ou fechar menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((v) => !v)}><span className="erm21-menuGlyph">☰</span><Brand compact /></button>
       {menuOpen && <button className="erm20-shade" type="button" aria-label="Fechar menu" onClick={() => setMenuOpen(false)} />}
       <aside className={`erm20-sidebar ${menuOpen ? 'isOpen' : ''}`}>
@@ -290,7 +337,7 @@ export default function EasyRotaClient() {
         </nav>
         <div className="erm20-sideTools">
           <div className="erm22-soundTools"><button type="button" className="erm22-soundToggle" onClick={toggleMusic} aria-label={soundOn ? "Desativar música ambiente" : "Ativar música ambiente"} aria-pressed={soundOn}><UiIcon name={soundOn ? "music" : "mute"} size={19}/><span>{soundOn ? "Trilha ligada" : "Trilha desligada"}</span></button><label className="erm20-volume"><span className="erm20-srOnly">Volume da trilha sonora</span><input type="range" min="0" max="100" value={volume} onChange={(e: ChangeEvent<HTMLInputElement>) => setVolume(Number(e.target.value))} aria-label="Volume da trilha sonora" /></label>{audioError && <small role="status">Seu navegador bloqueou o áudio. Toque novamente para ativar.</small>}</div>
-          <div className="erm20-toolIcons"><button onClick={() => goto('localizacao','ultratour')} aria-label="Visão geral" type="button"><UiIcon name="home" size={20}/></button><button onClick={fullScreen} aria-label="Tela cheia" type="button">⛶</button><button type="button" aria-label="Ajuda" onClick={() => setHelp(true)}>ⓘ</button></div>
+          <div className="erm20-toolIcons"><button onClick={() => { setCentralMenuOpen(true); setMenuOpen(false); }} aria-label="Voltar ao menu principal" type="button"><UiIcon name="home" size={20}/></button><button onClick={fullScreen} aria-label="Tela cheia" type="button">⛶</button><button type="button" aria-label="Ajuda" onClick={() => setHelp(true)}>ⓘ</button></div>
         </div>
       </aside>
 

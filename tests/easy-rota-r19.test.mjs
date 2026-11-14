@@ -173,3 +173,44 @@ test('R24: somente duas familias de tipografia e rodape coerente', () => {
   assert.doesNotMatch(css, /Century Gothic|Times New Roman|Arial/);
   assert.match(client, /<span>VIVA ALÉM DO COMUM<\/span><span>AMBIENTE DE HOMOLOGAÇÃO<\/span>/);
 });
+
+// R25: menu central após a escolha da trilha, sem modificar os módulos internos.
+test('R25: fluxo em quatro etapas (splash, áudio, menu central, módulo)', () => {
+  assert.match(client, /const \[centralMenuOpen, setCentralMenuOpen\] = useState\(false\)/);
+  assert.match(client, /setSoundOn\(enabled\); setSoundPrompt\(false\); setStarted\(true\); setCentralMenuOpen\(true\)/);
+  assert.match(client, /\{started && centralMenuOpen && <section className="erm25-centralMenu"/);
+  assert.match(client, /\{started && !centralMenuOpen && <div className="erm20-shell"/);
+  assert.match(client, /const openCentralSection = \(chosen: Section\) => \{/);
+  assert.match(client, /setCentralMenuOpen\(false\)/);
+});
+test('R25: a segunda tela tem logo e somente sete opções centrais', () => {
+  const menu=client.slice(client.indexOf('{started && centralMenuOpen &&'), client.indexOf('{started && !centralMenuOpen &&'));
+  assert.match(menu, /<Brand \/>/);
+  assert.match(menu, /sections\.map\(\(item, index\)/);
+  assert.match(menu, /onClick=\{\(\) => openCentralSection\(item\.id\)\}/);
+  assert.match(menu, /<nav className="erm25-options"/);
+  assert.match(menu, /erm25-optionIcon/);
+  assert.match(menu, /erm25-optionLabel/);
+  assert.doesNotMatch(menu, /platformMenu\.map|globalTabs\.map|erm20-panel/);
+  const sectionList = client.slice(client.indexOf('const sections:'), client.indexOf('const centralMenuIcons:'));
+  const matched = [...sectionList.matchAll(/\{ id: '(localizacao|lazer|plantas|imagens|videos|ficha|institucional)', label:/g)];
+  assert.equal(matched.length,7);
+});
+test('R25: a tela central tem botões reais de voltar, música e informações', () => {
+  assert.match(client, /const backToSplash = \(\) => \{/);
+  assert.match(client, /onClick=\{backToSplash\}/);
+  assert.match(client, /onClick=\{toggleMusic\}/);
+  assert.match(client, /onClick=\{\(\) => setHelp\(true\)\}/);
+  assert.match(client, /aria-pressed=\{soundOn\}/);
+  assert.match(client, /aria-label="Voltar ao menu principal"/);
+});
+test('R25: tipografia, cores, responsividade e redução de movimento', () => {
+  assert.match(css, /ROCHA R25/);
+  assert.match(css, /\.erm23 \.erm25-centralMenu/);
+  assert.match(css, /\.erm23 \.erm25-optionIcon/);
+  assert.match(css, /var\(--erm24-type-ui\)/);
+  assert.match(css, /#00bcd6|#00dafa/i);
+  assert.match(css, /@media\(max-width:740px\)/);
+  assert.match(css, /@media\(max-width:390px\)/);
+  assert.match(css, /@media\(prefers-reduced-motion:reduce\)/);
+});

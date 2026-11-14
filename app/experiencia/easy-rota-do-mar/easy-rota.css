@@ -470,3 +470,88 @@
     gap: 8px 14px;
   }
 }
+
+/* ROCHA R25 — MENU CENTRAL. FIEL À SEGUNDA TELA DA REFERÊNCIA:
+   logomarca centrada, lista vertical com sete itens, ícone esquerdo, utilitários inferiores.
+   Cores, padronização tipográfica e grafismos adaptados ao book Easy Rota do Mar. */
+.erm23 .erm25-centralMenu {
+  --erm25-ink: #e9fbff;
+  position:relative;isolation:isolate;display:flex;align-items:center;justify-content:center;
+  min-height:100vh;min-height:100svh;width:100%;overflow-x:hidden;overflow-y:auto;
+  box-sizing:border-box;padding:clamp(28px,5vh,65px) 22px 26px;
+  color:var(--erm25-ink);font-family:var(--erm24-type-ui);
+  background:
+    radial-gradient(ellipse 55% 48% at 52% 47%,rgba(0,181,224,.25) 0%,rgba(0,71,121,.13) 63%,transparent 98%),
+    linear-gradient(124deg,#002139 0%,#07527a 45%,#022643 100%);
+}
+.erm23 .erm25-centralMenu:before {
+  content:"";position:absolute;z-index:-1;inset:0;pointer-events:none;opacity:.18;
+  background-image:linear-gradient(90deg,transparent 0 91%,#14d5eb44 92% 94%,transparent 95%),linear-gradient(transparent 0 90%,#14d5eb33 91% 94%,transparent 95%);
+  background-size:94px 49px,94px 49px;
+  mask-image:linear-gradient(90deg,#000 0%,transparent 42%,transparent 55%,#000 100%);
+}
+.erm23 .erm25-pattern{position:absolute;pointer-events:none;z-index:-1;inset:0;opacity:.30;
+  background:repeating-linear-gradient(180deg,transparent 0 60px,rgba(14,168,200,.09) 60px 61px,transparent 61px 132px)}
+.erm23 .erm25-ambientWave{position:absolute;pointer-events:none;z-index:-1;left:-10%;width:120%;height:170px;bottom:7%;border-top:1px solid #35e0f55a;border-radius:50% 50% 0 0;
+  transform:rotate(-3deg);box-shadow:0 -11px 45px #00dbfa12;animation:erm25-waveDrift 7s ease-in-out infinite alternate}
+.erm23 .erm25-centralContent{display:flex;align-items:center;flex-direction:column;gap:0;
+  width:min(100%,510px);min-height:0;position:relative;z-index:1;animation:erm25-menuReveal .75s ease both}
+.erm23 .erm25-brand{display:flex;justify-content:center;align-items:center;
+  width:min(365px,86vw);min-height:120px;margin-bottom:28px;filter:drop-shadow(0 8px 24px #00def828)}
+.erm23 .erm25-brand .erm20-brand{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.erm23 .erm25-brand .erm20-brand img{display:block;width:100%;max-width:355px;max-height:118px;height:auto;object-fit:contain;mix-blend-mode:normal!important;filter:none!important}
+.erm23 .erm25-brand .erm20-brand>small{display:none!important}
+.erm23 .erm25-brand .erm20-brandFallback{color:#fff}
+.erm23 .erm25-options{width:min(100%,332px);display:flex;flex-direction:column;gap:8px}
+.erm23 .erm25-option{display:grid;grid-template-columns:55px minmax(0,1fr) 30px;align-items:stretch;min-height:48px;padding:0;cursor:pointer;
+  border:1px solid #58cbeb77;border-radius:5px;overflow:hidden;color:var(--erm25-ink);
+  background:linear-gradient(100deg,#00678fa6 0%,#087eaa96 100%);box-shadow:0 3px 15px #00000030,inset 0 1px #ffffff13;
+  font-family:var(--erm24-type-ui);font-size:clamp(15px,1vw,17px);font-weight:500;text-align:left;letter-spacing:.01em;
+  transform:translateY(0);transition:transform .22s ease,background .22s ease,border-color .22s ease,box-shadow .22s ease;
+  animation:erm25-optionReveal .55s both}
+.erm23 .erm25-optionIcon{display:flex;align-items:center;justify-content:center;
+  color:#7df9ff;background:linear-gradient(135deg,#003b61,#015477);border-right:1px solid #3ed5ef7a}
+.erm23 .erm25-optionLabel{display:flex;align-items:center;padding:0 15px;white-space:nowrap}
+.erm23 .erm25-optionArrow{display:flex;align-items:center;justify-content:center;color:#9fefff;opacity:0;transform:translateX(-5px);transition:transform .2s ease,opacity .2s ease}
+.erm23 .erm25-option:hover,.erm23 .erm25-option:focus-visible{background:linear-gradient(110deg,#059dc6,#00bcd6);border-color:#b2fbff;transform:translateX(5px);box-shadow:0 10px 24px #00dafa30,0 0 0 2px #9fe8ff33}
+.erm23 .erm25-option:hover .erm25-optionArrow,.erm23 .erm25-option:focus-visible .erm25-optionArrow{opacity:1;transform:translateX(0)}
+.erm23 .erm25-option:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.erm23 .erm25-footerTools{display:flex;align-items:center;justify-content:center;gap:15px;margin-top:24px}
+.erm23 .erm25-footerTools button{display:grid;place-items:center;width:43px;height:43px;
+  border:1px solid #61d7ed69;border-radius:9px;background:#023752bd;color:#c2faff;
+  font-family:var(--erm24-type-ui);font-size:23px;cursor:pointer;transition:background .2s,transform .2s,box-shadow .2s}
+.erm23 .erm25-footerTools button:hover,.erm23 .erm25-footerTools button:focus-visible{transform:translateY(-2px);background:#037b9f;box-shadow:0 5px 24px #00dcf750;outline:2px solid #b4fbff;outline-offset:2px}
+.erm23 .erm25-footerTools button[aria-pressed="true"]{color:#002b43;background:#47f1f8}
+.erm23 .erm25-menuCredit{position:absolute;right:32px;bottom:16px;font-family:var(--erm24-type-ui);font-size:9px;letter-spacing:.12em;color:#91bfd0;pointer-events:none}
+@keyframes erm25-menuReveal{from{opacity:0;transform:translateY(15px);filter:blur(3px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+@keyframes erm25-optionReveal{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes erm25-waveDrift{to{transform:rotate(-1deg) translateY(-14px)}}
+@media(max-width:740px){
+  .erm23 .erm25-centralMenu{padding:30px 16px 24px}
+  .erm23 .erm25-brand{width:min(305px,80vw);min-height:93px;margin-bottom:25px}
+  .erm23 .erm25-brand .erm20-brand img{max-height:101px}
+  .erm23 .erm25-options{width:min(100%,340px);gap:7px}
+  .erm23 .erm25-option{min-height:51px;grid-template-columns:53px minmax(0,1fr) 29px;font-size:16px}
+  .erm23 .erm25-footerTools{margin-top:21px}
+  .erm23 .erm25-menuCredit{right:auto;left:0;width:100%;bottom:8px;text-align:center;font-size:8px}
+}
+@media(max-width:390px){
+  .erm23 .erm25-centralMenu{padding:15px 13px 22px}
+  .erm23 .erm25-brand{min-height:78px;margin-bottom:17px;width:min(270px,76vw)}
+  .erm23 .erm25-brand .erm20-brand img{max-height:83px}
+  .erm23 .erm25-option{min-height:45px;font-size:15px}
+  .erm23 .erm25-options{gap:6px}
+  .erm23 .erm25-footerTools{margin-top:15px}
+}
+@media(max-height:750px) and (min-width:741px){
+  .erm23 .erm25-centralMenu{padding:16px 22px}
+  .erm23 .erm25-brand{min-height:91px;margin-bottom:14px}
+  .erm23 .erm25-brand .erm20-brand img{max-height:96px}
+  .erm23 .erm25-options{gap:6px}
+  .erm23 .erm25-option{min-height:42px}
+  .erm23 .erm25-footerTools{margin-top:14px}
+}
+@media(prefers-reduced-motion:reduce){
+  .erm23 .erm25-centralContent,.erm23 .erm25-option,.erm23 .erm25-ambientWave{animation:none!important;filter:none!important}
+  .erm23 .erm25-option,.erm23 .erm25-footerTools button{transition:none!important}
+}
