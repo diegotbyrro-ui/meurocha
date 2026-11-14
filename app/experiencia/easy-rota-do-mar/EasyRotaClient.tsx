@@ -285,12 +285,6 @@ export default function EasyRotaClient() {
     {!started && <section className="erm20-splash erm23-splash" aria-label="Abertura Easy Rota do Mar">
       <div className="erm23-backgroundGrid" aria-hidden="true" />
       <div className="erm23-backgroundGlow" aria-hidden="true" />
-      <div className="erm23-waveTop erm27-neonLine" aria-hidden="true">
-        <svg viewBox="0 0 1600 220" preserveAspectRatio="none" focusable="false">
-          <path className="erm27-neonBase" d="M -30 100 C 320 182 1020 172 1630 25" />
-          <path className="erm27-neonRunner" d="M -30 100 C 320 182 1020 172 1630 25" pathLength={1000} />
-        </svg>
-      </div>
       <header className="erm23-splashHeader">
         <a className="erm23-rochaSignature" href="https://meurocha.com.br" target="_blank" rel="noopener noreferrer" aria-label="Conheça a Rocha Empreendimentos no site oficial">
           <img src={`${BRAND_ASSETS}erm-rocha-assinatura.png`} alt="Rocha Empreendimentos" width={198} height={78} />
@@ -314,7 +308,6 @@ export default function EasyRotaClient() {
 
     {started && centralMenuOpen && <section className="erm25-centralMenu" aria-label="Menu principal da experiência Easy Rota do Mar">
       <div className="erm25-pattern" aria-hidden="true" />
-      <div className="erm25-ambientWave" aria-hidden="true" />
       <div className="erm25-centralContent">
         <div className="erm25-brand" aria-label="Easy Rota do Mar"><Brand /></div>
         <nav className="erm25-options" aria-label="Escolha um módulo da plataforma">

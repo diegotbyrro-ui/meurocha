@@ -244,14 +244,12 @@ test('R27: abertura limpa sem APRESENTA, mantendo CTA, slogan e marca', () => {
   assert.match(splash,/erm-rocha-assinatura\.png/);
   assert.match(splash,/erm23-brandFrame/);
 });
-test('R27: neon animado acompanha a curva vetorial sem invadir o menu', () => {
+test('R29: nenhum elemento de linha curva ou neon permanece no DOM das duas telas', () => {
   const splash = client.slice(client.indexOf('{!started &&'), client.indexOf('{started &&'));
-  assert.match(splash,/className="erm23-waveTop erm27-neonLine"/);
-  assert.match(splash,/className="erm27-neonBase"/);
-  assert.match(splash,/className="erm27-neonRunner"/);
-  assert.match(css,/stroke-dasharray:66 934/);
-  assert.match(css,/@keyframes erm27-neonTravel/);
-  assert.match(css,/-1000/);
+  const menu = client.slice(client.indexOf('{started && centralMenuOpen &&'), client.indexOf('{started && !centralMenuOpen &&'));
+  assert.doesNotMatch(splash,/erm23-waveTop|erm27-neonLine|erm27-neonBase|erm27-neonRunner/);
+  assert.doesNotMatch(menu,/erm25-ambientWave/);
+  assert.match(css,/\.erm23 \.erm23-waveTop,[\s\S]*?\.erm23 \.erm25-ambientWave \{ display:none!important; \}/);
 });
 test('R27: play com ondas e som original disparado pelo clique, sem autoplay', () => {
   const mp3=readFileSync(join(assetDir,'erm-onda-clique-original.mp3'));
@@ -274,7 +272,7 @@ test('R27: pattern mais discreto e movimentos opcionais respeitados', () => {
 
 
 // R28: regressao visual e sonora baseada no mockup reenviado pelo usuario.
-test('R28: neon extremamente sutil com traco fino, brilho contido e passagem lenta', () => {
+test('R28: configuracao historica do neon preservada, mas escondida pela R29', () => {
   const scope=css.slice(css.indexOf('ROCHA R28'));
   assert.match(scope,/\.erm23 \.erm27-neonRunner \{[\s\S]*?stroke-width:\.75;opacity:\.28;/);
   assert.match(scope,/stroke-dasharray:24 976/);
@@ -306,4 +304,34 @@ test('R28: centro livre e pattern no rodape e laterais; menu central intacto', (
   assert.match(scope,/\.erm23 \.erm23-backgroundGrid \{opacity:\.055;\}/);
   assert.match(client,/erm25-centralMenu/);
   assert.match(client,/erm-rocha-assinatura\.png/);
+});
+
+
+// R29 — verificações da correção solicitada após inspeção dos screenshots.
+test('R29: tile do book contém somente glifos completos, com dimensão e transparência auditadas', () => {
+  const tile = readFileSync(join(assetDir,'erm-pattern-book-r29.png'));
+  assert.equal(tile.subarray(0,8).toString('hex'),'89504e470d0a1a0a');
+  assert.equal(tile.readUInt32BE(16),520);
+  assert.equal(tile.readUInt32BE(20),108);
+  assert.equal(tile[25],6,'O tile deve ter canal alfa para evitar caixa colorida');
+  assert.ok(tile.length>1000 && tile.length<150000);
+  const r29=css.slice(css.lastIndexOf('ROCHA R29'));
+  assert.ok((r29.match(/erm-pattern-book-r29\.png/g)||[]).length===3);
+  assert.match(r29,/background-repeat:repeat/);
+  assert.match(r29,/background-size:520px 108px/);
+  assert.match(r29,/background-position:center bottom/);
+});
+test('R29: preserva CTA de onda, escolha de som, menu de sete módulos e interior da R28', () => {
+  const splash=client.slice(client.indexOf('{!started &&'),client.indexOf('{started &&'));
+  const menu=client.slice(client.indexOf('{started && centralMenuOpen &&'),client.indexOf('{started && !centralMenuOpen &&'));
+  assert.match(splash,/erm28-waveIcon/);
+  assert.match(splash,/TOQUE PARA INICIAR A EXPERIÊNCIA/);
+  assert.match(menu,/sections\.map\(\(item, index\)/);
+  assert.match(client,/Deseja iniciar com música\?/);
+  assert.match(client,/erm-onda-natural-r28\.mp3/);
+  assert.match(client,/erm20-sidebar/);
+  assert.match(client,/erm20-bottomTabs/);
+  const r29=css.slice(css.lastIndexOf('ROCHA R29'));
+  assert.match(r29,/Apenas splash e menu central/);
+  assert.doesNotMatch(r29,/erm20-panel|erm20-sidebar|erm20-bottomTabs/);
 });

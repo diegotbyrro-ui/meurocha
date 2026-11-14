@@ -737,3 +737,43 @@
   .erm23 .erm27-neonRunner{animation:none!important;stroke-dasharray:none;opacity:.14;stroke-width:.65;filter:none;}
   .erm23 .erm28-waveIcon,.erm23 .erm28-waveIcon path{animation:none!important;}
 }
+
+
+/* ROCHA R29 — DUAS TELAS SEM LINHAS CURVAS, PATTERN EASY INTEIRO DO BOOK.
+   O tile r29 contém APENAS a fileira completa e-a-s-y, sem fragmentos
+   da fileira superior; possui margem transparente em todas as bordas para
+   repetição limpa. Apenas splash e menu central, demais módulos intocados. */
+.erm23 .erm23-waveTop,
+.erm23 .erm25-ambientWave { display:none!important; }
+.erm23 .erm20-splash.erm23-splash::after {
+  background-image:url('/experiencia/easy-rota-do-mar/erm-pattern-book-r29.png');
+  background-repeat:repeat;
+  background-size:520px 108px;
+  background-position:center bottom;
+  height:51%;
+  opacity:.35;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.3) 23%,#000 100%);
+  mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.3) 23%,#000 100%);
+}
+.erm23 .erm25-pattern {
+  background-image:url('/experiencia/easy-rota-do-mar/erm-pattern-book-r29.png');
+  background-repeat:repeat;
+  background-size:520px 108px;
+  background-position:center center;
+  opacity:.31;
+  -webkit-mask-image:linear-gradient(to right,#000 0%,rgba(0,0,0,.75) 20%,transparent 42%,transparent 58%,rgba(0,0,0,.75) 80%,#000 100%);
+  mask-image:linear-gradient(to right,#000 0%,rgba(0,0,0,.75) 20%,transparent 42%,transparent 58%,rgba(0,0,0,.75) 80%,#000 100%);
+}
+.erm23 .erm25-centralMenu::after {
+  background-image:url('/experiencia/easy-rota-do-mar/erm-pattern-book-r29.png');
+  background-repeat:repeat;
+  background-size:520px 108px;
+  background-position:center bottom;
+  height:26%;
+  opacity:.15;
+}
+@media(max-width:740px) {
+  .erm23 .erm20-splash.erm23-splash::after {background-size:350px 73px;opacity:.28;height:43%;}
+  .erm23 .erm25-pattern {background-size:350px 73px;opacity:.25;}
+  .erm23 .erm25-centralMenu::after {background-size:350px 73px;opacity:.13;height:24%;}
+}
