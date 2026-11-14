@@ -619,3 +619,67 @@
   .erm23 .erm25-pattern,
   .erm23 .erm25-centralMenu::after {animation:none!important;transition:none!important;}
 }
+
+
+/* ROCHA R27 - APERTURA FIEL AO MOCKUP, NEON PERCORRENDO A LINHA E ONDA NO PLAY.
+   Apenas splash, sem alteracoes nos modulos e menu central. */
+.erm23 .erm23-waveTop.erm27-neonLine {
+  position:absolute;top:28%;left:0;width:100%;height:20%;
+  border:0;border-radius:0;box-shadow:none;transform:none;
+  pointer-events:none;z-index:1;overflow:visible;animation:none;
+}
+.erm23 .erm27-neonLine svg {display:block;width:100%;height:100%;overflow:visible;}
+.erm23 .erm27-neonBase {
+  fill:none;stroke:#47d6f1;stroke-width:1.1;opacity:.42;
+  vector-effect:non-scaling-stroke;
+}
+.erm23 .erm27-neonRunner {
+  fill:none;stroke:#81f7ff;stroke-width:2.8;opacity:.89;
+  stroke-linecap:round;stroke-dasharray:66 934;
+  vector-effect:non-scaling-stroke;
+  filter:drop-shadow(0 0 3px #00dfff) drop-shadow(0 0 9px #31dbff);
+  animation:erm27-neonTravel 8.5s linear infinite;
+}
+@keyframes erm27-neonTravel {
+  from {stroke-dashoffset:0;}
+  to {stroke-dashoffset:-1000;}
+}
+/* Menos repeticao e contraste no pattern, como no mockup aprovado. */
+.erm23 .erm20-splash.erm23-splash::after {
+  opacity:.19;height:45%;background-size:420px 90px;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.10) 30%,rgba(0,0,0,.6) 78%,#000 100%);
+  mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.10) 30%,rgba(0,0,0,.6) 78%,#000 100%);
+}
+.erm23 .erm25-pattern {opacity:.22;}
+.erm23 .erm25-centralMenu::after {opacity:.09;}
+/* O titulo sobe levemente apos retirar a palavra APRESENTA. */
+.erm23 .erm23-centerStage {gap:0;}
+.erm23 .erm23-startButton .erm23-startIcon {
+  position:relative;isolation:isolate;flex:0 0 auto;overflow:visible;
+}
+.erm23 .erm23-startButton .erm23-startIcon > svg {position:relative;z-index:2;}
+.erm23 .erm27-ripple,
+.erm23 .erm27-ripple::before,
+.erm23 .erm27-ripple::after {
+  position:absolute;inset:0;border:1.5px solid rgba(218,255,255,.8);
+  border-radius:50%;pointer-events:none;
+}
+.erm23 .erm27-ripple {border-color:rgba(222,255,255,.56);animation:erm27-wavePulse 2.8s ease-out infinite;}
+.erm23 .erm27-ripple::before,.erm23 .erm27-ripple::after {content:'';}
+.erm23 .erm27-ripple::before {animation:erm27-wavePulse 2.8s .85s ease-out infinite;}
+.erm23 .erm27-ripple::after {animation:erm27-wavePulse 2.8s 1.7s ease-out infinite;}
+@keyframes erm27-wavePulse {
+  0% {opacity:.82;transform:scale(.9);}
+  72%,100% {opacity:0;transform:scale(1.72);}
+}
+@media(max-width:740px) {
+  .erm23 .erm23-waveTop.erm27-neonLine{top:32%;height:16%;}
+  .erm23 .erm20-splash.erm23-splash::after {height:37%;background-size:310px 66px;opacity:.16;}
+  .erm23 .erm25-pattern {opacity:.18;}
+}
+@media(prefers-reduced-motion:reduce) {
+  .erm23 .erm27-neonRunner,.erm23 .erm27-ripple,.erm23 .erm27-ripple::before,.erm23 .erm27-ripple::after {animation:none!important;}
+  .erm23 .erm27-neonRunner {stroke-dasharray:none;opacity:.45;stroke-width:1.2;filter:none;}
+  .erm23 .erm27-ripple {opacity:.45;transform:none;}
+  .erm23 .erm27-ripple::before,.erm23 .erm27-ripple::after {display:none;}
+}

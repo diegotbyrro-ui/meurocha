@@ -169,6 +169,7 @@ export default function EasyRotaClient() {
   const [pendingSection, setPendingSection] = useState<Section>('localizacao');
   const [audioError, setAudioError] = useState(false);
   const music = useRef<HTMLAudioElement | null>(null);
+  const waveClick = useRef<HTMLAudioElement | null>(null);
   const soundYesButton = useRef<HTMLButtonElement | null>(null);
   const [soundOn, setSoundOn] = useState(false);
   const [volume, setVolume] = useState(35);
@@ -220,7 +221,15 @@ export default function EasyRotaClient() {
     music.current?.pause(); setSoundOn(false); setAudioError(false);
     setSoundPrompt(false); setCentralMenuOpen(false); setMenuOpen(false); setStarted(false);
   };
-  const start = (chosen: Section) => { setPendingSection(chosen); setSoundPrompt(true); setAudioError(false); };
+  const start = (chosen: Section) => {
+    // Efeito curto de mar acionado diretamente pelo clique no CTA, nunca no carregamento.
+    if (waveClick.current) {
+      waveClick.current.volume = 0.26;
+      waveClick.current.currentTime = 0;
+      void waveClick.current.play().catch(() => { /* A experiencia continua mesmo com audio bloqueado. */ });
+    }
+    setPendingSection(chosen); setSoundPrompt(true); setAudioError(false);
+  };
   const playMusic = () => {
     if (!music.current) return;
     music.current.volume = Math.min(1, Math.max(0, volume / 100));
@@ -272,24 +281,29 @@ export default function EasyRotaClient() {
 
   return <main className="erm20 erm21 erm22 erm23" style={{ '--erm-dark': palette.dark, '--erm-deep': palette.deep, '--erm-accent': palette.accent, '--erm-cream': palette.light } as CSSProperties}>
     <audio ref={music} src={`${BRAND_ASSETS}erm-ambiente-original.mp3`} loop preload="none" aria-hidden="true" />
+    <audio ref={waveClick} src={`${BRAND_ASSETS}erm-onda-clique-original.mp3`} preload="auto" aria-hidden="true" />
     {!started && <section className="erm20-splash erm23-splash" aria-label="Abertura Easy Rota do Mar">
       <div className="erm23-backgroundGrid" aria-hidden="true" />
       <div className="erm23-backgroundGlow" aria-hidden="true" />
-      <div className="erm23-waveTop" aria-hidden="true" />
+      <div className="erm23-waveTop erm27-neonLine" aria-hidden="true">
+        <svg viewBox="0 0 1600 220" preserveAspectRatio="none" focusable="false">
+          <path className="erm27-neonBase" d="M -30 100 C 320 182 1020 172 1630 25" />
+          <path className="erm27-neonRunner" d="M -30 100 C 320 182 1020 172 1630 25" pathLength={1000} />
+        </svg>
+      </div>
       <header className="erm23-splashHeader">
         <a className="erm23-rochaSignature" href="https://meurocha.com.br" target="_blank" rel="noopener noreferrer" aria-label="Conheça a Rocha Empreendimentos no site oficial">
           <img src={`${BRAND_ASSETS}erm-rocha-assinatura.png`} alt="Rocha Empreendimentos" width={198} height={78} />
         </a>
       </header>
       <div className="erm23-centerStage">
-        <p className="erm23-topCaption">APRESENTA</p>
         <div className="erm23-brandFrame"><Brand /></div>
         <div className="erm23-waveDivider" aria-hidden="true" />
         <h1 className="erm23-headline">O caminho mais curto entre a Serraria e o mar.</h1>
       </div>
       <div className="erm23-entryArea">
         <button type="button" className="erm23-startButton" onClick={() => start('localizacao')} aria-label="Iniciar experiência Easy Rota do Mar">
-          <span className="erm23-startIcon"><UiIcon name="play" size={26}/></span>
+          <span className="erm23-startIcon"><span className="erm27-ripple" aria-hidden="true"/><UiIcon name="play" size={26}/></span>
           <span>TOQUE PARA INICIAR A EXPERIÊNCIA</span>
           <UiIcon name="arrow" size={21}/>
         </button>

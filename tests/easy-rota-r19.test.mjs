@@ -106,7 +106,8 @@ test('R23: assinatura Rocha discreta e transparente no topo direito', () => {
   assert.match(css,/\.erm23-rochaSignature/);
 });
 test('R23: modal abre apos CTA e nao permite autoplay', () => {
-  assert.match(client,/const start = \(chosen: Section\) => \{ setPendingSection\(chosen\); setSoundPrompt\(true\)/);
+  assert.match(client,/const start = \(chosen: Section\) => \{/);
+  assert.match(client,/setPendingSection\(chosen\); setSoundPrompt\(true\)/);
   assert.match(client,/Deseja iniciar com música\?/);
   assert.match(client,/ENTRAR COM MÚSICA/);
   assert.match(client,/ENTRAR SEM MÚSICA/);
@@ -231,4 +232,42 @@ test('R26: aplica o pattern geométrico autêntico do book nas duas telas, sem n
   assert.match(css, /@media\(max-width:740px\)/);
   const menu=client.slice(client.indexOf('{started && centralMenuOpen &&'),client.indexOf('{started && !centralMenuOpen &&'));
   assert.match(menu, /sections\.map\(\(item, index\)/);
+});
+
+
+// R27: neón no traço, pulso de onda e feedback sonoro apenas após clique.
+test('R27: abertura limpa sem APRESENTA, mantendo CTA, slogan e marca', () => {
+  const splash = client.slice(client.indexOf('{!started &&'), client.indexOf('{started &&'));
+  assert.doesNotMatch(splash,/APRESENTA/);
+  assert.match(splash,/TOQUE PARA INICIAR A EXPERIÊNCIA/);
+  assert.match(splash,/O caminho mais curto entre a Serraria e o mar/);
+  assert.match(splash,/erm-rocha-assinatura\.png/);
+  assert.match(splash,/erm23-brandFrame/);
+});
+test('R27: neon animado acompanha a curva vetorial sem invadir o menu', () => {
+  const splash = client.slice(client.indexOf('{!started &&'), client.indexOf('{started &&'));
+  assert.match(splash,/className="erm23-waveTop erm27-neonLine"/);
+  assert.match(splash,/className="erm27-neonBase"/);
+  assert.match(splash,/className="erm27-neonRunner"/);
+  assert.match(css,/stroke-dasharray:66 934/);
+  assert.match(css,/@keyframes erm27-neonTravel/);
+  assert.match(css,/-1000/);
+});
+test('R27: play com ondas e som original disparado pelo clique, sem autoplay', () => {
+  const mp3=readFileSync(join(assetDir,'erm-onda-clique-original.mp3'));
+  assert.ok(mp3.length>12000);
+  assert.ok(mp3.subarray(0,3).toString('ascii')==='ID3' || mp3[0]===0xff,'MP3 real');
+  assert.match(client,/ref=\{waveClick\} src=\{`\$\{BRAND_ASSETS\}erm-onda-clique-original\.mp3`\}/);
+  assert.match(client,/waveClick\.current\.play\(\)\.catch/);
+  assert.match(client,/onClick=\{\(\) => start\('localizacao'\)\}/);
+  assert.match(client,/erm27-ripple/);
+  assert.match(css,/@keyframes erm27-wavePulse/);
+  assert.doesNotMatch(client,/<audio[^>]*autoPlay/i);
+});
+test('R27: pattern mais discreto e movimentos opcionais respeitados', () => {
+  assert.match(css,/ROCHA R27/);
+  assert.match(css,/opacity:\.19;height:45%/);
+  assert.match(css,/prefers-reduced-motion:reduce/);
+  assert.match(css,/\.erm23 \.erm25-pattern \{opacity:\.22;/);
+  assert.match(client,/erm25-centralMenu/);
 });
