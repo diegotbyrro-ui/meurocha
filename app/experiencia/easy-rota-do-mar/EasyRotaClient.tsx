@@ -224,7 +224,7 @@ export default function EasyRotaClient() {
   const start = (chosen: Section) => {
     // Efeito curto de mar acionado diretamente pelo clique no CTA, nunca no carregamento.
     if (waveClick.current) {
-      waveClick.current.volume = 0.26;
+      waveClick.current.volume = 0.23;
       waveClick.current.currentTime = 0;
       void waveClick.current.play().catch(() => { /* A experiencia continua mesmo com audio bloqueado. */ });
     }
@@ -281,7 +281,7 @@ export default function EasyRotaClient() {
 
   return <main className="erm20 erm21 erm22 erm23" style={{ '--erm-dark': palette.dark, '--erm-deep': palette.deep, '--erm-accent': palette.accent, '--erm-cream': palette.light } as CSSProperties}>
     <audio ref={music} src={`${BRAND_ASSETS}erm-ambiente-original.mp3`} loop preload="none" aria-hidden="true" />
-    <audio ref={waveClick} src={`${BRAND_ASSETS}erm-onda-clique-original.mp3`} preload="auto" aria-hidden="true" />
+    <audio ref={waveClick} src={`${BRAND_ASSETS}erm-onda-natural-r28.mp3`} preload="auto" aria-hidden="true" />
     {!started && <section className="erm20-splash erm23-splash" aria-label="Abertura Easy Rota do Mar">
       <div className="erm23-backgroundGrid" aria-hidden="true" />
       <div className="erm23-backgroundGlow" aria-hidden="true" />
@@ -303,7 +303,7 @@ export default function EasyRotaClient() {
       </div>
       <div className="erm23-entryArea">
         <button type="button" className="erm23-startButton" onClick={() => start('localizacao')} aria-label="Iniciar experiência Easy Rota do Mar">
-          <span className="erm23-startIcon"><span className="erm27-ripple" aria-hidden="true"/><UiIcon name="play" size={26}/></span>
+          <span className="erm23-startIcon"><svg className="erm28-waveIcon" width="29" height="29" viewBox="0 0 36 36" fill="none" aria-hidden="true" focusable="false"><path d="M4 13.5 C7.5 10.7 11 16.3 14.5 13.5 S21.5 10.7 25 13.5 S31.2 16.3 33 13.5"/><path d="M4 19 C7.5 16.2 11 21.8 14.5 19 S21.5 16.2 25 19 S31.2 21.8 33 19"/><path d="M4 24.5 C7.5 21.7 11 27.3 14.5 24.5 S21.5 21.7 25 24.5 S31.2 27.3 33 24.5"/></svg></span>
           <span>TOQUE PARA INICIAR A EXPERIÊNCIA</span>
           <UiIcon name="arrow" size={21}/>
         </button>

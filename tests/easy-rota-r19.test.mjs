@@ -257,10 +257,10 @@ test('R27: play com ondas e som original disparado pelo clique, sem autoplay', (
   const mp3=readFileSync(join(assetDir,'erm-onda-clique-original.mp3'));
   assert.ok(mp3.length>12000);
   assert.ok(mp3.subarray(0,3).toString('ascii')==='ID3' || mp3[0]===0xff,'MP3 real');
-  assert.match(client,/ref=\{waveClick\} src=\{`\$\{BRAND_ASSETS\}erm-onda-clique-original\.mp3`\}/);
+  assert.match(client,/ref=\{waveClick\} src=\{`\$\{BRAND_ASSETS\}erm-onda-natural-r28\.mp3`\}/);
   assert.match(client,/waveClick\.current\.play\(\)\.catch/);
   assert.match(client,/onClick=\{\(\) => start\('localizacao'\)\}/);
-  assert.match(client,/erm27-ripple/);
+  assert.match(client,/erm28-waveIcon/);
   assert.match(css,/@keyframes erm27-wavePulse/);
   assert.doesNotMatch(client,/<audio[^>]*autoPlay/i);
 });
@@ -270,4 +270,40 @@ test('R27: pattern mais discreto e movimentos opcionais respeitados', () => {
   assert.match(css,/prefers-reduced-motion:reduce/);
   assert.match(css,/\.erm23 \.erm25-pattern \{opacity:\.22;/);
   assert.match(client,/erm25-centralMenu/);
+});
+
+
+// R28: regressao visual e sonora baseada no mockup reenviado pelo usuario.
+test('R28: neon extremamente sutil com traco fino, brilho contido e passagem lenta', () => {
+  const scope=css.slice(css.indexOf('ROCHA R28'));
+  assert.match(scope,/\.erm23 \.erm27-neonRunner \{[\s\S]*?stroke-width:\.75;opacity:\.28;/);
+  assert.match(scope,/stroke-dasharray:24 976/);
+  assert.match(scope,/animation:erm27-neonTravel 17s linear infinite/);
+  assert.doesNotMatch(scope,/drop-shadow\(0 0 9px/);
+  assert.match(scope,/prefers-reduced-motion:reduce/);
+});
+test('R28: icone do CTA foi substituido por desenho de onda em movimento, sem play', () => {
+  const splash=client.slice(client.indexOf('{!started &&'),client.indexOf('{started &&'));
+  assert.match(splash,/className="erm28-waveIcon"/);
+  assert.match(splash,/erm23-startIcon/);
+  assert.doesNotMatch(splash,/<UiIcon name="play"/);
+  assert.doesNotMatch(splash,/erm27-ripple/);
+  assert.match(css,/@keyframes erm28-waveSway/);
+});
+test('R28: som de agua original substitui efeito sintetico sem autoplay', () => {
+  const mp3=readFileSync(join(assetDir,'erm-onda-natural-r28.mp3'));
+  assert.ok(mp3.length>30000);
+  assert.equal(mp3.subarray(0,3).toString('ascii'),'ID3');
+  assert.match(client,/erm-onda-natural-r28\.mp3/);
+  assert.match(client,/waveClick\.current\.volume = 0\.23/);
+  assert.match(client,/waveClick\.current\.play\(\)\.catch/);
+  assert.doesNotMatch(client,/<audio[^>]*autoPlay/i);
+});
+test('R28: centro livre e pattern no rodape e laterais; menu central intacto', () => {
+  const scope=css.slice(css.indexOf('ROCHA R28'));
+  assert.match(scope,/mask-image:radial-gradient/);
+  assert.match(scope,/height:75%;opacity:\.15/);
+  assert.match(scope,/\.erm23 \.erm23-backgroundGrid \{opacity:\.055;\}/);
+  assert.match(client,/erm25-centralMenu/);
+  assert.match(client,/erm-rocha-assinatura\.png/);
 });

@@ -683,3 +683,57 @@
   .erm23 .erm27-ripple {opacity:.45;transform:none;}
   .erm23 .erm27-ripple::before,.erm23 .erm27-ripple::after {display:none;}
 }
+
+
+/* ROCHA R28 - ACABAMENTO DE BAIXA INTENSIDADE CONFORME MOCKUP APROVADO.
+   NEON QUASE IMPERCEPTIVEL: filete de 0.75px, brilho de 1px e 17 segundos por passagem.
+   SÓ abertura; menu central e modulos não recebem alteracoes. */
+.erm23 .erm27-neonBase {
+  stroke:#79dced;stroke-width:.7;opacity:.19;
+  filter:none;
+}
+.erm23 .erm27-neonRunner {
+  stroke:#b0f6ff;stroke-width:.75;opacity:.28;
+  stroke-linecap:round;stroke-dasharray:24 976;
+  filter:drop-shadow(0 0 1px rgba(126,237,251,.30));
+  animation:erm27-neonTravel 17s linear infinite;
+}
+/* Grafismo do book em agrupamentos discretos nas bordas, e nao uma parede inteira.
+   Centro limpo como o mockup: a marca e o CTA seguem com maior contraste. */
+.erm23 .erm20-splash.erm23-splash {
+  background:radial-gradient(ellipse at 50% 48%,#07557a 0%,#003c5f 41%,#002c4b 68%,#001c37 100%);
+}
+.erm23 .erm20-splash.erm23-splash::after {
+  height:75%;opacity:.15;
+  background-size:420px 90px;
+  -webkit-mask-image:radial-gradient(ellipse 47% 63% at 4% 95%,#000 2%,rgba(0,0,0,.66) 35%,transparent 95%),radial-gradient(ellipse 33% 63% at 97% 92%,#000 0%,rgba(0,0,0,.42) 45%,transparent 96%);
+  mask-image:radial-gradient(ellipse 47% 63% at 4% 95%,#000 2%,rgba(0,0,0,.66) 35%,transparent 95%),radial-gradient(ellipse 33% 63% at 97% 92%,#000 0%,rgba(0,0,0,.42) 45%,transparent 96%);
+  -webkit-mask-composite:source-over;
+  mask-composite:add;
+}
+.erm23 .erm23-backgroundGrid {opacity:.055;}
+.erm23 .erm23-startButton .erm23-startIcon {
+  overflow:hidden;isolation:isolate;border-radius:50%;
+  border:1px solid rgba(235,255,255,.38);
+  background:rgba(1,86,111,.38);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.09);
+}
+.erm23 .erm28-waveIcon {
+  position:relative;z-index:2;width:30px;height:30px;
+  stroke:#ecffff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+  overflow:visible;
+  animation:erm28-waveSway 2.6s ease-in-out infinite alternate;
+}
+.erm23 .erm28-waveIcon path:nth-child(2){opacity:.83;animation:erm28-waveBreathe 2.4s ease-in-out infinite alternate;}
+.erm23 .erm28-waveIcon path:nth-child(3){opacity:.68;animation:erm28-waveBreathe 2.7s .4s ease-in-out infinite alternate;}
+@keyframes erm28-waveSway {from{transform:translateX(-1.8px)}to{transform:translateX(1.8px)}}
+@keyframes erm28-waveBreathe {from{opacity:.50}to{opacity:.95}}
+@media(max-width:740px){
+  .erm23 .erm27-neonRunner {stroke-width:.7;opacity:.23;}
+  .erm23 .erm20-splash.erm23-splash::after{height:66%;opacity:.125;background-size:310px 66px;}
+  .erm23 .erm28-waveIcon{width:25px;height:25px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .erm23 .erm27-neonRunner{animation:none!important;stroke-dasharray:none;opacity:.14;stroke-width:.65;filter:none;}
+  .erm23 .erm28-waveIcon,.erm23 .erm28-waveIcon path{animation:none!important;}
+}
