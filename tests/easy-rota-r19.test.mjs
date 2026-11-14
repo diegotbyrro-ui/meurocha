@@ -364,3 +364,73 @@ test('R30: nova imagem anti-recorte é usada nas duas telas com transparência',
   assert.match(r30,/font-family:var\(--erm24-type-ui\)/);
   assert.doesNotMatch(r30,/erm20-sidebar|erm20-panel|erm20-bottomTabs/);
 });
+
+
+// R31 — importação inicial das imagens fornecidas para o masterplan/ambientes.
+test('R31: planta de pavimento tipo é mostrada sem corte, com opção de consultar implantação original', () => {
+  assert.match(client,/erm-pavimento-tipo-r31\.webp/);
+  assert.match(client,/masterImage === 'pavimento'/);
+  assert.match(client,/masterImage === 'implantacao'/);
+  assert.match(client,/erm-implantacao\.webp/);
+  assert.match(css,/\.erm31-realPlan>img\.erm31-planImage\{[^}]*object-fit:contain/);
+});
+test('R31: os dez ambientes têm imagem individual corretamente associada, sem reutilizar fotografia de outro ambiente', () => {
+  const exact = new Map([
+    [6,'piscina-adulto'],[9,'espaco-grill'],[10,'espaco-gourmet'],[11,'espaco-fitness'],
+    [12,'easy-play'],[14,'espaco-beleza'],[17,'bicicletarios'],[22,'easy-wash'],
+    [30,'pista-de-cooper'],[31,'recarga-veiculos-eletricos'],
+  ]);
+  const block = client.slice(client.indexOf('const facilityImages:'),client.indexOf('const gallery ='));
+  const entries = [...block.matchAll(/(\d+): 'erm-amb-\d+-([^']+)'/g)].map(x=>[Number(x[1]),x[2]]);
+  assert.equal(entries.length,10);
+  assert.deepEqual(new Map(entries),exact);
+  for(const [num,suffix] of exact){
+    const p=`erm-amb-${String(num).padStart(2,'0')}-${suffix}`;
+    for(const f of [`${p}.webp`,`${p}-thumb.webp`]){
+      const buf=readFileSync(join(assetDir,f));
+      assert.equal(buf.subarray(0,4).toString('ascii'),'RIFF');
+      assert.equal(buf.subarray(8,12).toString('ascii'),'WEBP');
+      assert.ok(buf.length>1000);
+    }
+  }
+});
+test('R31: quadro superior usa imagem inteira fornecida e não perde nenhuma parte desenhada', () => {
+  const buf=readFileSync(join(assetDir,'erm-pavimento-tipo-r31.webp'));
+  assert.equal(buf.subarray(0,4).toString('ascii'),'RIFF');
+  assert.equal(buf.subarray(8,12).toString('ascii'),'WEBP');
+  assert.match(client,/Planta completa do pavimento tipo Easy Rota do Mar/);
+  assert.match(css,/\.erm31-realPlan>img\.erm31-planImage/);
+  assert.match(css,/object-fit:contain/);
+});
+test('R31: lista exibe miniaturas; seleção exibe arquivo específico ou aviso neutro de pendência', () => {
+  assert.match(client,/erm31-facilityThumb/);
+  assert.match(client,/erm31-masterPreview/);
+  assert.match(client,/facilityImages\[p\.number\]/);
+  assert.match(client,/facilityFile \?/);
+  assert.match(client,/Imagem ainda não fornecida/);
+  assert.doesNotMatch(client,/ERM_R31_FAKE_IMAGE/);
+  assert.match(css,/\.erm31-masterPreview>img\{[^}]*object-fit:contain/);
+});
+test('R31: preserva as 33 identificações e demais telas da R30 sem afetar música, logo ou navegação', () => {
+  assert.equal([...client.matchAll(/number: (\d+), name:/g)].length,33);
+  for(const term of ['erm28-waveIcon','setSoundPrompt(true)','erm25-centralMenu','erm20-bottomTabs','erm30-centralSlogan','erm-rocha-assinatura.png']) {
+    assert.ok(client.includes(term),term);
+  }
+});
+
+
+test('R31: a implantação é o padrão; a planta do pavimento tipo não é rotulada como implantação', () => {
+  assert.match(client,/useState<'implantacao' \| 'pavimento'>\('implantacao'\)/);
+  assert.match(client,/Implantação geral/);
+  assert.match(client,/Pavimento tipo/);
+  assert.match(client,/const currentMasterSource/);
+});
+test('R31: imagem principal tem zoom, arraste, ajuste e ampliação sem cortes', () => {
+  for(const x of ['masterZoom','setMasterOffset','onPointerMove={moveMaster}','setPointerCapture','setMasterExpanded','erm31-imageOverlay']) assert.ok(client.includes(x),x);
+  assert.match(css,/\.erm31-realPlan>img\.erm31-planImage\{[^}]*object-fit:contain/);
+  assert.match(css,/\.erm31-imageOverlay>img\{[^}]*object-fit:contain/);
+});
+test('R31: cards de ambientes têm seleção, imagem individual, miniatura e abertura ampliada', () => {
+  for(const x of ['erm31-facilityThumb','facilityImages[p.number]','setFacilityExpanded(true)','facilityFile','erm31-masterPreview']) assert.ok(client.includes(x),x);
+  assert.match(css,/\.erm31-facilityPhotoButton>img\{[^}]*object-fit:contain/);
+});

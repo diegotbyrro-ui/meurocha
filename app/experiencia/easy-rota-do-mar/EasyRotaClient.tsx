@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type ChangeEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ChangeEvent, type PointerEvent } from 'react';
 
 type Section = 'localizacao' | 'lazer' | 'plantas' | 'imagens' | 'videos' | 'ficha' | 'institucional' | 'simulacao';
 type TypeKey = 'slim' | 'premium' | 'master' | 'spazzio';
@@ -122,6 +122,20 @@ const facilities: Facility[] = [
   { number: 32, name: 'Vagas PNE', category: 'estrutura' },
   { number: 33, name: 'Lixo seco e molhado', category: 'estrutura' },
 ];
+// R31 — associação EXATA das perspectivas recebidas aos números da lista do masterplan.
+// Para os demais ambientes, nenhum arquivo é inventado ou reaproveitado indevidamente.
+const facilityImages: Partial<Record<number, string>> = {
+  6: 'erm-amb-06-piscina-adulto',
+  9: 'erm-amb-09-espaco-grill',
+  10: 'erm-amb-10-espaco-gourmet',
+  11: 'erm-amb-11-espaco-fitness',
+  12: 'erm-amb-12-easy-play',
+  14: 'erm-amb-14-espaco-beleza',
+  17: 'erm-amb-17-bicicletarios',
+  22: 'erm-amb-22-easy-wash',
+  30: 'erm-amb-30-pista-de-cooper',
+  31: 'erm-amb-31-recarga-veiculos-eletricos',
+};
 const gallery = [
   { id: 'hero', name: 'Vista geral', category: 'areas' },
   { id: 'fachada', name: 'Fachada do empreendimento', category: 'areas' },
@@ -190,6 +204,13 @@ export default function EasyRotaClient() {
   const [selectedEnding, setSelectedEnding] = useState(4);
   const [plant3D, setPlant3D] = useState(false);
   const [facility, setFacility] = useState(6);
+  const [masterImage, setMasterImage] = useState<'implantacao' | 'pavimento'>('implantacao');
+  const [masterZoom, setMasterZoom] = useState(1);
+  const [masterOffset, setMasterOffset] = useState({ x: 0, y: 0 });
+  const masterPointer = useRef<{ x: number; y: number } | null>(null);
+  const [masterExpanded, setMasterExpanded] = useState(false);
+  const [facilityExpanded, setFacilityExpanded] = useState(false);
+
   const [amenityGroup, setAmenityGroup] = useState<Group>('todos');
   const [imageIndex, setImageIndex] = useState(0);
   const [videoIndex, setVideoIndex] = useState(0);
@@ -257,6 +278,25 @@ export default function EasyRotaClient() {
   useEffect(() => { if (soundPrompt) soundYesButton.current?.focus(); }, [soundPrompt]);
   useEffect(() => { if (centralMenuOpen && !soundPrompt) { document.getElementById('erm25-menu-first')?.focus(); } }, [centralMenuOpen, soundPrompt]);
   const feature = facilities.find((p) => p.number === facility) || facilities[0];
+  const facilityFile = facilityImages[feature.number];
+  const currentMasterSource = `${BRAND_ASSETS}${masterImage === 'implantacao' ? 'erm-implantacao.webp' : 'erm-pavimento-tipo-r31.webp'}`;
+  const currentMasterAlt = masterImage === 'implantacao' ? 'Implantação completa do Easy Rota do Mar, fornecida no book oficial' : 'Planta completa do pavimento tipo Easy Rota do Mar, imagem enviada para a apresentação';
+  const changeMaster = (next: 'implantacao' | 'pavimento') => { setMasterImage(next); setMasterZoom(1); setMasterOffset({x:0,y:0}); };
+  const changeMasterZoom = (next: number) => { const z = Math.max(1,Math.min(2.5,+next.toFixed(2))); setMasterZoom(z); if (z===1) setMasterOffset({x:0,y:0}); };
+  const moveMaster = (event: PointerEvent<HTMLDivElement>) => {
+    if (masterZoom <= 1 || !masterPointer.current) return;
+    const dx=event.clientX-masterPointer.current.x, dy=event.clientY-masterPointer.current.y;
+    const bound=220*(masterZoom-1);
+    setMasterOffset(v=>({ x:Math.max(-bound,Math.min(bound,v.x+dx)), y:Math.max(-bound,Math.min(bound,v.y+dy)) }));
+    masterPointer.current={x:event.clientX,y:event.clientY};
+  };
+  useEffect(() => {
+    if (!masterExpanded && !facilityExpanded) return;
+    const close = (event: KeyboardEvent) => { if (event.key==='Escape') { setMasterExpanded(false); setFacilityExpanded(false); } };
+    window.addEventListener('keydown',close);
+    return () => window.removeEventListener('keydown',close);
+  },[masterExpanded,facilityExpanded]);
+
   const filtered = facilities.filter((p) => amenityGroup === 'todos' || p.category === amenityGroup);
   const images = gallery.filter((p) => p.category === tab);
   const image = images[imageIndex % Math.max(1, images.length)];
@@ -380,8 +420,57 @@ export default function EasyRotaClient() {
             {tab === 'mapa' && <div className="erm20-mapFrame"><SectionBanner title="MAPA" caption="Pontos de interesse próximos"/><div className="erm20-mapGrid"><div className="erm20-mapIllustration"><div className="erm20-road roadA"/><div className="erm20-road roadB"/><div className="erm20-road roadC"/><div className="erm20-mapPin">⌖<span>EASY ROTA DO MAR</span></div></div><div className="erm20-mapDetails"><div className="erm20-mapCats">{['Mobilidade', 'Educação', 'Comércio', 'Serviços'].map((x) => <button key={x} className={mapChoice === x ? 'active' : ''} type="button" onClick={() => setMapChoice(x)}>{x}</button>)}</div><h3>{mapChoice}</h3><p>Os marcadores definitivos serão inseridos após a validação dos endereços e distâncias pela Rocha.</p><a href="https://www.google.com/maps/search/?api=1&query=Easy%20Rota%20do%20Mar%20Macei%C3%B3" target="_blank" rel="noopener noreferrer">CONFERIR NO GOOGLE MAPS ↗</a></div></div></div>}
           </div>}
 
-          {section === 'lazer' && <div className="erm20-content erm20-leisure"><SectionBanner title="MASTERPLAN" caption="Um lugar completo para viver"/><div className="erm20-masterVisual erm21-realMaster"><img src={`${BRAND_ASSETS}erm-implantacao.webp`} alt="Implantação do Easy Rota do Mar extraída do book oficial"/><small>IMPLANTAÇÃO DO BOOK OFICIAL · CLIQUE NOS AMBIENTES ABAIXO PARA CONHECER</small></div><div className="erm20-masterLower"><div className="erm20-masterIndex"><div className="erm20-masterFilters">{(['todos','acessos','lazer','conveniencia','estrutura'] as Group[]).map((g) => <button key={g} type="button" className={amenityGroup === g ? 'active' : ''} onClick={() => setAmenityGroup(g)}>{groupNames[g]}</button>)}</div><div className="erm20-facilities">{filtered.map((p) => <button key={p.number} type="button" className={facility === p.number ? 'active' : ''} onClick={() => setFacility(p.number)}><b>{String(p.number).padStart(2, '0')}</b><span>{p.name}</span></button>)}</div></div><div className="erm20-masterPreview" aria-live="polite"><Photo id={feature.image || 'hero'} alt={`Imagem ilustrativa: ${feature.name}`}/><div><span>{String(feature.number).padStart(2, '0')} · {groupNames[feature.category]}</span><h3>{feature.name}</h3><small>{feature.image ? 'Perspectiva ilustrativa do material oficial' : 'Imagem de referência do empreendimento'}</small></div></div></div><p className="erm20-disclaimer">A implantação georreferenciada e os pontos posicionados exatamente na planta dependem da conversão e revisão do arquivo mestre original.</p></div>}
-
+          {section === 'lazer' && <div className="erm20-content erm20-leisure">
+            <SectionBanner title="MASTERPLAN" caption="Explore as perspectivas e os ambientes do Easy Rota do Mar" />
+            <div className="erm31-planControls" role="group" aria-label="Escolher imagem e ampliar a planta">
+              <div className="erm31-planModeButtons">
+                <button type="button" className={masterImage === 'implantacao' ? 'active' : ''} aria-pressed={masterImage === 'implantacao'} onClick={() => changeMaster('implantacao')}>Implantação geral</button>
+                <button type="button" className={masterImage === 'pavimento' ? 'active' : ''} aria-pressed={masterImage === 'pavimento'} onClick={() => changeMaster('pavimento')}>Pavimento tipo</button>
+              </div>
+              <div className="erm31-planZoomButtons">
+                <button type="button" aria-label="Reduzir imagem" disabled={masterZoom<=1} onClick={() => changeMasterZoom(masterZoom-.25)}>−</button>
+                <output aria-label="Zoom atual">{Math.round(masterZoom*100)}%</output>
+                <button type="button" aria-label="Ampliar imagem" disabled={masterZoom>=2.5} onClick={() => changeMasterZoom(masterZoom+.25)}>+</button>
+                <button type="button" aria-label="Restaurar enquadramento" onClick={() => {changeMasterZoom(1);setMasterOffset({x:0,y:0});}}>Ajustar</button>
+                <button type="button" aria-label="Abrir imagem em tela ampliada" onClick={() => setMasterExpanded(true)}>⛶ Ampliar</button>
+              </div>
+            </div>
+            <div className="erm20-masterVisual erm21-realMaster erm31-realPlan" aria-label={currentMasterAlt}
+              onPointerDown={event => { if(masterZoom>1){masterPointer.current={x:event.clientX,y:event.clientY};event.currentTarget.setPointerCapture(event.pointerId);} }}
+              onPointerMove={moveMaster}
+              onPointerUp={event => {masterPointer.current=null;if(event.currentTarget.hasPointerCapture(event.pointerId))event.currentTarget.releasePointerCapture(event.pointerId);}}
+              onPointerCancel={()=>{masterPointer.current=null;}}>
+              <img className="erm31-planImage" src={currentMasterSource} alt={currentMasterAlt} draggable={false} loading="lazy" decoding="async" style={{transform:`translate(${masterOffset.x}px,${masterOffset.y}px) scale(${masterZoom})`}} />
+              <small>{masterImage === 'implantacao' ? 'IMPLANTAÇÃO DO BOOK OFICIAL · IMAGEM INTEIRA SEM CORTES' : 'PAVIMENTO TIPO · IMAGEM INTEIRA SEM CORTES'} · {masterZoom>1?'Arraste para explorar':'Use + para explorar detalhes'}</small>
+            </div>
+            {masterExpanded && <div className="erm31-imageOverlay" role="dialog" aria-modal="true" aria-label="Visualização ampliada da imagem principal">
+              <div className="erm31-overlayTop"><strong>{masterImage === 'implantacao' ? 'Implantação geral' : 'Planta do pavimento tipo'}</strong><button type="button" onClick={() => setMasterExpanded(false)} aria-label="Fechar imagem ampliada">✕ Fechar</button></div>
+              <img src={currentMasterSource} alt={currentMasterAlt} draggable={false} />
+            </div>}
+            <div className="erm20-masterLower">
+              <div className="erm20-masterIndex">
+                <div className="erm20-masterFilters">{(['todos','acessos','lazer','conveniencia','estrutura'] as Group[]).map((g) => <button key={g} type="button" className={amenityGroup === g ? 'active' : ''} onClick={() => setAmenityGroup(g)}>{groupNames[g]}</button>)}</div>
+                <div className="erm20-facilities erm31-facilities">
+                  {filtered.map((p) => <button key={p.number} type="button" className={facility === p.number ? 'active' : ''} aria-pressed={facility === p.number} onClick={() => setFacility(p.number)}>
+                    <b>{String(p.number).padStart(2, '0')}</b>
+                    {facilityImages[p.number] && <img className="erm31-facilityThumb" src={`${BRAND_ASSETS}${facilityImages[p.number]}-thumb.webp`} alt="" loading="lazy" decoding="async" />}
+                    <span>{p.name}</span>
+                  </button>)}
+                </div>
+              </div>
+              <div className="erm20-masterPreview erm31-masterPreview" aria-live="polite">
+                {facilityFile ?
+                  <button type="button" className="erm31-facilityPhotoButton" aria-label={`Ampliar imagem de ${feature.name}`} onClick={() => setFacilityExpanded(true)}><img key={facility} src={`${BRAND_ASSETS}${facilityFile}.webp`} alt={`Perspectiva do ambiente: ${feature.name}`} loading="lazy" decoding="async" /></button> :
+                  <div className="erm31-previewPending" role="status"><UiIcon name="image" size={28}/><strong>Imagem ainda não fornecida</strong><span>Envie a perspectiva específica de {feature.name} para completar este ambiente.</span></div>}
+                <div className="erm31-featureCaption"><span>{String(feature.number).padStart(2, '0')} · {groupNames[feature.category]}</span><h3>{feature.name}</h3><small>{facilityFile ? 'Perspectiva enviada para este ambiente · imagem inteira, sem cortes' : 'Aguardando o arquivo deste ambiente'}</small></div>
+              </div>
+            </div>
+            {facilityExpanded && facilityFile && <div className="erm31-imageOverlay" role="dialog" aria-modal="true" aria-label={`Foto ampliada de ${feature.name}`}>
+              <div className="erm31-overlayTop"><strong>{feature.name}</strong><button type="button" onClick={() => setFacilityExpanded(false)} aria-label="Fechar foto ampliada">✕ Fechar</button></div>
+              <img src={`${BRAND_ASSETS}${facilityFile}.webp`} alt={`Perspectiva ampliada do ambiente ${feature.name}`} />
+            </div>}
+            <p className="erm20-disclaimer">As imagens foram fornecidas para a apresentação comercial. A georreferenciação de pontos sobre a implantação ainda depende do arquivo mestre validado.</p>
+          </div>}
           {section === 'plantas' && <div className="erm20-content erm20-plans">
             {tab === 'tipologias' && <><div className="erm20-plansTitle"><SectionBanner title="PAVIMENTO TIPO"/><h2>ESCOLHA O ESPAÇO QUE COMBINA COM VOCÊ.</h2></div><div className="erm20-floorPlan"><div className="erm20-planUpper"><div className="erm20-floorBuilding">{Array.from({ length: 8 }, (_, i) => { const t=endingToType[i+1]; return <button type="button" key={i} onClick={() => { setType(t); chooseTab('plantas'); }} title={`Terminação ${i+1}: ${types[t].name}`} className={`unit unit-${t}`}><span>{String(i+1).padStart(2,'0')}</span><b>{types[t].name.toUpperCase()}</b></button>; })}<div className="erm20-floorCore">CIRCULAÇÃO</div></div></div><div className="erm20-floorTypes">{typeKeys.map((t) => <button type="button" key={t} onClick={() => { setType(t); chooseTab('plantas'); }}><span className="erm20-swatch"/><h3>{types[t].name}</h3><strong>{types[t].area}</strong><small>{types[t].rooms}</small></button>)}</div></div></>}
             {tab === 'plantas' && <><div className="erm20-plantDetailHeader"><SectionBanner title="PLANTA TIPO"/><div><h2>{selected.name.toUpperCase()}</h2><span>{selected.area}</span></div></div><div className="erm20-bigPlan"><button type="button" className="erm20-arrow left" onClick={() => stepType(-1)} aria-label="Planta anterior">‹</button><Photo id={selectedType === 'spazzio' && plant3D ? 'spazzio-3d' : selected.image} alt={`Planta ${selected.name} do Easy Rota do Mar`} fit="contain"/><button type="button" className="erm20-arrow right" onClick={() => stepType(1)} aria-label="Próxima planta">›</button></div><div className="erm20-planFooter"><div><p>Os ambientes apresentados correspondem às tipologias documentadas do Easy Rota do Mar. Imagens ilustrativas e sujeitos à confirmação do material comercial.</p><ul><li>{selected.rooms}</li><li>{selected.parking}</li><li>{selected.description}</li></ul></div><div className="erm20-apartmentPicker"><b>TORRE {tower.toUpperCase()} · TERMINAÇÕES</b><div>{Array.from({length:8},(_,i)=>i+1).map((n)=><button type="button" className={selectedEnding===n?'active':''} key={n} onClick={()=>{setSelectedEnding(n);setSelectedType(endingToType[n]);setPlant3D(false);}}>{String(n).padStart(2,'0')}</button>)}</div><small>Referência por tipo; não indica unidade disponível.</small><label><input type="checkbox" checked={plant3D} onChange={(e: ChangeEvent<HTMLInputElement>)=>setPlant3D(e.target.checked)} disabled={selectedType!=='spazzio'}/> Planta 3D (Spazzio)</label></div></div></>}

@@ -821,3 +821,55 @@
   .erm23 .erm25-pattern,
   .erm23 .erm25-centralMenu::after {background-size:350px 73px;}
 }
+
+
+/* ROCHA R31 — fotografias originais dos ambientes, sem cortes nem distorcao.
+ * Classes isoladas no modulo masterplan, sem alterar os demais componentes.
+ */
+.erm21 .erm31-planControls{display:flex;flex-wrap:wrap;gap:9px;margin:0 0 10px}
+.erm21 .erm31-planControls button{font:600 12px var(--erm24-type-ui, "Segoe UI", sans-serif);padding:8px 14px;border:1px solid #62afc9;border-radius:7px;background:#e8f5fa;color:#064364;cursor:pointer}
+.erm21 .erm31-planControls button.active{background:#02c5e4;color:#002c48;border-color:#01d4f1}
+.erm21 .erm31-realPlan{height:clamp(265px,43vh,520px);min-height:265px;background:#f8fafc;border:1px solid #50b1cd;box-sizing:border-box}
+.erm21 .erm31-realPlan::before{content:none!important;display:none!important}
+.erm21 .erm31-realPlan>img.erm31-planImage{width:100%;height:100%;max-height:100%;object-fit:contain;object-position:center;background:#fff}
+.erm21 .erm31-realPlan>small{bottom:9px;left:9px;right:auto;max-width:min(92%,520px);color:#eefaff;background:#003251e8}
+.erm21 .erm31-facilities button{min-height:40px;gap:0;overflow:hidden}
+.erm21 .erm31-facilities button>b{width:32px;min-width:32px}
+.erm21 .erm31-facilities button>.erm31-facilityThumb{width:46px;min-width:46px;height:38px;max-height:38px;object-fit:contain;object-position:center;background:#f5f7f8;border-right:1px solid #95c9d9;box-sizing:border-box}
+.erm21 .erm31-facilities button>span{min-width:0;overflow-wrap:anywhere;line-height:1.25;padding:4px 6px}
+.erm21 .erm31-masterPreview{height:clamp(235px,31vh,365px);max-height:365px;background:#002a47;display:flex;align-items:center;justify-content:center}
+.erm21 .erm31-masterPreview>img{width:100%;height:100%;min-height:0;object-fit:contain;object-position:center;background:#002a47}
+.erm21 .erm31-masterPreview>.erm31-previewPending{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:30px 18px 95px;color:#c6e9f2;font-size:12px}
+.erm21 .erm31-previewPending strong{font-size:13px;color:#fff}
+.erm21 .erm31-previewPending>span{max-width:260px;line-height:1.4}
+.erm21 .erm31-masterPreview>.erm31-featureCaption{pointer-events:none;padding-top:40px;background:linear-gradient(0deg,rgba(0,30,52,.96),rgba(0,30,52,.78) 60%,transparent)}
+.erm21 .erm31-masterPreview>.erm31-featureCaption h3{font:normal 21px Georgia,serif;line-height:1.1;margin:3px 0 3px}
+@media(max-width:900px){.erm21 .erm31-realPlan{height:38vh;min-height:230px}.erm21 .erm31-masterPreview{height:290px;max-width:100%;max-height:290px}.erm21 .erm31-facilities{max-height:34vh}}
+@media(max-width:560px){.erm21 .erm31-planControls button{font-size:11px;padding:7px 10px}.erm21 .erm31-realPlan{height:32vh;min-height:210px}.erm21 .erm31-masterPreview{height:240px;max-height:240px}.erm21 .erm31-facilities button{min-height:38px}.erm21 .erm31-facilities button>.erm31-facilityThumb{width:42px;min-width:42px;height:36px}}
+
+/* ROCHA R31 R2 — interatividade de imagem principal, identidade azul e fidelidade ao enquadramento. */
+.erm21 .erm31-planControls{align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.erm21 .erm31-planModeButtons,.erm21 .erm31-planZoomButtons{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.erm21 .erm31-planControls button{transition:background .17s,border-color .17s,box-shadow .17s}
+.erm21 .erm31-planControls button:hover:not(:disabled){border-color:#06d0ed;box-shadow:0 0 0 2px #18cdef24}
+.erm21 .erm31-planControls button:disabled{opacity:.4;cursor:default}
+.erm21 .erm31-planZoomButtons output{font:600 11px 'Segoe UI',sans-serif;min-width:42px;text-align:center;color:#053c5d}
+.erm21 .erm31-realPlan{height:clamp(320px,54vh,600px);min-height:320px;border:1px solid #1a8fba;border-radius:11px;background:radial-gradient(ellipse at center,#145f80 0%,#073954 52%,#002a45 100%);cursor:grab;touch-action:pan-y}
+.erm21 .erm31-realPlan:active{cursor:grabbing}
+.erm21 .erm31-realPlan>img.erm31-planImage{background:transparent;width:100%;height:100%;max-height:100%;object-fit:contain;object-position:center;will-change:transform;transition:transform .12s ease;display:block;user-select:none;pointer-events:none}
+.erm21 .erm31-realPlan>small{right:12px;left:auto;bottom:10px;padding:5px 9px;border-radius:5px;font-size:10px;pointer-events:none}
+.erm21 .erm31-masterPreview>.erm31-facilityPhotoButton{display:block;position:absolute;inset:0;padding:0;border:0;background:#003551;cursor:zoom-in;width:100%;height:100%;overflow:hidden}
+.erm21 .erm31-masterPreview>.erm31-facilityPhotoButton>img{width:100%;height:100%;object-fit:contain;object-position:center;animation:erm31ImageReveal .3s ease both}
+.erm21 .erm31-facilities button{transition:background-color .16s,border-color .16s;cursor:pointer;border-radius:4px}
+.erm21 .erm31-facilities button:hover{background:#a6eaf2;color:#003d66}
+.erm21 .erm31-facilities button.active{background:#00d4ef;color:#002c4d;border-color:#0086a5;box-shadow:inset 0 0 0 1px #00739c}
+.erm21 .erm31-masterPreview>.erm31-featureCaption{z-index:1}
+.erm31-imageOverlay{position:fixed;inset:0;z-index:100;background:linear-gradient(135deg,#00172b,#003a5d 70%,#001a2e);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:75px 24px 30px;box-sizing:border-box}
+.erm31-imageOverlay>img{width:100%;height:100%;object-fit:contain;object-position:center;min-height:0;max-height:100%}
+.erm31-overlayTop{position:absolute;top:15px;left:24px;right:24px;display:flex;align-items:center;justify-content:space-between;gap:20px;color:white;font:600 15px 'Segoe UI',sans-serif}
+.erm31-overlayTop button{padding:9px 15px;border:1px solid #27bed6;border-radius:8px;background:#06435f;color:white;cursor:pointer;font:600 12px 'Segoe UI',sans-serif}
+.erm31-overlayTop button:hover{background:#0789a9}
+@keyframes erm31ImageReveal{from{opacity:.35;transform:scale(.985)}to{opacity:1;transform:scale(1)}}
+@media(max-width:900px){.erm21 .erm31-realPlan{height:clamp(280px,46vh,480px);min-height:280px}.erm21 .erm31-masterPreview{height:320px;max-height:320px;max-width:100%}}
+@media(max-width:560px){.erm21 .erm31-realPlan{height:clamp(255px,38vh,400px);min-height:255px}.erm21 .erm31-planControls{align-items:stretch}.erm21 .erm31-planZoomButtons{width:100%}.erm21 .erm31-planControls button{font-size:10px;padding:7px 9px}.erm21 .erm31-planZoomButtons output{min-width:35px}.erm21 .erm31-imageOverlay{padding:75px 8px 15px}.erm21 .erm31-overlayTop{left:10px;right:10px}.erm21 .erm31-masterPreview{height:260px;max-height:260px}}
+@media(prefers-reduced-motion:reduce){.erm21 .erm31-masterPreview>.erm31-facilityPhotoButton>img{animation:none}.erm21 .erm31-realPlan>img.erm31-planImage{transition:none}}
