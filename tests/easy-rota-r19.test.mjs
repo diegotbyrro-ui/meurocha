@@ -479,3 +479,70 @@ test('R32: responsividade, acessibilidade e sem inventar estoque ou preços',()=
   assert.match(client,/não disponibilidade de unidades/);
   assert.doesNotMatch(client,/R32_ESTOQUE_INVENTADO/);
 });
+
+
+// R33 — cartoes 3D ilustrativos, quatro cores, pavimento inteiro e planta oficial no detalhe.
+test('R33 R2: imagens dos 3 tipos derivadas da planta original em TIFF, sem geometria inventada',()=>{
+  for (const type of ['slim','premium','master']) {
+    const f=`erm33r2-${type}-oficial-perspectiva.webp`;
+    const buf=readFileSync(join(assetDir,f));
+    assert.ok(buf.length > 30000,f);
+    assert.equal(buf.subarray(0,4).toString('ascii'),'RIFF');
+    assert.equal(buf.subarray(8,12).toString('ascii'),'WEBP');
+    assert.ok(client.includes(f),f);
+  }
+  assert.match(client,/sem modificar a distribuição dos ambientes/);
+  assert.match(client,/não são maquetes executivas 3D/);
+  assert.ok(client.includes('erm33-perspectiva-spazzio-book.webp'));
+});
+test('R33: imagens técnicas 2D ainda são mostradas ao abrir tipologia',()=>{
+  assert.ok(client.includes('r32Asset(r32PlanFile[selectedType])'));
+  assert.ok(client.includes('setTypeAndShow(key)'));
+  assert.match(client,/erm32-planFocus/);
+});
+test('R33: zona translúcida marcada para cada uma das oito terminações',()=>{
+  const block=client.slice(client.indexOf('const r33Zones:'),client.indexOf('const r32PlanFile'));
+  const found=[...block.matchAll(/ending:(\d+),x:/g)].map(m=>Number(m[1]));
+  assert.deepEqual(found.sort((a,b)=>a-b),[1,2,3,4,5,6,7,8]);
+  assert.match(client,/erm33-zone erm33-\$\{key\}/);
+  assert.match(css,/\.erm21 \.erm33-zone\.isSelected/);
+  assert.match(css,/opacity:\.23/);
+});
+test('R33: cores por tipologia mantêm o mesmo mapeamento dos marcadores aos cards',()=>{
+  for(const key of ['slim','premium','master','spazzio']){
+    assert.match(css,new RegExp('\\.erm21 \\.erm33-'+key+'\\{'));
+    assert.ok(client.includes('erm33-${type}'));
+    assert.ok(client.includes('erm33-${key}'));
+  }
+  assert.match(client,/erm33-unitLabel/);
+});
+test('R33: pavimento transparente e vistas sem corte',()=>{
+  const buf=readFileSync(join(assetDir,'erm33-pavimento-transparente.webp'));
+  assert.equal(buf.subarray(0,4).toString('ascii'),'RIFF');
+  assert.equal(buf.subarray(8,12).toString('ascii'),'WEBP');
+  assert.match(css,/\.erm21 \.erm33-building>img\{[^}]*object-fit:contain/);
+  assert.match(css,/\.erm21 \.erm33-perspective img\{[^}]*object-fit:contain/);
+});
+test('R33: nao altera dados de tipologia nem disponibilidade',()=>{
+  for(const term of ["endings: [1, 8]","endings: [2, 3]","endings: [6, 7]","endings: [4, 5]"]){assert.ok(client.includes(term));}
+  assert.match(client,/não disponibilidade de unidades/);
+});
+
+// R33 R2 — comparação possível entre vista oficial ortogonal e a projeção baseada na mesma imagem.
+test('R33 R2: detalhe alterna Planta técnica ou Perspectiva sem perder a imagem oficial',()=>{
+  assert.match(client,/erm33-viewSwitch/);
+  assert.match(client,/setPlant3D\(false\)/);
+  assert.match(client,/setPlant3D\(true\)/);
+  assert.match(client,/plant3D \? r33CardAsset\[selectedType\] : r32Asset\(r32PlanFile\[selectedType\]\)/);
+  assert.match(client,/aria-pressed=\{plant3D\}/);
+  assert.match(css,/\.erm21 \.erm33-viewSwitch button\.active/);
+});
+test('R33 R2: todas as associações de tipologia e fonte oficial preservadas',()=>{
+  const names=['PlantaTipo1_EasyRMTEXTOS','PlantaTipo2_EasyRMTEXTOS','PlantaTipo3_EasyRM'];
+  for (const n of ['Slim','Premium','Master','Spazzio']) assert.ok(client.includes(n));
+  for (const k of ['slim','premium','master']) {
+    assert.match(client,new RegExp(`erm33r2-${k}-oficial-perspectiva\\.webp`));
+  }
+  assert.ok(client.includes('planta-spazzio-book-3d'));
+  assert.ok(client.includes('Planta técnica'));
+});

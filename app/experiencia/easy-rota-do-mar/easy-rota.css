@@ -935,3 +935,47 @@
 @media(max-width:1000px){.erm21 .erm32-tipologyCards{grid-template-columns:repeat(2,minmax(0,1fr))}.erm21 .erm32-head{flex-direction:column;gap:4px}.erm21 .erm32-head h1{text-align:left}.erm21 .erm32-planInfo{grid-template-columns:1fr}.erm21 .erm32-masterMoved{flex-wrap:wrap}}
 @media(max-width:600px){.erm21 .erm32-plans{padding:13px 10px 18px}.erm21 .erm32-head h1{font-size:20px}.erm21 .erm32-hint{font-size:11px}.erm21 .erm32-building{aspect-ratio:2500/957;overflow:visible;min-height:0}.erm21 .erm32-unit{min-width:22px;min-height:29px;width:9%;height:40%;border-radius:4px}.erm21 .erm32-tipologyCards{gap:7px}.erm21 .erm32-typeCard>img{height:92px}.erm21 .erm32-typeCard>div{padding:9px 8px;min-height:114px}.erm21 .erm32-typeCard h2{font-size:18px}.erm21 .erm32-typeCard p{font-size:10px}.erm21 .erm32-detailTop{flex-wrap:wrap;gap:9px}.erm21 .erm32-detailTop>div{text-align:left}.erm21 .erm32-planFocus{grid-template-columns:27px minmax(0,1fr) 27px;gap:3px;height:36vh;min-height:230px}.erm21 .erm32-navArrow{width:27px;height:33px;border-radius:6px;font-size:23px}.erm21 .erm32-planPhoto>span{font-size:8px;right:4px;bottom:4px}.erm21 .erm32-planInfo{gap:9px;padding:12px}.erm21 .erm32-endingPicker>div{gap:3px}.erm21 .erm32-endingPicker button{font-size:10px;height:30px}.erm21 .erm32-lightbox{padding:12px}.erm21 .erm32-lightbox>div{font-size:12px}.erm21 .erm32-masterMoved{padding:10px}}
 @media(prefers-reduced-motion:reduce){.erm21 .erm32-typeCard,.erm21 .erm32-unit{transition:none}}
+
+/* R33 — 3D ilustrativo nos cartoes, cores de tipologia e realce sutil, sem alterar a planta oficial do detalhe. */
+.erm21 .erm33-slim{--erm33-accent:#00cbe9;--erm33-pale:#cdf5ff;--erm33-soft:#a9eaff;--erm33-ink:#004663}
+.erm21 .erm33-premium{--erm33-accent:#00ad92;--erm33-pale:#d4f7eb;--erm33-soft:#acf0df;--erm33-ink:#005a54}
+.erm21 .erm33-master{--erm33-accent:#c39a49;--erm33-pale:#fff2da;--erm33-soft:#f0deae;--erm33-ink:#655021}
+.erm21 .erm33-spazzio{--erm33-accent:#7960d4;--erm33-pale:#e6dfff;--erm33-soft:#bfb3f7;--erm33-ink:#443385}
+.erm21 .erm33-plans .erm32-head{margin-bottom:7px}
+.erm21 .erm33-plans .erm32-hint{margin-bottom:7px}
+.erm21 .erm33-building{background:radial-gradient(ellipse at 50% 45%,#075678 0%,#003957 65%,#002a45 100%);border:1px solid #19a7c9;box-shadow:0 8px 23px #003b5f40;aspect-ratio:2500/957;max-height:min(48vh,465px)}
+.erm21 .erm33-building>img{object-fit:contain;object-position:center}
+.erm21 .erm33-zones{position:absolute;inset:0;z-index:1;pointer-events:none}
+.erm21 .erm33-zone{position:absolute;display:block;box-sizing:border-box;background:var(--erm33-accent);opacity:.095;clip-path:inset(1% 1% round 3px);transition:opacity .22s,filter .22s;mix-blend-mode:multiply}
+.erm21 .erm33-zone.isSelected{opacity:.23;filter:saturate(1.45);outline:0}
+.erm21 .erm33-unit{width:max(8.6%,86px);height:11%;min-height:28px;max-height:47px;min-width:0;display:flex;align-items:center;justify-content:center;border:0;background:transparent!important;box-shadow:none!important;border-radius:9px;padding:0;z-index:3}
+.erm21 .erm33-unit:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.erm21 .erm33-unitLabel{white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:78px;min-height:25px;padding:2px 7px 2px 2px;border-radius:30px;color:#fff;background:var(--erm33-accent);border:1px solid #ffffffaa;box-shadow:0 1px 5px #002b48ba;font:700 clamp(8px,.72vw,11px)/1 'Segoe UI',sans-serif;transition:transform .2s,box-shadow .2s}
+.erm21 .erm33-unitLabel b{display:grid;place-items:center;min-width:21px;height:21px;border-radius:50%;background:#ffffff30;font-size:clamp(9px,1vw,14px)}
+.erm21 .erm33-unit.isSelected .erm33-unitLabel,.erm21 .erm33-unit:hover .erm33-unitLabel{transform:scale(1.055);box-shadow:0 0 0 2px #fff9,0 0 15px var(--erm33-accent)}
+.erm21 .erm33-tipologyCards{gap:9px;margin:10px 0 5px;grid-template-columns:repeat(4,minmax(0,1fr))}
+.erm21 .erm33-typeCard{position:relative;display:grid;grid-template-columns:42% 58%;min-height:147px;height:clamp(147px,19vh,174px);max-height:180px;border:2px solid var(--erm33-accent);background:linear-gradient(150deg,var(--erm33-pale),var(--erm33-soft));box-shadow:0 4px 11px #003f5d30;color:var(--erm33-ink);border-radius:12px;isolation:isolate}
+.erm21 .erm33-typeCard.isSelected{box-shadow:0 0 0 2px #ffffffcc,0 4px 15px var(--erm33-accent)}
+.erm21 .erm33-typeCard:hover,.erm21 .erm33-typeCard:focus-visible{border-color:var(--erm33-accent);box-shadow:0 0 0 2px #fff,0 5px 18px #003b503b}
+.erm21 .erm33-perspective{grid-area:1/2/2/3;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:3px 7px 3px 0}
+.erm21 .erm33-perspective img{display:block;max-width:100%;width:100%;height:100%;object-fit:contain;object-position:center;background:none;filter:drop-shadow(1px 7px 5px #002d5330)}
+.erm21 .erm33-typeCard .erm33-cardInfo{grid-area:1/1/2/2;padding:15px 0 8px 11px;min-height:0;display:flex;flex-direction:column;justify-content:center;z-index:1;overflow:hidden}
+.erm21 .erm33-cardInfo h2{display:flex;align-items:center;gap:5px;margin:0 0 7px;font:400 clamp(15px,1.6vw,21px)/1 Georgia,serif;color:var(--erm33-ink)}
+.erm21 .erm33-cardInfo .erm32-swatch{margin:0;flex:0 0 9px;background:var(--erm33-accent)}
+.erm21 .erm33-cardInfo strong{color:var(--erm33-ink);font:bold clamp(12px,1.12vw,15px)/1.2 'Segoe UI',sans-serif;margin:0 0 5px}
+.erm21 .erm33-cardInfo p{font:600 clamp(9px,.85vw,11px)/1.3 'Segoe UI',sans-serif;margin:0 0 4px}
+.erm21 .erm33-cardInfo small{font:400 clamp(8px,.76vw,10px)/1.2 'Segoe UI',sans-serif;color:var(--erm33-ink);margin:0 0 4px}
+.erm21 .erm33-cardInfo em{font:400 9px/1.1 'Segoe UI',sans-serif;color:var(--erm33-ink);opacity:.8}
+@media(max-width:1250px){.erm21 .erm33-typeCard{grid-template-columns:40% 60%;height:145px}.erm21 .erm33-cardInfo h2{font-size:16px}.erm21 .erm33-cardInfo p{font-size:9px}.erm21 .erm33-cardInfo small{font-size:8px}}
+@media(max-width:900px){.erm21 .erm33-plans .erm32-building{max-height:none}.erm21 .erm33-tipologyCards{grid-template-columns:repeat(2,minmax(0,1fr))}.erm21 .erm33-typeCard{height:165px;max-height:none}.erm21 .erm33-cardInfo h2{font-size:20px}.erm21 .erm33-unitLabel{gap:2px;min-height:20px;min-width:61px;font-size:8px;padding:1px 4px 1px 1px}.erm21 .erm33-unitLabel b{min-width:16px;height:16px;font-size:9px}}
+@media(max-width:520px){.erm21 .erm33-plans{padding:10px 9px 16px}.erm21 .erm33-building{min-height:125px;aspect-ratio:2500/957;overflow:hidden}.erm21 .erm33-unit{min-width:0;width:12%;height:16%;min-height:20px}.erm21 .erm33-unitLabel{min-width:0;font-size:7px;padding:1px 3px;gap:2px}.erm21 .erm33-unitLabel b{font-size:8px;min-width:14px;height:14px}.erm21 .erm33-tipologyCards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.erm21 .erm33-typeCard{height:130px;grid-template-columns:44% 56%}.erm21 .erm33-cardInfo h2{font-size:14px}.erm21 .erm33-cardInfo p,.erm21 .erm33-cardInfo small{font-size:8px}.erm21 .erm33-cardInfo em{font-size:8px}.erm21 .erm33-cardInfo{padding:8px 0 6px 7px}.erm21 .erm33-plans .erm32-head h1{font-size:18px}}
+@media(prefers-reduced-motion:reduce){.erm21 .erm33-unitLabel,.erm21 .erm33-zone,.erm21 .erm33-typeCard{transition:none}}
+
+/* R33 R2: alternância explícita entre as plantas oficiais e suas projeções inclinadas. */
+.erm21 .erm33-viewSwitch{display:flex;justify-content:center;align-items:center;gap:8px;margin:5px auto 10px;flex-wrap:wrap}
+.erm21 .erm33-viewSwitch button{border:1px solid #2c9fbd;background:#003d5a;color:#b4e1ef;border-radius:7px;min-height:35px;padding:7px 15px;cursor:pointer;font:600 11px/1.2 'Segoe UI',sans-serif;transition:background .18s,color .18s}
+.erm21 .erm33-viewSwitch button.active{background:#08bbd6;color:#052d43;border-color:#8bf5ff}
+.erm21 .erm33-viewSwitch button:focus-visible{outline:2px solid white;outline-offset:2px}
+.erm21 .erm33-perspective img{object-fit:contain;max-width:100%;max-height:100%}
+@media(max-width:520px){.erm21 .erm33-viewSwitch{gap:5px}.erm21 .erm33-viewSwitch button{font-size:10px;padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){.erm21 .erm33-viewSwitch button{transition:none}}

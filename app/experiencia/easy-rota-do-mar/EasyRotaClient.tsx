@@ -95,7 +95,23 @@ const r32UnitPoints: { ending: number; x: number; y: number }[] = [
   {ending:1,x:15.1,y:59.0},{ending:2,x:31.0,y:59.0},
   {ending:3,x:66.9,y:59.0},{ending:4,x:82.0,y:59.0},
 ];
+// R33 R2: perspectivas projetadas sem inventar plantas, baseadas nos arquivos TIFF oficiais.
+// Nao sao maquetes 3D de projeto executivo. As plantas originais permanecem acessiveis.
+const r33CardAsset: Record<TypeKey,string> = {
+  slim: `${BRAND_ASSETS}erm33r2-slim-oficial-perspectiva.webp`,
+  premium: `${BRAND_ASSETS}erm33r2-premium-oficial-perspectiva.webp`,
+  master: `${BRAND_ASSETS}erm33r2-master-oficial-perspectiva.webp`,
+  spazzio: `${BRAND_ASSETS}erm33-perspectiva-spazzio-book.webp`,
+};
+// Areas aproximadas apenas para realce visual; os oito botoes sao os alvos funcionais.
 const r32Asset = (name: string) => `${BRAND_ASSETS}erm32-${name}.webp`;
+const r33Zones: {ending:number; x:number;y:number;w:number;h:number}[] = [
+  {ending:8,x:1.4,y:13.5,w:28.3,h:30.5}, {ending:1,x:1.4,y:54.0,w:28.3,h:29.0},
+  {ending:7,x:30.0,y:12.0,w:14.6,h:31.0}, {ending:2,x:30.0,y:55.0,w:14.6,h:29.0},
+  {ending:6,x:55.4,y:12.0,w:19.5,h:31.0}, {ending:3,x:55.4,y:55.0,w:19.5,h:29.0},
+  {ending:5,x:75.4,y:5.0,w:22.8,h:39.0}, {ending:4,x:75.4,y:55.0,w:22.8,h:39.0},
+];
+
 const r32PlanFile: Record<TypeKey, string> = {
   slim:'planta-slim', premium:'planta-premium', master:'planta-master', spazzio:'planta-spazzio-book-3d',
 };
@@ -473,53 +489,65 @@ export default function EasyRotaClient() {
               <button type="button" onClick={() => { goto('plantas','tipologias'); setSelectedNav('plantas'); }}>EXPLORAR PAVIMENTO TIPO <UiIcon name="arrow" size={16}/></button>
             </div>
           </div>}
-          {section === 'plantas' && <div className="erm20-content erm20-plans erm32-plans">
+          {section === 'plantas' && <div className="erm20-content erm20-plans erm32-plans erm33-plans">
             {tab === 'tipologias' && <>
               <div className="erm32-head">
                 <SectionBanner title="PAVIMENTO TIPO" caption="08 terminações · 04 opções de planta" />
                 <h1>ESCOLHA A PLANTA QUE COMBINA COM VOCÊ</h1>
               </div>
               <p className="erm32-hint">Toque no número de um apartamento na imagem ou selecione uma das tipologias abaixo.</p>
-              <div className="erm32-building" aria-label="Pavimento tipo com oito terminações interativas">
-                <img src={r32Asset('pavimento-interativo')} alt="Pavimento tipo completo do Easy Rota do Mar com apartamentos 01 a 08 e duas caixas de elevadores" draggable={false} />
+              <div className="erm32-building erm33-building" aria-label="Pavimento tipo com oito terminações interativas e cores por tipologia">
+                <img src={`${BRAND_ASSETS}erm33-pavimento-transparente.webp`} alt="Pavimento tipo completo do Easy Rota do Mar com apartamentos 01 a 08 e duas caixas de elevadores" draggable={false} />
+                <div className="erm33-zones" aria-hidden="true">
+                  {r33Zones.map((zone) => {
+                    const key = endingToType[zone.ending];
+                    return <span key={zone.ending} className={`erm33-zone erm33-${key} ${selectedEnding===zone.ending?'isSelected':''}`}
+                      style={{left:`${zone.x}%`,top:`${zone.y}%`,width:`${zone.w}%`,height:`${zone.h}%`}} />;
+                  })}
+                </div>
                 {r32UnitPoints.map((p) => {
                   const type = endingToType[p.ending];
-                  return <button key={p.ending} type="button" className={`erm32-unit ${selectedEnding===p.ending?'isSelected':''}`} style={{left:`${p.x}%`,top:`${p.y}%`}}
+                  return <button key={p.ending} type="button" className={`erm32-unit erm33-unit erm33-${type} ${selectedEnding===p.ending?'isSelected':''}`} style={{left:`${p.x}%`,top:`${p.y}%`}}
                     aria-label={`Ver planta ${types[type].name}, terminação ${String(p.ending).padStart(2,'0')}`} title={`${String(p.ending).padStart(2,'0')} · ${types[type].name}`}
                     onClick={() => {setSelectedType(type);setSelectedEnding(p.ending);setPlant3D(false);chooseTab('plantas');}}>
-                    <span className="erm32-unitRing" aria-hidden="true" />
+                    <span className="erm33-unitLabel"><b>{String(p.ending).padStart(2,'0')}</b><span>{types[type].name.toUpperCase()}</span></span>
                   </button>;
                 })}
               </div>
-              <div className="erm32-tipologyCards" aria-label="Quatro tipologias disponíveis">
-                {typeKeys.map((key) => <button key={key} type="button" className="erm32-typeCard" onClick={() => setTypeAndShow(key)}>
-                  <img src={r32Asset(r32PlanFile[key])} alt={`Visualização da planta ${types[key].name}`} loading="lazy" />
-                  <div><span className="erm32-swatch"/><h2>{types[key].name.toUpperCase()}</h2><strong>{types[key].area}</strong><p>{r32PlanDetails[key]}</p><small>Terminações {types[key].endings.map(n=>String(n).padStart(2,'0')).join(' / ')}</small></div>
+              <div className="erm32-tipologyCards erm33-tipologyCards" aria-label="Quatro tipologias disponíveis">
+                {typeKeys.map((key) => <button key={key} type="button" className={`erm32-typeCard erm33-typeCard erm33-${key} ${selectedType===key?'isSelected':''}`}
+                  aria-label={`Abrir planta técnica ${types[key].name}, ${types[key].area}`} onClick={() => setTypeAndShow(key)}>
+                  <div className="erm33-perspective"><img src={r33CardAsset[key]} alt={key==='spazzio'?`Perspectiva 3D Spazzio do book oficial`:`Perspectiva da planta oficial ${types[key].name}, com geometria da imagem original preservada`} loading="lazy" /></div>
+                  <div className="erm33-cardInfo"><h2><span className="erm32-swatch"/>{types[key].name.toUpperCase()}</h2><strong>{types[key].area}</strong><p>{r32PlanDetails[key]}</p><small>Terminações {types[key].endings.map(n=>String(n).padStart(2,'0')).join(' / ')}</small><em>{key==='spazzio'?'Perspectiva do book':'Projeção da planta oficial'}</em></div>
                 </button>)}
               </div>
-              <p className="erm32-disclaimer">Imagem de pavimento e plantas fornecidas pela Rocha. As terminações indicam o tipo de apartamento, não disponibilidade de unidades. Perspectiva Spazzio extraída do book oficial.</p>
+              <p className="erm32-disclaimer">Plantas técnicas fornecidas pela Rocha. Slim, Premium e Master exibem projeções inclinadas das imagens oficiais, sem modificar a distribuição dos ambientes; não são maquetes executivas 3D. Consulte a planta original sem perspectiva para leitura técnica. Spazzio utiliza a perspectiva oficial do book. Cores e áreas translúcidas são guias aproximados de tipologia, não disponibilidade de unidades.</p>
             </>}
             {tab === 'plantas' && <>
               <div className="erm32-detailTop">
                 <button type="button" className="erm32-back" onClick={() => chooseTab('tipologias')}>‹ VOLTAR AO PAVIMENTO TIPO</button>
                 <div><small>PLANTA SELECIONADA · TERMINAÇÃO {String(selectedEnding).padStart(2,'0')}</small><h1>{selected.name.toUpperCase()}</h1><strong>{selected.area}</strong></div>
               </div>
+              <div className="erm33-viewSwitch" role="group" aria-label="Modo de visualização da planta">
+                <button type="button" className={!plant3D ? 'active' : ''} aria-pressed={!plant3D} onClick={() => setPlant3D(false)}>Planta técnica</button>
+                <button type="button" className={plant3D ? 'active' : ''} aria-pressed={plant3D} onClick={() => setPlant3D(true)}>{selectedType==='spazzio' ? 'Perspectiva do book' : 'Perspectiva da planta'}</button>
+              </div>
               <div className="erm32-planFocus">
                 <button type="button" aria-label="Ver tipologia anterior" className="erm32-navArrow" onClick={() => stepType(-1)}>‹</button>
                 <button type="button" className="erm32-planPhoto" onClick={() => setR32Expanded(true)} aria-label={`Ampliar a planta ${selected.name}`}>
-                  <img src={r32Asset(r32PlanFile[selectedType])} alt={`Planta ${selected.name} do Easy Rota do Mar, imagem inteira sem cortes`} draggable={false}/>
+                  <img src={plant3D ? r33CardAsset[selectedType] : r32Asset(r32PlanFile[selectedType])} alt={plant3D ? `Perspectiva da planta ${selected.name}, imagem inteira sem cortes` : `Planta original ${selected.name} do Easy Rota do Mar, sem cortes`} draggable={false}/>
                   <span>⛶ AMPLIAR PLANTA</span>
                 </button>
                 <button type="button" aria-label="Ver próxima tipologia" className="erm32-navArrow" onClick={() => stepType(1)}>›</button>
               </div>
               <div className="erm32-planInfo">
-                <div><h2>{selected.name}</h2><p>{r32PlanDetails[selectedType]}</p><p>{selected.description}</p><small>{selectedType==='spazzio'?'Perspectiva 3D oficial do book; planta 2D individual ainda não fornecida.':'Planta individual oficial fornecida em TIFF, convertida sem cortes.'}</small></div>
+                <div><h2>{selected.name}</h2><p>{r32PlanDetails[selectedType]}</p><p>{selected.description}</p><small>{selectedType==='spazzio'?'Perspectiva 3D oficial do book; planta 2D individual ainda não fornecida.':'A planta técnica original é a referência de geometria. A perspectiva é uma projeção visual do próprio desenho.'}</small></div>
                 <div className="erm32-endingPicker"><strong>ESCOLHA A TERMINAÇÃO</strong><div>{Array.from({length:8},(_,i)=>i+1).map(n=><button key={n} type="button" className={selectedEnding===n?'active':''} aria-pressed={selectedEnding===n} onClick={() => {setSelectedEnding(n);setSelectedType(endingToType[n]);setPlant3D(false);}} title={`Terminação ${n}: ${types[endingToType[n]].name}`}>{String(n).padStart(2,'0')}</button>)}</div><small>Representação das tipologias, sem informação de estoque.</small></div>
               </div>
               <div className="erm32-detailBottom"><button type="button" onClick={() => chooseTab('tipologias')}>TIPOLOGIAS</button><button type="button" className="active" aria-current="page">PLANTAS</button></div>
               {r32Expanded && <div className="erm32-lightbox" role="dialog" aria-modal="true" aria-label={`Planta ampliada ${selected.name}`}>
                 <div><strong>{selected.name} · {selected.area}</strong><button type="button" onClick={() => setR32Expanded(false)} aria-label="Fechar planta ampliada">✕ FECHAR</button></div>
-                <img src={r32Asset(r32PlanFile[selectedType])} alt={`Planta ampliada ${selected.name}`} />
+                <img src={plant3D ? r33CardAsset[selectedType] : r32Asset(r32PlanFile[selectedType])} alt={plant3D ? `Perspectiva ampliada ${selected.name}` : `Planta original ampliada ${selected.name}`} />
               </div>}
             </>}
           </div>}
