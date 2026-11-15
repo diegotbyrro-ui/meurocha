@@ -103,13 +103,20 @@ const r33CardAsset: Record<TypeKey,string> = {
   master: `${BRAND_ASSETS}erm33r2-master-oficial-perspectiva.webp`,
   spazzio: `${BRAND_ASSETS}erm33-perspectiva-spazzio-book.webp`,
 };
-// Areas aproximadas apenas para realce visual; os oito botoes sao os alvos funcionais.
+// R34: a planta TIFF SEM TEXTOS e a unica fonte dos desenhos. O arquivo R33
+// tinha rotulos gravados nos pixels, duplicados pelos botoes interativos.
+// Os caminhos abaixo delimitam somente os apartamentos (nao a circulacao).
+// Coordenadas aproximadas sobre o quadro original 2500 x 957; sem valor tecnico.
 const r32Asset = (name: string) => `${BRAND_ASSETS}erm32-${name}.webp`;
-const r33Zones: {ending:number; x:number;y:number;w:number;h:number}[] = [
-  {ending:8,x:1.4,y:13.5,w:28.3,h:30.5}, {ending:1,x:1.4,y:54.0,w:28.3,h:29.0},
-  {ending:7,x:30.0,y:12.0,w:14.6,h:31.0}, {ending:2,x:30.0,y:55.0,w:14.6,h:29.0},
-  {ending:6,x:55.4,y:12.0,w:19.5,h:31.0}, {ending:3,x:55.4,y:55.0,w:19.5,h:29.0},
-  {ending:5,x:75.4,y:5.0,w:22.8,h:39.0}, {ending:4,x:75.4,y:55.0,w:22.8,h:39.0},
+const r34Zones: {ending:number; points:string}[] = [
+  {ending:8,points:'30,160 780,160 780,437 30,437'},
+  {ending:7,points:'780,100 1138,100 1138,437 780,437'},
+  {ending:6,points:'1360,100 1720,100 1720,160 1910,160 1910,437 1360,437'},
+  {ending:5,points:'1910,55 2465,55 2465,437 1910,437'},
+  {ending:1,points:'30,510 780,510 780,780 30,780'},
+  {ending:2,points:'780,510 1138,510 1138,780 1100,780 1100,850 780,850'},
+  {ending:3,points:'1360,510 1910,510 1910,780 1720,780 1720,850 1360,850'},
+  {ending:4,points:'1910,510 2465,510 2465,897 1910,897'},
 ];
 
 const r32PlanFile: Record<TypeKey, string> = {
@@ -497,22 +504,24 @@ export default function EasyRotaClient() {
               </div>
               <p className="erm32-hint">Toque no número de um apartamento na imagem ou selecione uma das tipologias abaixo.</p>
               <div className="erm32-building erm33-building" aria-label="Pavimento tipo com oito terminações interativas e cores por tipologia">
-                <img src={`${BRAND_ASSETS}erm33-pavimento-transparente.webp`} alt="Pavimento tipo completo do Easy Rota do Mar com apartamentos 01 a 08 e duas caixas de elevadores" draggable={false} />
-                <div className="erm33-zones" aria-hidden="true">
-                  {r33Zones.map((zone) => {
-                    const key = endingToType[zone.ending];
-                    return <span key={zone.ending} className={`erm33-zone erm33-${key} ${selectedEnding===zone.ending?'isSelected':''}`}
-                      style={{left:`${zone.x}%`,top:`${zone.y}%`,width:`${zone.w}%`,height:`${zone.h}%`}} />;
+                <div className="erm34-planStage">
+                  <img src={`${BRAND_ASSETS}erm34-pavimento-limpo.webp`} alt="Pavimento tipo oficial sem rotulos impressos, com oito unidades e circulacao preservada" draggable={false} />
+                  <svg className="erm34-zones" viewBox="0 0 2500 957" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+                    {r34Zones.map((zone) => {
+                      const key = endingToType[zone.ending];
+                      return <polygon key={zone.ending} points={zone.points}
+                        className={`erm34-zone erm33-${key} ${selectedEnding===zone.ending?'isSelected':''}`} />;
+                    })}
+                  </svg>
+                  {r32UnitPoints.map((p) => {
+                    const type = endingToType[p.ending];
+                    return <button key={p.ending} type="button" className={`erm32-unit erm33-unit erm33-${type} ${selectedEnding===p.ending?'isSelected':''}`} style={{left:`${p.x}%`,top:`${p.y}%`}}
+                      aria-label={`Ver planta ${types[type].name}, terminação ${String(p.ending).padStart(2,'0')}`} title={`${String(p.ending).padStart(2,'0')} · ${types[type].name}`}
+                      onClick={() => {setSelectedType(type);setSelectedEnding(p.ending);setPlant3D(false);chooseTab('plantas');}}>
+                      <span className="erm33-unitLabel"><b>{String(p.ending).padStart(2,'0')}</b><span>{types[type].name.toUpperCase()}</span></span>
+                    </button>;
                   })}
                 </div>
-                {r32UnitPoints.map((p) => {
-                  const type = endingToType[p.ending];
-                  return <button key={p.ending} type="button" className={`erm32-unit erm33-unit erm33-${type} ${selectedEnding===p.ending?'isSelected':''}`} style={{left:`${p.x}%`,top:`${p.y}%`}}
-                    aria-label={`Ver planta ${types[type].name}, terminação ${String(p.ending).padStart(2,'0')}`} title={`${String(p.ending).padStart(2,'0')} · ${types[type].name}`}
-                    onClick={() => {setSelectedType(type);setSelectedEnding(p.ending);setPlant3D(false);chooseTab('plantas');}}>
-                    <span className="erm33-unitLabel"><b>{String(p.ending).padStart(2,'0')}</b><span>{types[type].name.toUpperCase()}</span></span>
-                  </button>;
-                })}
               </div>
               <div className="erm32-tipologyCards erm33-tipologyCards" aria-label="Quatro tipologias disponíveis">
                 {typeKeys.map((key) => <button key={key} type="button" className={`erm32-typeCard erm33-typeCard erm33-${key} ${selectedType===key?'isSelected':''}`}

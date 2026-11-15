@@ -2,6 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { join } from 'node:path';
 const root = process.cwd();
 const client = readFileSync(join(root,'app/experiencia/easy-rota-do-mar/EasyRotaClient.tsx'),'utf8');
@@ -500,13 +501,19 @@ test('R33: imagens técnicas 2D ainda são mostradas ao abrir tipologia',()=>{
   assert.ok(client.includes('setTypeAndShow(key)'));
   assert.match(client,/erm32-planFocus/);
 });
-test('R33: zona translúcida marcada para cada uma das oito terminações',()=>{
-  const block=client.slice(client.indexOf('const r33Zones:'),client.indexOf('const r32PlanFile'));
-  const found=[...block.matchAll(/ending:(\d+),x:/g)].map(m=>Number(m[1]));
-  assert.deepEqual(found.sort((a,b)=>a-b),[1,2,3,4,5,6,7,8]);
-  assert.match(client,/erm33-zone erm33-\$\{key\}/);
-  assert.match(css,/\.erm21 \.erm33-zone\.isSelected/);
-  assert.match(css,/opacity:\.23/);
+test('R34: oito zonas por tipologia com contornos restritos e sem circulacao central',()=>{
+  const block=client.slice(client.indexOf('const r34Zones:'),client.indexOf('const r32PlanFile'));
+  const found=[...block.matchAll(/ending:(\d+),points:'([^']+)'/g)].map(m=>({ending:Number(m[1]),points:m[2]}));
+  assert.deepEqual(found.map(v=>v.ending).sort((a,b)=>a-b),[1,2,3,4,5,6,7,8]);
+  for(const zone of found){
+    const pts=zone.points.split(' ').map(t=>t.split(',').map(Number));
+    assert.ok(pts.length>=4 && pts.every(p=>p.length===2 && p[0]>=0 && p[0]<=2500 && p[1]>=0 && p[1]<=957));
+    // A circulacao (y 440..510) fica sempre fora da area colorida.
+    assert.ok(pts.every(p=>p[1]<=437) || pts.every(p=>p[1]>=510),String(zone.ending));
+  }
+  assert.match(client,/className=\{`erm34-zone erm33-\$\{key\}/);
+  assert.match(css,/\.erm21 \.erm34-zone\.isSelected/);
+  assert.match(css,/fill-opacity:\.19/);
 });
 test('R33: cores por tipologia mantêm o mesmo mapeamento dos marcadores aos cards',()=>{
   for(const key of ['slim','premium','master','spazzio']){
@@ -545,4 +552,30 @@ test('R33 R2: todas as associações de tipologia e fonte oficial preservadas',(
   }
   assert.ok(client.includes('planta-spazzio-book-3d'));
   assert.ok(client.includes('Planta técnica'));
+});
+
+// R34: eliminacao da duplicacao de badges e realce sem areas retangulares gigantes.
+test('R34: planta original sem etiquetas embutidas e somente oito marcadores HTML',()=>{
+  const name='erm34-pavimento-limpo.webp';
+  const buf=readFileSync(join(assetDir,name));
+  assert.equal(buf.subarray(0,4).toString('ascii'),'RIFF');
+  assert.equal(buf.subarray(8,12).toString('ascii'),'WEBP');
+  assert.equal(createHash('sha256').update(buf).digest('hex'), '36933ce62a5c7caa45cd59bfddb9e5e8a094673212db2b649b184d9bb1c6480a');
+  assert.match(client,/erm34-pavimento-limpo\.webp/);
+  const plan=client.slice(client.indexOf('className="erm32-building erm33-building"'),client.indexOf('className="erm32-tipologyCards erm33-tipologyCards"'));
+  assert.doesNotMatch(plan,/erm33-pavimento-transparente/);
+  assert.doesNotMatch(plan,/r33Zones|erm33-zones|erm33-zone erm33/);
+  assert.match(plan,/r32UnitPoints\.map/);
+  assert.match(plan,/key=\{p\.ending\}/);
+  assert.match(plan,/erm33-unitLabel/);
+  assert.match(css,/\.erm21 \.erm34-zones\{/);
+  assert.match(css,/mask-image:url\('/);
+});
+
+test('R34: sobreposicoes e etiquetas usam o mesmo palco proporcional ao quadro, sem alterar seu tamanho',()=>{
+  assert.match(client,/className="erm34-planStage"/);
+  assert.match(client,/preserveAspectRatio="xMidYMid meet"/);
+  assert.match(css,/\.erm21 \.erm33-building\{display:flex;align-items:center;justify-content:center\}/);
+  assert.match(css,/\.erm21 \.erm34-planStage\{[^}]*aspect-ratio:2500\/957/);
+  assert.match(css,/\.erm21 \.erm34-planStage>img\{[^}]*object-fit:contain/);
 });

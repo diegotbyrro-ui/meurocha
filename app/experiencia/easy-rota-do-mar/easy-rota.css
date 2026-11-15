@@ -979,3 +979,14 @@
 .erm21 .erm33-perspective img{object-fit:contain;max-width:100%;max-height:100%}
 @media(max-width:520px){.erm21 .erm33-viewSwitch{gap:5px}.erm21 .erm33-viewSwitch button{font-size:10px;padding:6px 9px}}
 @media(prefers-reduced-motion:reduce){.erm21 .erm33-viewSwitch button{transition:none}}
+
+/* R34 - unica fonte de etiquetas: botoes acessiveis (sem rotulos impressos no WebP).
+   Coloracao por unidade contida nos poligonos da planta, sem cobrir a circulacao.
+   Mantem aspect-ratio, tamanho, cards e todos os outros modulos inalterados. */
+.erm21 .erm34-zones{position:absolute;inset:0;width:100%;height:100%;z-index:1;overflow:visible;pointer-events:none;mask-image:url('/experiencia/easy-rota-do-mar/erm34-pavimento-limpo.webp');mask-size:100% 100%;-webkit-mask-image:url('/experiencia/easy-rota-do-mar/erm34-pavimento-limpo.webp');-webkit-mask-size:100% 100%}
+.erm21 .erm34-zone{fill:var(--erm33-accent);fill-opacity:.085;stroke:transparent;stroke-width:0;transition:fill-opacity .18s ease,stroke .18s ease}
+.erm21 .erm34-zone.isSelected{fill-opacity:.19;stroke:var(--erm33-accent);stroke-opacity:.66;stroke-width:3;stroke-linejoin:round}
+@media(prefers-reduced-motion:reduce){.erm21 .erm34-zone{transition:none}}
+.erm21 .erm34-planStage{position:relative;aspect-ratio:2500/957;height:100%;max-width:100%;flex:0 1 auto;min-width:0}
+.erm21 .erm33-building{display:flex;align-items:center;justify-content:center}
+.erm21 .erm34-planStage>img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;object-position:center}
