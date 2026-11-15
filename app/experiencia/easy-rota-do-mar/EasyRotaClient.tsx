@@ -103,20 +103,20 @@ const r33CardAsset: Record<TypeKey,string> = {
   master: `${BRAND_ASSETS}erm33r2-master-oficial-perspectiva.webp`,
   spazzio: `${BRAND_ASSETS}erm33-perspectiva-spazzio-book.webp`,
 };
-// R34: a planta TIFF SEM TEXTOS e a unica fonte dos desenhos. O arquivo R33
-// tinha rotulos gravados nos pixels, duplicados pelos botoes interativos.
-// Os caminhos abaixo delimitam somente os apartamentos (nao a circulacao).
-// Coordenadas aproximadas sobre o quadro original 2500 x 957; sem valor tecnico.
+// R35: mascaras precisas por unidade, traçadas sobre o pavimento TIFF sem textos.
+// As salas de circulacao, escada e elevadores NAO recebem cor. Em cada extremidade
+// a divisao usa o contorno real: quartos avancam alem do corredor central.
+// Geometria ilustrativa sobre o quadro original 2500 x 957, nao delimita area privativa legal.
 const r32Asset = (name: string) => `${BRAND_ASSETS}erm32-${name}.webp`;
-const r34Zones: {ending:number; points:string}[] = [
-  {ending:8,points:'30,160 780,160 780,437 30,437'},
-  {ending:7,points:'780,100 1138,100 1138,437 780,437'},
-  {ending:6,points:'1360,100 1720,100 1720,160 1910,160 1910,437 1360,437'},
-  {ending:5,points:'1910,55 2465,55 2465,437 1910,437'},
-  {ending:1,points:'30,510 780,510 780,780 30,780'},
-  {ending:2,points:'780,510 1138,510 1138,780 1100,780 1100,850 780,850'},
-  {ending:3,points:'1360,510 1910,510 1910,780 1720,780 1720,850 1360,850'},
-  {ending:4,points:'1910,510 2465,510 2465,897 1910,897'},
+const r35Zones: {ending:number; points:string}[] = [
+  {ending:8,points:'32,162 784,162 784,422 280,422 280,470 32,470'},
+  {ending:7,points:'787,105 958,105 958,154 1136,154 1136,420 787,420'},
+  {ending:6,points:'1320,157 1505,157 1505,105 1662,105 1662,157 1909,157 1909,419 1320,419'},
+  {ending:5,points:'1915,58 2465,58 2465,474 2042,474 2042,424 1915,424'},
+  {ending:1,points:'32,482 281,482 281,524 784,524 784,777 32,777'},
+  {ending:2,points:'787,526 1134,526 1134,781 1101,781 1101,846 787,846'},
+  {ending:3,points:'1321,525 1909,525 1909,782 1664,782 1664,845 1321,845'},
+  {ending:4,points:'1915,525 2042,525 2042,486 2465,486 2465,897 1915,897'},
 ];
 
 const r32PlanFile: Record<TypeKey, string> = {
@@ -243,6 +243,7 @@ export default function EasyRotaClient() {
   const [poiGroup, setPoiGroup] = useState('Principais');
   const [selectedType, setSelectedType] = useState<TypeKey>('spazzio');
   const [selectedEnding, setSelectedEnding] = useState(4);
+  const [hoveredEnding, setHoveredEnding] = useState<number | null>(null);
   const [plant3D, setPlant3D] = useState(false);
   const [r32Expanded, setR32Expanded] = useState(false);
   const [facility, setFacility] = useState(6);
@@ -507,17 +508,19 @@ export default function EasyRotaClient() {
                 <div className="erm34-planStage">
                   <img src={`${BRAND_ASSETS}erm34-pavimento-limpo.webp`} alt="Pavimento tipo oficial sem rotulos impressos, com oito unidades e circulacao preservada" draggable={false} />
                   <svg className="erm34-zones" viewBox="0 0 2500 957" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
-                    {r34Zones.map((zone) => {
+                    {r35Zones.map((zone) => {
                       const key = endingToType[zone.ending];
                       return <polygon key={zone.ending} points={zone.points}
-                        className={`erm34-zone erm33-${key} ${selectedEnding===zone.ending?'isSelected':''}`} />;
+                        className={`erm34-zone erm33-${key} ${selectedEnding===zone.ending?'isSelected':''} ${hoveredEnding===zone.ending?'isHovered':''}`} />;
                     })}
                   </svg>
                   {r32UnitPoints.map((p) => {
                     const type = endingToType[p.ending];
                     return <button key={p.ending} type="button" className={`erm32-unit erm33-unit erm33-${type} ${selectedEnding===p.ending?'isSelected':''}`} style={{left:`${p.x}%`,top:`${p.y}%`}}
                       aria-label={`Ver planta ${types[type].name}, terminação ${String(p.ending).padStart(2,'0')}`} title={`${String(p.ending).padStart(2,'0')} · ${types[type].name}`}
-                      onClick={() => {setSelectedType(type);setSelectedEnding(p.ending);setPlant3D(false);chooseTab('plantas');}}>
+                      onMouseEnter={() => setHoveredEnding(p.ending)} onMouseLeave={() => setHoveredEnding(null)}
+                      onFocus={() => setHoveredEnding(p.ending)} onBlur={() => setHoveredEnding(null)}
+                      onClick={() => {setHoveredEnding(null);setSelectedType(type);setSelectedEnding(p.ending);setPlant3D(false);chooseTab('plantas');}}>
                       <span className="erm33-unitLabel"><b>{String(p.ending).padStart(2,'0')}</b><span>{types[type].name.toUpperCase()}</span></span>
                     </button>;
                   })}

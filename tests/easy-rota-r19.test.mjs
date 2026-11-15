@@ -502,18 +502,22 @@ test('R33: imagens técnicas 2D ainda são mostradas ao abrir tipologia',()=>{
   assert.match(client,/erm32-planFocus/);
 });
 test('R34: oito zonas por tipologia com contornos restritos e sem circulacao central',()=>{
-  const block=client.slice(client.indexOf('const r34Zones:'),client.indexOf('const r32PlanFile'));
+  const block=client.slice(client.indexOf('const r35Zones:'),client.indexOf('const r32PlanFile'));
   const found=[...block.matchAll(/ending:(\d+),points:'([^']+)'/g)].map(m=>({ending:Number(m[1]),points:m[2]}));
   assert.deepEqual(found.map(v=>v.ending).sort((a,b)=>a-b),[1,2,3,4,5,6,7,8]);
   for(const zone of found){
     const pts=zone.points.split(' ').map(t=>t.split(',').map(Number));
     assert.ok(pts.length>=4 && pts.every(p=>p.length===2 && p[0]>=0 && p[0]<=2500 && p[1]>=0 && p[1]<=957));
-    // A circulacao (y 440..510) fica sempre fora da area colorida.
-    assert.ok(pts.every(p=>p[1]<=437) || pts.every(p=>p[1]>=510),String(zone.ending));
+    // A circulacao central deve ficar sempre fora, sem impedir os quartos nas extremidades.
+    const pointInside=(x,y)=>{ let inside=false; for(let i=0,j=pts.length-1;i<pts.length;j=i++){
+      const a=pts[i],b=pts[j]; if((a[1]>y)!==(b[1]>y) && x < (b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0]) inside=!inside;
+    } return inside; };
+    for(const x of [350,650,900,1450,1700,1850]) for(const y of [445,470,490,505])
+      assert.equal(pointInside(x,y),false,`Corredor ${x},${y} invadido pela unidade ${zone.ending}`);
   }
   assert.match(client,/className=\{`erm34-zone erm33-\$\{key\}/);
   assert.match(css,/\.erm21 \.erm34-zone\.isSelected/);
-  assert.match(css,/fill-opacity:\.19/);
+  assert.match(css,/fill-opacity:\.15/);
 });
 test('R33: cores por tipologia mantêm o mesmo mapeamento dos marcadores aos cards',()=>{
   for(const key of ['slim','premium','master','spazzio']){
@@ -578,4 +582,34 @@ test('R34: sobreposicoes e etiquetas usam o mesmo palco proporcional ao quadro, 
   assert.match(css,/\.erm21 \.erm33-building\{display:flex;align-items:center;justify-content:center\}/);
   assert.match(css,/\.erm21 \.erm34-planStage\{[^}]*aspect-ratio:2500\/957/);
   assert.match(css,/\.erm21 \.erm34-planStage>img\{[^}]*object-fit:contain/);
+});
+
+// R35 - limites das oito unidades sem invadir circulacao, escadas ou outro apartamento.
+test('R35: oito recortes independentes respeitam as divisas indicadas e nao se sobrepoem',()=>{
+  const block=client.slice(client.indexOf('const r35Zones:'),client.indexOf('const r32PlanFile'));
+  const polygons=[...block.matchAll(/ending:(\d+),points:'([^']+)'/g)].map(m=>({n:Number(m[1]),p:m[2].split(' ').map(x=>x.split(',').map(Number))}));
+  assert.equal(polygons.length,8);
+  const contains=(pts,x,y)=>{let inside=false;for(let i=0,j=pts.length-1;i<pts.length;j=i++){
+    const a=pts[i],b=pts[j]; if((a[1]>y)!==(b[1]>y) && x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0])inside=!inside;
+  }return inside};
+  for(let x=0;x<2500;x+=10)for(let y=0;y<957;y+=10){
+    const found=polygons.filter(p=>contains(p.p,x,y)).map(p=>p.n);
+    assert.ok(found.length<=1,`Apartamentos sobrepostos em ${x},${y}: ${found}`);
+    if(x>=290&&x<=1905&&y>=438&&y<=512)assert.equal(found.length,0,`Corredor colorido em ${x},${y}`);
+    if(x>=1139&&x<=1310&&y>=120&&y<=843)assert.equal(found.length,0,`Escada ou elevador colorido em ${x},${y}`);
+  }
+  assert.equal(polygons.find(p=>p.n===8).p.length,6);
+  assert.equal(polygons.find(p=>p.n===4).p.length,6);
+});
+test('R35: cores seguem unidade com hover/foco e clique preserva a planta tecnica',()=>{
+  assert.match(client,/r35Zones\.map/);
+  assert.match(client,/hoveredEnding===zone\.ending\?'isHovered'/);
+  assert.match(client,/onMouseEnter=\{\(\) => setHoveredEnding\(p\.ending\)\}/);
+  assert.match(client,/onFocus=\{\(\) => setHoveredEnding\(p\.ending\)\}/);
+  assert.match(client,/setHoveredEnding\(null\);setSelectedType\(type\);setSelectedEnding\(p\.ending\)/);
+  assert.match(css,/\.erm21 \.erm34-zone\.isHovered\{/);
+  assert.match(css,/\.erm21 \.erm34-zone\.isSelected\{/);
+  assert.match(css,/stroke-width:1\.5/);
+  assert.match(client,/erm34-pavimento-limpo\.webp/);
+  assert.match(client,/r32UnitPoints\.map/);
 });

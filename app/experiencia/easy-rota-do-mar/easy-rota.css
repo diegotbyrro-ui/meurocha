@@ -984,8 +984,12 @@
    Coloracao por unidade contida nos poligonos da planta, sem cobrir a circulacao.
    Mantem aspect-ratio, tamanho, cards e todos os outros modulos inalterados. */
 .erm21 .erm34-zones{position:absolute;inset:0;width:100%;height:100%;z-index:1;overflow:visible;pointer-events:none;mask-image:url('/experiencia/easy-rota-do-mar/erm34-pavimento-limpo.webp');mask-size:100% 100%;-webkit-mask-image:url('/experiencia/easy-rota-do-mar/erm34-pavimento-limpo.webp');-webkit-mask-size:100% 100%}
-.erm21 .erm34-zone{fill:var(--erm33-accent);fill-opacity:.085;stroke:transparent;stroke-width:0;transition:fill-opacity .18s ease,stroke .18s ease}
-.erm21 .erm34-zone.isSelected{fill-opacity:.19;stroke:var(--erm33-accent);stroke-opacity:.66;stroke-width:3;stroke-linejoin:round}
+/* R35: cores contidas nas oito poligonais individuais, sem faixas no corredor.
+   Realce sutil quando selecionado ou sob mouse/teclado; sem bordas grossas. */
+.erm21 .erm34-zone{fill:var(--erm33-accent);fill-opacity:.052;stroke:transparent;stroke-width:0;transition:fill-opacity .18s ease,stroke .18s ease;stroke-linejoin:round}
+.erm21 .erm34-zone.isHovered{fill-opacity:.12;stroke:var(--erm33-accent);stroke-opacity:.25;stroke-width:1}
+.erm21 .erm34-zone.isSelected{fill-opacity:.15;stroke:var(--erm33-accent);stroke-opacity:.4;stroke-width:1.5}
+.erm21 .erm34-zone.isSelected.isHovered{fill-opacity:.18;stroke-opacity:.5}
 @media(prefers-reduced-motion:reduce){.erm21 .erm34-zone{transition:none}}
 .erm21 .erm34-planStage{position:relative;aspect-ratio:2500/957;height:100%;max-width:100%;flex:0 1 auto;min-width:0}
 .erm21 .erm33-building{display:flex;align-items:center;justify-content:center}
