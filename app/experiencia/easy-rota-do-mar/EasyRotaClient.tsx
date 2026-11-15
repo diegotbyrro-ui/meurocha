@@ -29,25 +29,17 @@ const centralMenuTabs: Partial<Record<Section, string>> = {
   localizacao: 'ultratour', lazer: 'implantacao', plantas: 'tipologias',
   imagens: 'apartamentos', videos: 'perspectivas', ficha: 'ficha', institucional: 'historia',
 };
-type MenuKey = 'visao' | 'localizacao' | 'entorno' | 'empreendimento' | 'masterplan' | 'plantas' | 'galeria' | 'videos' | 'diferenciais' | 'simulacao';
+// R36: menu lateral com as mesmas sete entradas da referencia Park Plaza.
+// Os conteudos anteriores sao preservados e acessados pelas secoes correspondentes.
+type MenuKey = 'localizacao' | 'lazer' | 'plantas' | 'imagens' | 'videos' | 'ficha' | 'institucional';
 const platformMenu: { id: MenuKey; label: string; icon: string; section: Section; sub: string }[] = [
-  { id: 'visao', label: 'Visão Geral', icon: 'home', section: 'localizacao', sub: 'ultratour' },
-  { id: 'localizacao', label: 'Localização', icon: 'pin', section: 'localizacao', sub: 'mapa' },
-  { id: 'entorno', label: 'Entorno', icon: 'building', section: 'localizacao', sub: 'entorno' },
-  { id: 'empreendimento', label: 'Empreendimento', icon: 'building', section: 'ficha', sub: 'ficha' },
-  { id: 'masterplan', label: 'Masterplan', icon: 'layers', section: 'lazer', sub: 'implantacao' },
+  { id: 'localizacao', label: 'Localização', icon: 'pin', section: 'localizacao', sub: 'ultratour' },
+  { id: 'lazer', label: 'Lazer', icon: 'waves', section: 'lazer', sub: 'implantacao' },
   { id: 'plantas', label: 'Plantas', icon: 'floor', section: 'plantas', sub: 'tipologias' },
-  { id: 'galeria', label: 'Galeria de Imagens', icon: 'image', section: 'imagens', sub: 'apartamentos' },
+  { id: 'imagens', label: 'Imagens', icon: 'image', section: 'imagens', sub: 'apartamentos' },
   { id: 'videos', label: 'Vídeos', icon: 'play', section: 'videos', sub: 'perspectivas' },
-  { id: 'diferenciais', label: 'Diferenciais', icon: 'star', section: 'lazer', sub: 'espacos' },
-  { id: 'simulacao', label: 'Simulação', icon: 'calculator', section: 'simulacao', sub: 'simulacao' },
-];
-const globalTabs: { label: string; icon: string; section: Section; sub: string; menu: MenuKey }[] = [
-  { label: 'Utilização', icon: 'pin', section: 'localizacao', sub: 'ultratour', menu: 'visao' },
-  { label: 'Entorno', icon: 'building', section: 'localizacao', sub: 'entorno', menu: 'entorno' },
-  { label: 'Masterplan', icon: 'layers', section: 'lazer', sub: 'implantacao', menu: 'masterplan' },
-  { label: 'Plantas', icon: 'floor', section: 'plantas', sub: 'tipologias', menu: 'plantas' },
-  { label: 'Mídias', icon: 'play', section: 'imagens', sub: 'apartamentos', menu: 'galeria' },
+  { id: 'ficha', label: 'Ficha Técnica', icon: 'file', section: 'ficha', sub: 'ficha' },
+  { id: 'institucional', label: 'Institucional', icon: 'building', section: 'institucional', sub: 'historia' },
 ];
 function UiIcon({ name, size = 20 }: { name: string; size?: number }) {
   const common = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const, 'aria-hidden': true as const };
@@ -230,7 +222,7 @@ export default function EasyRotaClient() {
   const [volume, setVolume] = useState(35);
   const audio = useRef<AudioContext | null>(null);
   const [section, setSection] = useState<Section>('localizacao');
-  const [selectedNav, setSelectedNav] = useState<MenuKey>('visao');
+  const [selectedNav, setSelectedNav] = useState<MenuKey>('localizacao');
   const [mobileSlide, setMobileSlide] = useState(0);
   const [tilted, setTilted] = useState(false);
   const [tab, setTab] = useState('ultratour');
@@ -274,7 +266,7 @@ export default function EasyRotaClient() {
   }, [soundOn, volume]);
   const goto = (s: Section, sub?: string) => {
     tone(); setSection(s); setTab(sub || subtabs[s][0].id); setMenuOpen(false); setOpenLightbox(false);
-    const target = platformMenu.find((n) => n.section === s && n.sub === (sub || subtabs[s][0].id));
+    const target = platformMenu.find((n) => n.section === s);
     if (target) setSelectedNav(target.id);
   };
   const openCentralSection = (chosen: Section) => {
@@ -304,7 +296,6 @@ export default function EasyRotaClient() {
     else { setSoundOn(true); setAudioError(false); playMusic(); }
   };
   const goMenu = (n: typeof platformMenu[number]) => { goto(n.section, n.sub); setSelectedNav(n.id); };
-  const goGlobal = (n: typeof globalTabs[number]) => { goto(n.section, n.sub); setSelectedNav(n.menu); };
   const fullScreen = () => {
     if (typeof document === 'undefined') return;
     if (document.fullscreenElement) { void document.exitFullscreen().catch(() => setHelp(true)); return; }
@@ -314,7 +305,7 @@ export default function EasyRotaClient() {
     setSoundOn(enabled); setSoundPrompt(false); setStarted(true); setCentralMenuOpen(true);
     setSection(pendingSection); setTab(subtabs[pendingSection][0].id);
     const target = platformMenu.find((n) => n.section === pendingSection && n.sub === subtabs[pendingSection][0].id);
-    setSelectedNav(target?.id || 'visao');
+    setSelectedNav(target?.id || 'localizacao');
     if (enabled) { setAudioError(false); playMusic(); } else { music.current?.pause(); }
   };
   useEffect(() => { if (music.current) music.current.volume = Math.min(1,Math.max(0,volume / 100)); }, [volume]);
@@ -433,7 +424,7 @@ export default function EasyRotaClient() {
       </aside>
 
       <section className="erm20-main">
-        {!(section === 'localizacao' && tab === 'ultratour') && <nav className="erm21-subTabs" aria-label="Abas da seção">{subtabs[section].map((t) => <button key={t.id} type="button" className={tab === t.id ? 'active' : ''} onClick={() => chooseTab(t.id)}>{t.label}</button>)}</nav>}
+        {section !== 'plantas' && !(section === 'localizacao' && tab === 'ultratour') && <nav className="erm21-subTabs" aria-label="Abas da seção">{subtabs[section].map((t) => <button key={t.id} type="button" className={tab === t.id ? 'active' : ''} onClick={() => chooseTab(t.id)}>{t.label}</button>)}</nav>}
         <div className="erm20-panel" key={section}>
           {section === 'localizacao' && <div className="erm20-content erm20-location">
             {tab === 'ultratour' && <div className="erm20-immersive" role="region" aria-label="Visão aérea de referência do empreendimento">
@@ -457,7 +448,7 @@ export default function EasyRotaClient() {
               </div>
               <h1>O CAMINHO MAIS CURTO<br/>ENTRE A SERRARIA E O MAR</h1>
               <div className="erm21-mobileDots" aria-label="Selecionar imagem">{[0,1].map((i)=><button type="button" key={i} aria-label={`Imagem ${i+1}`} aria-pressed={mobileSlide===i} className={mobileSlide===i?'active':''} onClick={()=>setMobileSlide(i)}/>)}</div>
-              <div className="erm21-shortcuts">{platformMenu.filter((n)=>['localizacao','masterplan','plantas','galeria','videos','diferenciais'].includes(n.id)).map((n)=><button type="button" key={n.id} onClick={()=>goMenu(n)}><UiIcon name={n.icon} size={28}/><span>{n.label === 'Galeria de Imagens' ? 'Galeria' : n.label}</span></button>)}</div>
+              <div className="erm21-shortcuts">{platformMenu.filter((n)=>['localizacao','lazer','plantas','imagens','videos','ficha'].includes(n.id)).map((n)=><button type="button" key={n.id} onClick={()=>goMenu(n)}><UiIcon name={n.icon} size={28}/><span>{n.label}</span></button>)}</div>
             </div>}
             {tab === 'entorno' && <div className="erm20-nearby"><SectionBanner title="ENTORNO" caption="Explore o que faz parte do dia a dia"/><div className="erm20-nearbyHero"><Photo id="hero" alt="Visão ilustrativa da região do empreendimento"/><Brand compact /></div><div className="erm20-nearbyLinks">{['Serviços', 'Comércio', 'Educação', 'Mobilidade', 'Bem-estar', 'Lazer', 'Conveniência', 'Gastronomia'].map((x) => <button key={x} onClick={() => { setMapChoice(x); chooseTab('mapa'); }} type="button">{x}</button>)}</div><p className="erm20-disclaimer">Mapa e pontos de interesse serão georreferenciados após conferência do endereço e das coordenadas oficiais.</p></div>}
             {tab === 'rotas' && <div className="erm20-mapFrame"><SectionBanner title="ROTAS" caption="Visualização do entorno"/><div className="erm20-mapGrid"><div className="erm20-mapIllustration"><div className="erm20-road roadA"/><div className="erm20-road roadB"/><div className="erm20-road roadC"/><div className="erm20-mapPin">⌖<span>EASY ROTA DO MAR</span></div></div><div className="erm20-mapDetails"><h2>O caminho que conecta você a novos momentos.</h2><p>Explore a localização na Serraria, em Maceió, e consulte rotas reais no serviço de mapas.</p><a href="https://www.google.com/maps/search/?api=1&query=Easy%20Rota%20do%20Mar%20Macei%C3%B3" target="_blank" rel="noopener noreferrer">ABRIR MAPA EXTERNO ↗</a><small>Não exibimos tempos ou distâncias não verificados.</small></div></div></div>}
@@ -503,7 +494,7 @@ export default function EasyRotaClient() {
                 <SectionBanner title="PAVIMENTO TIPO" caption="08 terminações · 04 opções de planta" />
                 <h1>ESCOLHA A PLANTA QUE COMBINA COM VOCÊ</h1>
               </div>
-              <p className="erm32-hint">Toque no número de um apartamento na imagem ou selecione uma das tipologias abaixo.</p>
+              <p className="erm32-hint">Toque no número de um apartamento no pavimento para abrir a planta individual. As tipologias e especificações estão abaixo.</p>
               <div className="erm32-building erm33-building" aria-label="Pavimento tipo com oito terminações interativas e cores por tipologia">
                 <div className="erm34-planStage">
                   <img src={`${BRAND_ASSETS}erm34-pavimento-limpo.webp`} alt="Pavimento tipo oficial sem rotulos impressos, com oito unidades e circulacao preservada" draggable={false} />
@@ -526,14 +517,15 @@ export default function EasyRotaClient() {
                   })}
                 </div>
               </div>
-              <div className="erm32-tipologyCards erm33-tipologyCards" aria-label="Quatro tipologias disponíveis">
-                {typeKeys.map((key) => <button key={key} type="button" className={`erm32-typeCard erm33-typeCard erm33-${key} ${selectedType===key?'isSelected':''}`}
-                  aria-label={`Abrir planta técnica ${types[key].name}, ${types[key].area}`} onClick={() => setTypeAndShow(key)}>
-                  <div className="erm33-perspective"><img src={r33CardAsset[key]} alt={key==='spazzio'?`Perspectiva 3D Spazzio do book oficial`:`Perspectiva da planta oficial ${types[key].name}, com geometria da imagem original preservada`} loading="lazy" /></div>
-                  <div className="erm33-cardInfo"><h2><span className="erm32-swatch"/>{types[key].name.toUpperCase()}</h2><strong>{types[key].area}</strong><p>{r32PlanDetails[key]}</p><small>Terminações {types[key].endings.map(n=>String(n).padStart(2,'0')).join(' / ')}</small><em>{key==='spazzio'?'Perspectiva do book':'Projeção da planta oficial'}</em></div>
-                </button>)}
-              </div>
-              <p className="erm32-disclaimer">Plantas técnicas fornecidas pela Rocha. Slim, Premium e Master exibem projeções inclinadas das imagens oficiais, sem modificar a distribuição dos ambientes; não são maquetes executivas 3D. Consulte a planta original sem perspectiva para leitura técnica. Spazzio utiliza a perspectiva oficial do book. Cores e áreas translúcidas são guias aproximados de tipologia, não disponibilidade de unidades.</p>
+                             {/* R36: sem imagens nos resumos; especificacoes no mesmo formato editorial do Plaza. */}
+               <div className="erm36-typesRow" aria-label="Resumo de tipologias do Easy Rota do Mar">
+                 {typeKeys.map((key) => <article key={key} className={`erm36-typeLegend erm33-${key}`}>
+                   <h2><span className="erm36-typeSwatch" aria-hidden="true" />{types[key].name.toUpperCase()}</h2>
+                   <div className="erm36-typeMetric"><strong>{types[key].area}</strong><span>TERMINAÇÕES {types[key].endings.map(n=>String(n).padStart(2,'0')).join(', ')}</span></div>
+                   <p>{r32PlanDetails[key]}</p>
+                 </article>)}
+               </div>
+               <p className="erm36-note">Selecione a identificação de um dos oito apartamentos no pavimento para consultar sua planta. As cores indicam tipologias, não disponibilidade de unidades.</p>
             </>}
             {tab === 'plantas' && <>
               <div className="erm32-detailTop">
@@ -553,10 +545,9 @@ export default function EasyRotaClient() {
                 <button type="button" aria-label="Ver próxima tipologia" className="erm32-navArrow" onClick={() => stepType(1)}>›</button>
               </div>
               <div className="erm32-planInfo">
-                <div><h2>{selected.name}</h2><p>{r32PlanDetails[selectedType]}</p><p>{selected.description}</p><small>{selectedType==='spazzio'?'Perspectiva 3D oficial do book; planta 2D individual ainda não fornecida.':'A planta técnica original é a referência de geometria. A perspectiva é uma projeção visual do próprio desenho.'}</small></div>
+                <div><h2>{selected.name}</h2><p>{r32PlanDetails[selectedType]}</p><p>{selected.description}</p><small>{selectedType==='spazzio'?'Perspectiva 3D oficial do book; planta 2D individual ainda não fornecida.':'A planta técnica original é a referência de geometria. As perspectivas são projeções visuais, sem modificar a distribuição dos ambientes; não são maquetes executivas 3D.'}</small></div>
                 <div className="erm32-endingPicker"><strong>ESCOLHA A TERMINAÇÃO</strong><div>{Array.from({length:8},(_,i)=>i+1).map(n=><button key={n} type="button" className={selectedEnding===n?'active':''} aria-pressed={selectedEnding===n} onClick={() => {setSelectedEnding(n);setSelectedType(endingToType[n]);setPlant3D(false);}} title={`Terminação ${n}: ${types[endingToType[n]].name}`}>{String(n).padStart(2,'0')}</button>)}</div><small>Representação das tipologias, sem informação de estoque.</small></div>
               </div>
-              <div className="erm32-detailBottom"><button type="button" onClick={() => chooseTab('tipologias')}>TIPOLOGIAS</button><button type="button" className="active" aria-current="page">PLANTAS</button></div>
               {r32Expanded && <div className="erm32-lightbox" role="dialog" aria-modal="true" aria-label={`Planta ampliada ${selected.name}`}>
                 <div><strong>{selected.name} · {selected.area}</strong><button type="button" onClick={() => setR32Expanded(false)} aria-label="Fechar planta ampliada">✕ FECHAR</button></div>
                 <img src={plant3D ? r33CardAsset[selectedType] : r32Asset(r32PlanFile[selectedType])} alt={plant3D ? `Perspectiva ampliada ${selected.name}` : `Planta original ampliada ${selected.name}`} />
@@ -568,7 +559,7 @@ export default function EasyRotaClient() {
 
           {section === 'videos' && <div className="erm20-content erm20-videos"><SectionBanner title="VÍDEOS"/><div className="erm20-videoGrid"><div className="erm20-videoFocus"><div className="erm20-videoPoster"><Photo id={mediaList[videoIndex].image} alt={mediaList[videoIndex].name}/><span className="erm20-filmStatus">{tab === 'perspectivas' ? 'PERSPECTIVAS ANIMADAS' : tab === 'empreendimento' ? 'EMPREENDIMENTO' : 'SHORT VÍDEOS'}</span></div><h2>{mediaList[videoIndex].name}</h2><p>Prévia visual. O vídeo correspondente será vinculado assim que a Rocha selecionar e aprovar o arquivo original.</p></div><div className="erm20-videoList">{mediaList.map((v,i)=><button key={`${v.name}-${i}`} type="button" className={videoIndex===i?'active':''} onClick={()=>setVideoIndex(i)}><b>{String(i+1).padStart(2,'0')}</b><span>{v.name}</span></button>)}</div></div></div>}
 
-          {section === 'ficha' && <div className="erm20-content erm20-spec"><SectionBanner title="FICHA TÉCNICA"/><div className="erm20-specHero"><Photo id="fachada" alt="Perspectiva da fachada do Easy Rota do Mar"/><div><span>CONHEÇA O PROJETO</span><h2>Um empreendimento pensado para viver <em>além do comum.</em></h2><div><b>02</b><small>Torres</small><b>208</b><small>Unidades</small><b>04</b><small>Tipologias</small></div></div></div><div className="erm20-specColumns">{typeKeys.map((k)=><article key={k}><h3>{types[k].name}</h3><strong>{types[k].area}</strong><p>{types[k].rooms}</p><p>{types[k].parking}</p><p>Terminações {types[k].endings.map((x)=>String(x).padStart(2,'0')).join(' e ')}</p><button type="button" onClick={()=>{setType(k);goto('plantas','plantas');}}>VER PLANTA ↗</button></article>)}</div><p className="erm20-disclaimer">Projeto de referência para homologação: 2 blocos, 208 apartamentos e 4 tipologias. Vagas, dados comerciais e disponibilidade devem ser confirmados com a Rocha.</p></div>}
+          {section === 'ficha' && <div className="erm20-content erm20-spec"><SectionBanner title="FICHA TÉCNICA"/><div className="erm20-specHero"><Photo id="fachada" alt="Perspectiva da fachada do Easy Rota do Mar"/><div><span>CONHEÇA O PROJETO</span><h2>Um empreendimento pensado para viver <em>além do comum.</em></h2><div><b>02</b><small>Torres</small><b>208</b><small>Unidades</small><b>04</b><small>Tipologias</small></div></div></div><div className="erm20-specColumns">{typeKeys.map((k)=><article key={k}><h3>{types[k].name}</h3><strong>{types[k].area}</strong><p>{types[k].rooms}</p><p>{types[k].parking}</p><p>Terminações {types[k].endings.map((x)=>String(x).padStart(2,'0')).join(' e ')}</p><button type="button" onClick={()=>{goto('plantas','plantas');setTypeAndShow(k);}}>VER PLANTA ↗</button></article>)}</div><p className="erm20-disclaimer">Projeto de referência para homologação: 2 blocos, 208 apartamentos e 4 tipologias. Vagas, dados comerciais e disponibilidade devem ser confirmados com a Rocha.</p></div>}
 
           {section === 'simulacao' && <div className="erm20-content erm21-simulation">
             <SectionBanner title="SIMULAÇÃO" caption="Apresentação em homologação"/>
@@ -577,8 +568,7 @@ export default function EasyRotaClient() {
 
           {section === 'institucional' && <div className="erm20-content erm20-institutional"><div className="erm20-institutionalHero"><Photo id="fachada" alt="Empreendimento Rocha Empreendimentos"/><div><SectionBanner title="INSTITUCIONAL"/><span className="erm20-overline">ROCHA EMPREENDIMENTOS · DESDE 2009</span><h2>HÁ HISTÓRIAS QUE SÓ O TEMPO CONSEGUE CONSTRUIR.</h2><p>Projetos que acompanham novos capítulos. O Easy Rota do Mar faz parte dessa trajetória de construir possibilidades em Alagoas.</p><div className="erm20-institutionalMetrics"><div><b>2009</b><small>Início da trajetória</small></div><div><b>17</b><small>Anos em 2026</small></div><div><b>208</b><small>Unidades Easy Rota do Mar</small></div></div><h3>Viva além do comum.</h3><p>Conheça os empreendimentos e iniciativas da Rocha.</p><a href="https://meurocha.com.br" target="_blank" rel="noopener noreferrer">SITE OFICIAL ↗</a><div className="erm20-rochaSignature">ROCHA <small>EMPREENDIMENTOS</small></div></div></div></div>}
         </div>
-        <nav className="erm20-bottomTabs" aria-label="Módulos principais">{globalTabs.map((n)=><button key={n.label} className={section===n.section && (n.sub===tab || (n.menu==='plantas' && section==='plantas') || (n.menu==='galeria' && section==='imagens') || (n.menu==='masterplan' && section==='lazer')) ? 'active' : ''} type="button" onClick={()=>goGlobal(n)}><UiIcon name={n.icon} size={25}/><span>{n.label}</span></button>)}</nav>
-      </section>
+              </section>
     </div>}
 
     {soundPrompt && <div className="erm20-modalBackdrop erm22-audioBackdrop"><div className="erm20-modal erm22-audioModal" role="dialog" aria-modal="true" aria-labelledby="erm20-soundTitle" aria-describedby="erm22-soundDescription"><button className="erm22-modalBack" type="button" onClick={()=>setSoundPrompt(false)} aria-label="Voltar para a abertura">×</button><div className="erm22-modalIcon"><UiIcon name="music" size={31}/></div><span className="erm22-modalEyebrow">SUA EXPERIÊNCIA, SEU RITMO</span><h2 id="erm20-soundTitle">Deseja iniciar com música?</h2><p id="erm22-soundDescription">Uma trilha instrumental original e discreta pode acompanhar sua visita. Você poderá desligá-la a qualquer momento.</p><button ref={soundYesButton} type="button" className="erm22-modalPrimary" onClick={()=>setSound(true)}><UiIcon name="music" size={19}/> ENTRAR COM MÚSICA <UiIcon name="arrow" size={18}/></button><button type="button" className="erm22-modalSecondary" onClick={()=>setSound(false)}><UiIcon name="mute" size={19}/> ENTRAR SEM MÚSICA <UiIcon name="arrow" size={18}/></button><small>Áudio opcional · Sem reprodução automática · Volume ajustável</small></div></div>}

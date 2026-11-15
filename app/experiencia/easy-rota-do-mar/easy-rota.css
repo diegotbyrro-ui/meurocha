@@ -994,3 +994,22 @@
 .erm21 .erm34-planStage{position:relative;aspect-ratio:2500/957;height:100%;max-width:100%;flex:0 1 auto;min-width:0}
 .erm21 .erm33-building{display:flex;align-items:center;justify-content:center}
 .erm21 .erm34-planStage>img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;object-position:center}
+
+/* R36 - Plataforma ERM: sete itens laterais, sem menu inferior e resumos como Park Plaza.
+   Nao altera imagem do pavimento, divisas R35 ou navegacao por termino. */
+.erm21{--erm-bottom:0px}
+.erm21 .erm20-main{min-height:0}
+.erm21 .erm20-panel{flex:1 1 auto;min-height:0}
+.erm21 .erm36-typesRow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(9px,1.5vw,22px);padding:16px 8px 5px;margin:2px 0 6px;background:transparent;align-items:start}
+.erm21 .erm36-typeLegend{min-width:0;padding:0 9px 11px;background:transparent;border:0;color:#10425d}
+.erm21 .erm36-typeLegend h2{display:flex;align-items:center;gap:9px;margin:0 0 9px;font-family:var(--erm24-type-editorial);font-size:clamp(16px,1.75vw,27px);font-weight:400;line-height:1.15;letter-spacing:.015em;color:#003b5b}
+.erm21 .erm36-typeSwatch{flex:0 0 13px;width:13px;height:13px;background:var(--erm33-accent,#00cbe9);box-shadow:0 0 0 1px #003b5b24}
+.erm21 .erm36-typeMetric{display:flex;align-items:stretch;flex-wrap:wrap;gap:0;margin:0 0 10px;color:#00506d}
+.erm21 .erm36-typeMetric strong,.erm21 .erm36-typeMetric span{min-width:0;display:flex;align-items:center;border:1px solid var(--erm33-accent,#00cbe9);padding:4px 7px;font-family:var(--erm24-type-ui);line-height:1.25}
+.erm21 .erm36-typeMetric strong{font-size:clamp(12px,1.1vw,16px);font-weight:700;background:color-mix(in srgb,var(--erm33-accent,#00cbe9) 10%,white)}
+.erm21 .erm36-typeMetric span{font-size:clamp(8px,.8vw,10px);letter-spacing:.035em;border-left:0;overflow-wrap:anywhere}
+.erm21 .erm36-typeLegend p{margin:0;font:500 clamp(10px,.9vw,13px)/1.55 var(--erm24-type-ui);color:#365a65}
+.erm21 .erm36-note{margin:0 8px 16px;font:400 11px/1.5 var(--erm24-type-ui);color:#56788a}
+@media(max-width:1020px){.erm21 .erm36-typesRow{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:15px}.erm21 .erm36-typeLegend h2{font-size:21px}.erm21 .erm36-typeMetric strong{font-size:13px}.erm21 .erm36-typeMetric span{font-size:10px}}
+@media(max-width:560px){.erm21 .erm36-typesRow{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:10px 2px 3px}.erm21 .erm36-typeLegend{padding:0 4px 10px}.erm21 .erm36-typeLegend h2{font-size:16px;gap:5px}.erm21 .erm36-typeSwatch{width:9px;height:9px;flex-basis:9px}.erm21 .erm36-typeMetric strong,.erm21 .erm36-typeMetric span{border-left:1px solid var(--erm33-accent,#00cbe9);font-size:10px;padding:3px 4px}.erm21 .erm36-typeMetric span{font-size:8px}.erm21 .erm36-typeLegend p{font-size:10px}.erm21 .erm36-note{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.erm21 .erm36-typesRow,.erm21 .erm36-typeLegend{transition:none}}

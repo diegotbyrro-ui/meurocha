@@ -14,18 +14,16 @@ const assetDir = join(root,'public/experiencia/easy-rota-do-mar');
 test('R21: pagina nao indexavel, rota e layout originais preservados', () => {
   assert.match(page,/robots: \{ index: false, follow: false, nocache: true \}/);
   assert.match(page,/EasyRotaClient/);
-  for(const n of ['erm20-shell','erm20-sidebar','erm20-main','erm20-panel','erm20-bottomTabs']) assert.match(client,new RegExp(n));
+  for(const n of ['erm20-shell','erm20-sidebar','erm20-main','erm20-panel']) assert.match(client,new RegExp(n));
 });
-test('R21: 10 entradas do menu lateral como na arte escolhida', () => {
-  for(const id of ['visao','localizacao','entorno','empreendimento','masterplan','plantas','galeria','videos','diferenciais','simulacao'])
+test('R36: menu lateral reduzido a sete opcoes como no Park Plaza', () => {
+  for(const id of ['localizacao','lazer','plantas','imagens','videos','ficha','institucional'])
     assert.match(client,new RegExp(`id: '${id}'`));
   assert.match(client,/platformMenu\.map/);
   assert.match(client,/selectedNav === n\.id/);
 });
-test('R21: navegacao inferior com cinco modulos do Modelo 3', () => {
-  for (const label of ['Utilização','Entorno','Masterplan','Plantas','Mídias']) assert.match(client,new RegExp(`label: '${label}'`));
-  assert.match(client,/globalTabs\.map/);
-  assert.match(client,/goGlobal\(n\)/);
+test('R36: nao renderiza a barra inferior de cinco modulos', () => {
+  assert.doesNotMatch(client,/erm20-bottomTabs|globalTabs\.map|goGlobal\(n\)/);
 });
 test('R21: identidade azul marinho e ciano, isolada no escopo erm21', () => {
   assert.match(client,/className="erm20 erm21 erm22 erm23"/);
@@ -116,7 +114,7 @@ test('R23: modal abre apos CTA e nao permite autoplay', () => {
   assert.doesNotMatch(client,/<audio[^>]*autoPlay/i);
 });
 test('R23: os modulos internos de R22 permanecem completos', () => {
-  for (const s of ['erm20-sidebar','erm20-sideNav','erm20-panel','erm20-bottomTabs','platformMenu.map','globalTabs.map','openLightbox','toggleMusic']) assert.ok(client.includes(s),s);
+  for (const s of ['erm20-sidebar','erm20-sideNav','erm20-panel','platformMenu.map','openLightbox','toggleMusic']) assert.ok(client.includes(s),s);
   assert.match(css,/\.erm23 \.erm20-splash\.erm23-splash/);
   assert.match(css,/@media\(max-width:740px\)/);
   assert.match(css, /prefers-reduced-motion:reduce/);
@@ -331,8 +329,8 @@ test('R29: preserva CTA de onda, escolha de som, menu de sete módulos e interio
   assert.match(client,/Deseja iniciar com música\?/);
   assert.match(client,/erm-onda-natural-r28\.mp3/);
   assert.match(client,/erm20-sidebar/);
-  assert.match(client,/erm20-bottomTabs/);
-  const r29=css.slice(css.lastIndexOf('ROCHA R29'));
+  assert.doesNotMatch(client,/erm20-bottomTabs/);
+  const r29=css.slice(css.indexOf('ROCHA R29'),css.indexOf('ROCHA R30'));
   assert.match(r29,/Apenas splash e menu central/);
   assert.doesNotMatch(r29,/erm20-panel|erm20-sidebar|erm20-bottomTabs/);
 });
@@ -360,7 +358,7 @@ test('R30: nova imagem anti-recorte é usada nas duas telas com transparência',
   assert.equal(png.readUInt32BE(20),108);
   assert.equal(png[25],6,'A nova textura deve manter o canal alfa');
   assert.ok(png.length>1000);
-  const r30=css.slice(css.lastIndexOf('ROCHA R30'));
+  const r30=css.slice(css.indexOf('ROCHA R30'),css.indexOf('ROCHA R31'));
   assert.equal((r30.match(/erm-pattern-book-r30\.png/g)||[]).length,2,'Uma entrada para splash e uma regra compartilhada das duas camadas do menu');
   assert.match(r30,/font-family:var\(--erm24-type-ui\)/);
   assert.doesNotMatch(r30,/erm20-sidebar|erm20-panel|erm20-bottomTabs/);
@@ -411,7 +409,7 @@ test('R31: fotos individuais permanecem preservadas para futura seção de área
 });
 test('R31: preserva as 33 identificações e demais telas da R30 sem afetar música, logo ou navegação', () => {
   assert.equal([...client.matchAll(/number: (\d+), name:/g)].length,33);
-  for(const term of ['erm28-waveIcon','setSoundPrompt(true)','erm25-centralMenu','erm20-bottomTabs','erm30-centralSlogan','erm-rocha-assinatura.png']) {
+  for(const term of ['erm28-waveIcon','setSoundPrompt(true)','erm25-centralMenu','erm30-centralSlogan','erm-rocha-assinatura.png']) {
     assert.ok(client.includes(term),term);
   }
 });
@@ -498,7 +496,7 @@ test('R33 R2: imagens dos 3 tipos derivadas da planta original em TIFF, sem geom
 });
 test('R33: imagens técnicas 2D ainda são mostradas ao abrir tipologia',()=>{
   assert.ok(client.includes('r32Asset(r32PlanFile[selectedType])'));
-  assert.ok(client.includes('setTypeAndShow(key)'));
+  assert.ok(client.includes('setTypeAndShow(k)'));
   assert.match(client,/erm32-planFocus/);
 });
 test('R34: oito zonas por tipologia com contornos restritos e sem circulacao central',()=>{
@@ -566,7 +564,7 @@ test('R34: planta original sem etiquetas embutidas e somente oito marcadores HTM
   assert.equal(buf.subarray(8,12).toString('ascii'),'WEBP');
   assert.equal(createHash('sha256').update(buf).digest('hex'), '36933ce62a5c7caa45cd59bfddb9e5e8a094673212db2b649b184d9bb1c6480a');
   assert.match(client,/erm34-pavimento-limpo\.webp/);
-  const plan=client.slice(client.indexOf('className="erm32-building erm33-building"'),client.indexOf('className="erm32-tipologyCards erm33-tipologyCards"'));
+  const plan=client.slice(client.indexOf('className="erm32-building erm33-building"'),client.indexOf('className="erm36-typesRow"'));
   assert.doesNotMatch(plan,/erm33-pavimento-transparente/);
   assert.doesNotMatch(plan,/r33Zones|erm33-zones|erm33-zone erm33/);
   assert.match(plan,/r32UnitPoints\.map/);
@@ -612,4 +610,39 @@ test('R35: cores seguem unidade com hover/foco e clique preserva a planta tecnic
   assert.match(css,/stroke-width:1\.5/);
   assert.match(client,/erm34-pavimento-limpo\.webp/);
   assert.match(client,/r32UnitPoints\.map/);
+});
+
+// R36 — interface aprovada: menu de sete itens, sem barra inferior e sem imagens nos resumos.
+test('R36: sete itens laterais na ordem do Park Plaza com seus modulos reais',()=>{
+  const block=client.slice(client.indexOf('const platformMenu:'),client.indexOf('function UiIcon'));
+  const labels=[...block.matchAll(/label: '([^']+)'/g)].map(m=>m[1]);
+  assert.deepEqual(labels,['Localização','Lazer','Plantas','Imagens','Vídeos','Ficha Técnica','Institucional']);
+  for(const id of ['localizacao','lazer','plantas','imagens','videos','ficha','institucional'])assert.ok(block.includes(`id: '${id}'`));
+  assert.doesNotMatch(block,/Visão Geral|Entorno'|Empreendimento'|Masterplan'|Galeria de Imagens|Diferenciais|Simulação/);
+  assert.match(client,/platformMenu\.map/);
+});
+test('R36: navegacao inferior removida do DOM; conteudo preenche a tela',()=>{
+  assert.doesNotMatch(client,/globalTabs|goGlobal|erm20-bottomTabs|erm32-detailBottom/);
+  assert.match(css,/R36 - Plataforma ERM/);
+  assert.match(css,/--erm-bottom:0px/);
+  assert.match(client,/section !== 'plantas' &&/);
+});
+test('R36: quatro legendas de dados reais sem perspectivas no quadro inicial',()=>{
+  const overview=client.slice(client.indexOf("{tab === 'tipologias' && <>"), client.indexOf("{tab === 'plantas' && <>"));
+  assert.match(overview,/erm36-typesRow/);
+  assert.match(overview,/erm36-typeLegend/);
+  assert.match(overview,/r32PlanDetails\[key\]/);
+  assert.match(overview,/types\[key\]\.area/);
+  assert.match(overview,/types\[key\]\.endings/);
+  assert.doesNotMatch(overview,/erm33-perspective|erm32-typeCard|r33CardAsset\[key\]|setTypeAndShow\(key\)/);
+  assert.match(css,/\.erm21 \.erm36-typesRow/);
+  for(const k of ['slim','premium','master','spazzio']) assert.ok(client.includes(`name: '${k[0].toUpperCase()+k.slice(1)}'`));
+});
+test('R36: detalhes surgem ao clicar em uma das oito unidades, com retorno funcional',()=>{
+  const overview=client.slice(client.indexOf('className="erm34-planStage"'),client.indexOf('className="erm36-typesRow"'));
+  assert.match(overview,/r32UnitPoints\.map/);
+  assert.match(overview,/onClick=\{\(\) => \{setHoveredEnding\(null\);setSelectedType\(type\);setSelectedEnding\(p\.ending\);setPlant3D\(false\);chooseTab\('plantas'\);\}\}/);
+  assert.match(client,/VOLTAR AO PAVIMENTO TIPO/);
+  assert.match(client,/r32Asset\(r32PlanFile\[selectedType\]\)/);
+  assert.match(client,/erm33-viewSwitch/);
 });
