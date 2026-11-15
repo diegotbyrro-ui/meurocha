@@ -83,9 +83,27 @@ const types: Record<TypeKey, { name: string; area: string; rooms: string; descri
   slim: { name: 'Slim', area: '39,19 m²', rooms: '2 quartos', description: 'Ambientes funcionais para uma rotina prática.', parking: '1 vaga', image: 'slim', endings: [1, 8] },
   premium: { name: 'Premium', area: '45,21 m²', rooms: '2 quartos com suíte', description: 'Conforto e praticidade em uma planta inteligente.', parking: '1 vaga', image: 'premium', endings: [2, 3] },
   master: { name: 'Master', area: '47,91 m²', rooms: '2 quartos com suíte master', description: 'Mais espaço e privacidade no dia a dia.', parking: '1 vaga', image: 'master', endings: [6, 7] },
-  spazzio: { name: 'Spazzio', area: '58,60 m²', rooms: '3 quartos', description: 'Suíte master, suíte reversível e varanda gourmet.', parking: '2 vagas', image: 'spazzio', endings: [4, 5] },
+  spazzio: { name: 'Spazzio', area: '58,60 m²', rooms: '3 quartos', description: '3 quartos, 2 suítes e varanda, conforme o book oficial.', parking: '2 vagas', image: 'spazzio', endings: [4, 5] },
 };
 const typeKeys: TypeKey[] = ['slim', 'premium', 'master', 'spazzio'];
+// R32: apartamentos do pavimento tipo, conforme etiquetas do TIFF original e quadro
+// de tipologias/terminacoes do book (paginas 13 e 14). Pontos de toque sao aproximados
+// sobre os identificadores visuais; nao indicam disponibilidade comercial.
+const r32UnitPoints: { ending: number; x: number; y: number }[] = [
+  {ending:8,x:15.1,y:43.9},{ending:7,x:31.0,y:44.0},
+  {ending:6,x:66.9,y:44.0},{ending:5,x:82.0,y:43.9},
+  {ending:1,x:15.1,y:59.0},{ending:2,x:31.0,y:59.0},
+  {ending:3,x:66.9,y:59.0},{ending:4,x:82.0,y:59.0},
+];
+const r32Asset = (name: string) => `${BRAND_ASSETS}erm32-${name}.webp`;
+const r32PlanFile: Record<TypeKey, string> = {
+  slim:'planta-slim', premium:'planta-premium', master:'planta-master', spazzio:'planta-spazzio-book-3d',
+};
+const r32PlanDetails: Record<TypeKey,string> = {
+  slim:'2 quartos · 1 vaga', premium:'2 quartos · 1 suíte · 1 vaga',
+  master:'2 quartos · 1 suíte master · 1 vaga', spazzio:'3 quartos · 2 suítes · varanda · 2 vagas',
+};
+
 const endingToType: Record<number, TypeKey> = { 1: 'slim', 2: 'premium', 3: 'premium', 4: 'spazzio', 5: 'spazzio', 6: 'master', 7: 'master', 8: 'slim' };
 const facilities: Facility[] = [
   { number: 1, name: 'Rua de acesso', category: 'acessos' },
@@ -203,6 +221,7 @@ export default function EasyRotaClient() {
   const [selectedType, setSelectedType] = useState<TypeKey>('spazzio');
   const [selectedEnding, setSelectedEnding] = useState(4);
   const [plant3D, setPlant3D] = useState(false);
+  const [r32Expanded, setR32Expanded] = useState(false);
   const [facility, setFacility] = useState(6);
   const [masterImage, setMasterImage] = useState<'implantacao' | 'pavimento'>('implantacao');
   const [masterZoom, setMasterZoom] = useState(1);
@@ -279,7 +298,7 @@ export default function EasyRotaClient() {
   useEffect(() => { if (centralMenuOpen && !soundPrompt) { document.getElementById('erm25-menu-first')?.focus(); } }, [centralMenuOpen, soundPrompt]);
   const feature = facilities.find((p) => p.number === facility) || facilities[0];
   const facilityFile = facilityImages[feature.number];
-  const currentMasterSource = `${BRAND_ASSETS}${masterImage === 'implantacao' ? 'erm-implantacao.webp' : 'erm-pavimento-tipo-r31.webp'}`;
+  const currentMasterSource = masterImage === 'implantacao' ? `${BRAND_ASSETS}erm-implantacao.webp` : r32Asset('pavimento-interativo');
   const currentMasterAlt = masterImage === 'implantacao' ? 'Implantação completa do Easy Rota do Mar, fornecida no book oficial' : 'Planta completa do pavimento tipo Easy Rota do Mar, imagem enviada para a apresentação';
   const changeMaster = (next: 'implantacao' | 'pavimento') => { setMasterImage(next); setMasterZoom(1); setMasterOffset({x:0,y:0}); };
   const changeMasterZoom = (next: number) => { const z = Math.max(1,Math.min(2.5,+next.toFixed(2))); setMasterZoom(z); if (z===1) setMasterOffset({x:0,y:0}); };
@@ -291,17 +310,18 @@ export default function EasyRotaClient() {
     masterPointer.current={x:event.clientX,y:event.clientY};
   };
   useEffect(() => {
-    if (!masterExpanded && !facilityExpanded) return;
-    const close = (event: KeyboardEvent) => { if (event.key==='Escape') { setMasterExpanded(false); setFacilityExpanded(false); } };
+    if (!masterExpanded && !facilityExpanded && !r32Expanded) return;
+    const close = (event: KeyboardEvent) => { if (event.key==='Escape') { setMasterExpanded(false); setFacilityExpanded(false); setR32Expanded(false); } };
     window.addEventListener('keydown',close);
     return () => window.removeEventListener('keydown',close);
-  },[masterExpanded,facilityExpanded]);
+  },[masterExpanded,facilityExpanded,r32Expanded]);
 
   const filtered = facilities.filter((p) => amenityGroup === 'todos' || p.category === amenityGroup);
   const images = gallery.filter((p) => p.category === tab);
   const image = images[imageIndex % Math.max(1, images.length)];
   const selected = types[selectedType];
   const setType = (type: TypeKey) => { tone(); setSelectedType(type); setSelectedEnding(types[type].endings[0]); setPlant3D(false); };
+  const setTypeAndShow = (type: TypeKey) => { setType(type); setTab('plantas'); };
   const stepType = (dir: number) => setType(typeKeys[(typeKeys.indexOf(selectedType) + dir + typeKeys.length) % typeKeys.length]);
   const chooseTab = (newTab: string) => { tone(); setTab(newTab); setImageIndex(0); };
 
@@ -447,33 +467,61 @@ export default function EasyRotaClient() {
               <div className="erm31-overlayTop"><strong>{masterImage === 'implantacao' ? 'Implantação geral' : 'Planta do pavimento tipo'}</strong><button type="button" onClick={() => setMasterExpanded(false)} aria-label="Fechar imagem ampliada">✕ Fechar</button></div>
               <img src={currentMasterSource} alt={currentMasterAlt} draggable={false} />
             </div>}
-            <div className="erm20-masterLower">
-              <div className="erm20-masterIndex">
-                <div className="erm20-masterFilters">{(['todos','acessos','lazer','conveniencia','estrutura'] as Group[]).map((g) => <button key={g} type="button" className={amenityGroup === g ? 'active' : ''} onClick={() => setAmenityGroup(g)}>{groupNames[g]}</button>)}</div>
-                <div className="erm20-facilities erm31-facilities">
-                  {filtered.map((p) => <button key={p.number} type="button" className={facility === p.number ? 'active' : ''} aria-pressed={facility === p.number} onClick={() => setFacility(p.number)}>
-                    <b>{String(p.number).padStart(2, '0')}</b>
-                    {facilityImages[p.number] && <img className="erm31-facilityThumb" src={`${BRAND_ASSETS}${facilityImages[p.number]}-thumb.webp`} alt="" loading="lazy" decoding="async" />}
-                    <span>{p.name}</span>
-                  </button>)}
-                </div>
-              </div>
-              <div className="erm20-masterPreview erm31-masterPreview" aria-live="polite">
-                {facilityFile ?
-                  <button type="button" className="erm31-facilityPhotoButton" aria-label={`Ampliar imagem de ${feature.name}`} onClick={() => setFacilityExpanded(true)}><img key={facility} src={`${BRAND_ASSETS}${facilityFile}.webp`} alt={`Perspectiva do ambiente: ${feature.name}`} loading="lazy" decoding="async" /></button> :
-                  <div className="erm31-previewPending" role="status"><UiIcon name="image" size={28}/><strong>Imagem ainda não fornecida</strong><span>Envie a perspectiva específica de {feature.name} para completar este ambiente.</span></div>}
-                <div className="erm31-featureCaption"><span>{String(feature.number).padStart(2, '0')} · {groupNames[feature.category]}</span><h3>{feature.name}</h3><small>{facilityFile ? 'Perspectiva enviada para este ambiente · imagem inteira, sem cortes' : 'Aguardando o arquivo deste ambiente'}</small></div>
-              </div>
+            <div className="erm32-masterMoved">
+              <UiIcon name="floor" size={24}/>
+              <p>A apresentação de áreas comuns será organizada em uma seção própria. Os materiais já enviados foram preservados.</p>
+              <button type="button" onClick={() => { goto('plantas','tipologias'); setSelectedNav('plantas'); }}>EXPLORAR PAVIMENTO TIPO <UiIcon name="arrow" size={16}/></button>
             </div>
-            {facilityExpanded && facilityFile && <div className="erm31-imageOverlay" role="dialog" aria-modal="true" aria-label={`Foto ampliada de ${feature.name}`}>
-              <div className="erm31-overlayTop"><strong>{feature.name}</strong><button type="button" onClick={() => setFacilityExpanded(false)} aria-label="Fechar foto ampliada">✕ Fechar</button></div>
-              <img src={`${BRAND_ASSETS}${facilityFile}.webp`} alt={`Perspectiva ampliada do ambiente ${feature.name}`} />
-            </div>}
-            <p className="erm20-disclaimer">As imagens foram fornecidas para a apresentação comercial. A georreferenciação de pontos sobre a implantação ainda depende do arquivo mestre validado.</p>
           </div>}
-          {section === 'plantas' && <div className="erm20-content erm20-plans">
-            {tab === 'tipologias' && <><div className="erm20-plansTitle"><SectionBanner title="PAVIMENTO TIPO"/><h2>ESCOLHA O ESPAÇO QUE COMBINA COM VOCÊ.</h2></div><div className="erm20-floorPlan"><div className="erm20-planUpper"><div className="erm20-floorBuilding">{Array.from({ length: 8 }, (_, i) => { const t=endingToType[i+1]; return <button type="button" key={i} onClick={() => { setType(t); chooseTab('plantas'); }} title={`Terminação ${i+1}: ${types[t].name}`} className={`unit unit-${t}`}><span>{String(i+1).padStart(2,'0')}</span><b>{types[t].name.toUpperCase()}</b></button>; })}<div className="erm20-floorCore">CIRCULAÇÃO</div></div></div><div className="erm20-floorTypes">{typeKeys.map((t) => <button type="button" key={t} onClick={() => { setType(t); chooseTab('plantas'); }}><span className="erm20-swatch"/><h3>{types[t].name}</h3><strong>{types[t].area}</strong><small>{types[t].rooms}</small></button>)}</div></div></>}
-            {tab === 'plantas' && <><div className="erm20-plantDetailHeader"><SectionBanner title="PLANTA TIPO"/><div><h2>{selected.name.toUpperCase()}</h2><span>{selected.area}</span></div></div><div className="erm20-bigPlan"><button type="button" className="erm20-arrow left" onClick={() => stepType(-1)} aria-label="Planta anterior">‹</button><Photo id={selectedType === 'spazzio' && plant3D ? 'spazzio-3d' : selected.image} alt={`Planta ${selected.name} do Easy Rota do Mar`} fit="contain"/><button type="button" className="erm20-arrow right" onClick={() => stepType(1)} aria-label="Próxima planta">›</button></div><div className="erm20-planFooter"><div><p>Os ambientes apresentados correspondem às tipologias documentadas do Easy Rota do Mar. Imagens ilustrativas e sujeitos à confirmação do material comercial.</p><ul><li>{selected.rooms}</li><li>{selected.parking}</li><li>{selected.description}</li></ul></div><div className="erm20-apartmentPicker"><b>TORRE {tower.toUpperCase()} · TERMINAÇÕES</b><div>{Array.from({length:8},(_,i)=>i+1).map((n)=><button type="button" className={selectedEnding===n?'active':''} key={n} onClick={()=>{setSelectedEnding(n);setSelectedType(endingToType[n]);setPlant3D(false);}}>{String(n).padStart(2,'0')}</button>)}</div><small>Referência por tipo; não indica unidade disponível.</small><label><input type="checkbox" checked={plant3D} onChange={(e: ChangeEvent<HTMLInputElement>)=>setPlant3D(e.target.checked)} disabled={selectedType!=='spazzio'}/> Planta 3D (Spazzio)</label></div></div></>}
+          {section === 'plantas' && <div className="erm20-content erm20-plans erm32-plans">
+            {tab === 'tipologias' && <>
+              <div className="erm32-head">
+                <SectionBanner title="PAVIMENTO TIPO" caption="08 terminações · 04 opções de planta" />
+                <h1>ESCOLHA A PLANTA QUE COMBINA COM VOCÊ</h1>
+              </div>
+              <p className="erm32-hint">Toque no número de um apartamento na imagem ou selecione uma das tipologias abaixo.</p>
+              <div className="erm32-building" aria-label="Pavimento tipo com oito terminações interativas">
+                <img src={r32Asset('pavimento-interativo')} alt="Pavimento tipo completo do Easy Rota do Mar com apartamentos 01 a 08 e duas caixas de elevadores" draggable={false} />
+                {r32UnitPoints.map((p) => {
+                  const type = endingToType[p.ending];
+                  return <button key={p.ending} type="button" className={`erm32-unit ${selectedEnding===p.ending?'isSelected':''}`} style={{left:`${p.x}%`,top:`${p.y}%`}}
+                    aria-label={`Ver planta ${types[type].name}, terminação ${String(p.ending).padStart(2,'0')}`} title={`${String(p.ending).padStart(2,'0')} · ${types[type].name}`}
+                    onClick={() => {setSelectedType(type);setSelectedEnding(p.ending);setPlant3D(false);chooseTab('plantas');}}>
+                    <span className="erm32-unitRing" aria-hidden="true" />
+                  </button>;
+                })}
+              </div>
+              <div className="erm32-tipologyCards" aria-label="Quatro tipologias disponíveis">
+                {typeKeys.map((key) => <button key={key} type="button" className="erm32-typeCard" onClick={() => setTypeAndShow(key)}>
+                  <img src={r32Asset(r32PlanFile[key])} alt={`Visualização da planta ${types[key].name}`} loading="lazy" />
+                  <div><span className="erm32-swatch"/><h2>{types[key].name.toUpperCase()}</h2><strong>{types[key].area}</strong><p>{r32PlanDetails[key]}</p><small>Terminações {types[key].endings.map(n=>String(n).padStart(2,'0')).join(' / ')}</small></div>
+                </button>)}
+              </div>
+              <p className="erm32-disclaimer">Imagem de pavimento e plantas fornecidas pela Rocha. As terminações indicam o tipo de apartamento, não disponibilidade de unidades. Perspectiva Spazzio extraída do book oficial.</p>
+            </>}
+            {tab === 'plantas' && <>
+              <div className="erm32-detailTop">
+                <button type="button" className="erm32-back" onClick={() => chooseTab('tipologias')}>‹ VOLTAR AO PAVIMENTO TIPO</button>
+                <div><small>PLANTA SELECIONADA · TERMINAÇÃO {String(selectedEnding).padStart(2,'0')}</small><h1>{selected.name.toUpperCase()}</h1><strong>{selected.area}</strong></div>
+              </div>
+              <div className="erm32-planFocus">
+                <button type="button" aria-label="Ver tipologia anterior" className="erm32-navArrow" onClick={() => stepType(-1)}>‹</button>
+                <button type="button" className="erm32-planPhoto" onClick={() => setR32Expanded(true)} aria-label={`Ampliar a planta ${selected.name}`}>
+                  <img src={r32Asset(r32PlanFile[selectedType])} alt={`Planta ${selected.name} do Easy Rota do Mar, imagem inteira sem cortes`} draggable={false}/>
+                  <span>⛶ AMPLIAR PLANTA</span>
+                </button>
+                <button type="button" aria-label="Ver próxima tipologia" className="erm32-navArrow" onClick={() => stepType(1)}>›</button>
+              </div>
+              <div className="erm32-planInfo">
+                <div><h2>{selected.name}</h2><p>{r32PlanDetails[selectedType]}</p><p>{selected.description}</p><small>{selectedType==='spazzio'?'Perspectiva 3D oficial do book; planta 2D individual ainda não fornecida.':'Planta individual oficial fornecida em TIFF, convertida sem cortes.'}</small></div>
+                <div className="erm32-endingPicker"><strong>ESCOLHA A TERMINAÇÃO</strong><div>{Array.from({length:8},(_,i)=>i+1).map(n=><button key={n} type="button" className={selectedEnding===n?'active':''} aria-pressed={selectedEnding===n} onClick={() => {setSelectedEnding(n);setSelectedType(endingToType[n]);setPlant3D(false);}} title={`Terminação ${n}: ${types[endingToType[n]].name}`}>{String(n).padStart(2,'0')}</button>)}</div><small>Representação das tipologias, sem informação de estoque.</small></div>
+              </div>
+              <div className="erm32-detailBottom"><button type="button" onClick={() => chooseTab('tipologias')}>TIPOLOGIAS</button><button type="button" className="active" aria-current="page">PLANTAS</button></div>
+              {r32Expanded && <div className="erm32-lightbox" role="dialog" aria-modal="true" aria-label={`Planta ampliada ${selected.name}`}>
+                <div><strong>{selected.name} · {selected.area}</strong><button type="button" onClick={() => setR32Expanded(false)} aria-label="Fechar planta ampliada">✕ FECHAR</button></div>
+                <img src={r32Asset(r32PlanFile[selectedType])} alt={`Planta ampliada ${selected.name}`} />
+              </div>}
+            </>}
           </div>}
 
           {section === 'imagens' && <div className="erm20-content erm20-images"><SectionBanner title={`IMAGENS / ${tab === 'apartamentos' ? 'APARTAMENTOS' : tab === 'areas' ? 'ÁREAS COMUNS' : 'LAZER'}`}/><h2>{image?.name || 'Galeria do Easy Rota do Mar'}</h2><div className="erm20-galleryStage"><button type="button" className="erm20-galleryPrev" aria-label="Imagem anterior" onClick={() => setImageIndex((i)=>(i+images.length-1)%images.length)}>‹</button>{image && <button type="button" className="erm20-galleryPhoto" aria-label="Ampliar imagem" onClick={() => setOpenLightbox(true)}><Photo id={image.id} alt={image.name} fit={tab === 'apartamentos' ? 'contain' : 'cover'}/></button>}<button type="button" className="erm20-galleryNext" aria-label="Próxima imagem" onClick={() => setImageIndex((i)=>(i+1)%images.length)}>›</button></div><div className="erm20-galleryThumbs">{images.map((p,i)=><button type="button" key={p.id} aria-pressed={imageIndex%images.length===i} className={imageIndex%images.length===i?'active':''} onClick={()=>setImageIndex(i)}><Photo id={p.id} alt={p.name}/></button>)}</div><span className="erm20-photoCaption">Perspectivas meramente ilustrativas · {images.length} imagens</span></div>}

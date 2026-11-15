@@ -873,3 +873,65 @@
 @media(max-width:900px){.erm21 .erm31-realPlan{height:clamp(280px,46vh,480px);min-height:280px}.erm21 .erm31-masterPreview{height:320px;max-height:320px;max-width:100%}}
 @media(max-width:560px){.erm21 .erm31-realPlan{height:clamp(255px,38vh,400px);min-height:255px}.erm21 .erm31-planControls{align-items:stretch}.erm21 .erm31-planZoomButtons{width:100%}.erm21 .erm31-planControls button{font-size:10px;padding:7px 9px}.erm21 .erm31-planZoomButtons output{min-width:35px}.erm21 .erm31-imageOverlay{padding:75px 8px 15px}.erm21 .erm31-overlayTop{left:10px;right:10px}.erm21 .erm31-masterPreview{height:260px;max-height:260px}}
 @media(prefers-reduced-motion:reduce){.erm21 .erm31-masterPreview>.erm31-facilityPhotoButton>img{animation:none}.erm21 .erm31-realPlan>img.erm31-planImage{transition:none}}
+
+/* ROCHA R32 — PAVIMENTO INTERATIVO / TIPOS OFICIAIS DO BOOK
+   CSS isolado em .erm21 .erm32-*; nao altera demais secoes. */
+.erm21 .erm32-plans{background:linear-gradient(180deg,#eff9fc 0%,#e3f2f7 100%);color:#064361;min-height:100%;overflow-y:auto;padding:18px 22px 30px}
+.erm21 .erm32-head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:14px}
+.erm21 .erm32-head .erm20-sectionBanner{flex-shrink:0}
+.erm21 .erm32-head h1{margin:3px 0 0;font:400 clamp(18px,2vw,28px)/1.2 Georgia,serif;letter-spacing:.035em;text-align:right;color:#003e62;max-width:630px}
+.erm21 .erm32-hint{font:400 13px/1.4 'Segoe UI',sans-serif;color:#55788c;margin:0 0 10px}
+.erm21 .erm32-building{position:relative;display:block;width:100%;aspect-ratio:2500/957;border:1px solid #80bdcf;border-radius:9px;background:#f8fafb;overflow:hidden;box-shadow:0 5px 22px #00415c17}
+.erm21 .erm32-building>img{display:block;position:absolute;width:100%;height:100%;inset:0;object-fit:contain;object-position:center}
+.erm21 .erm32-unit{position:absolute;z-index:2;transform:translate(-50%,-50%);width:6%;height:24%;min-width:30px;min-height:32px;border:1px solid transparent;border-radius:9px;background:#00d1ed0b;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s ease,border-color .15s ease,box-shadow .15s ease}
+.erm21 .erm32-unit:hover,.erm21 .erm32-unit:focus-visible{background:#0bd6ed3b;border-color:#00a9d5;box-shadow:0 0 0 2px #00cfea40;outline:0}
+.erm21 .erm32-unit.isSelected{background:#00d6ef1c;border-color:#00cfe566}
+.erm21 .erm32-unitRing{width:13px;height:13px;border:2px solid #00aeca;background:#d2faff9c;border-radius:100%;box-shadow:0 0 0 3px #efffff81;opacity:0;transition:opacity .15s ease}
+.erm21 .erm32-unit:hover .erm32-unitRing,.erm21 .erm32-unit:focus-visible .erm32-unitRing{opacity:1}
+.erm21 .erm32-tipologyCards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0 8px}
+.erm21 .erm32-typeCard{font:inherit;border:1px solid #8dc3d2;border-radius:8px;background:#fff;text-align:left;padding:0;cursor:pointer;color:#063a58;overflow:hidden;box-shadow:0 2px 12px #003b5020;transition:transform .16s,border-color .16s,box-shadow .16s}
+.erm21 .erm32-typeCard:hover,.erm21 .erm32-typeCard:focus-visible{transform:translateY(-2px);border-color:#04c3e8;box-shadow:0 8px 25px #003b5038;outline:0}
+.erm21 .erm32-typeCard>img{display:block;width:100%;height:120px;object-fit:contain;object-position:center;background:#f6fafc}
+.erm21 .erm32-typeCard>div{position:relative;padding:11px 12px 13px;min-height:110px}
+.erm21 .erm32-swatch{display:inline-block;width:9px;height:9px;background:#00c0db;margin-right:7px;vertical-align:middle}
+.erm21 .erm32-typeCard h2{display:inline;font:400 22px Georgia,serif;color:#003850;vertical-align:middle}
+.erm21 .erm32-typeCard strong{display:block;margin:6px 0 4px;font-size:13px;color:#007dab}
+.erm21 .erm32-typeCard p{font-size:11px;line-height:1.3;margin:0 0 5px}
+.erm21 .erm32-typeCard small{display:block;font-size:10px;color:#516c78}
+.erm21 .erm32-disclaimer{font:400 11px/1.45 'Segoe UI',sans-serif;color:#557c8e;margin:8px 0 0}
+.erm21 .erm32-detailTop{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin:0 0 16px}
+.erm21 .erm32-back{border:1px solid #60b1c9;background:#e5f8fd;color:#005172;border-radius:8px;padding:11px 15px;font:600 12px 'Segoe UI',sans-serif;cursor:pointer}
+.erm21 .erm32-back:hover,.erm21 .erm32-back:focus-visible{background:#bdeef9}
+.erm21 .erm32-detailTop>div{text-align:right}
+.erm21 .erm32-detailTop small{font:600 10px 'Segoe UI',sans-serif;letter-spacing:.13em;color:#237c98}
+.erm21 .erm32-detailTop h1{font:400 clamp(25px,3.1vw,41px)/1.1 Georgia,serif;letter-spacing:.05em;color:#00364e;margin:3px 0}
+.erm21 .erm32-detailTop strong{font:600 13px 'Segoe UI',sans-serif;color:#008bae}
+.erm21 .erm32-planFocus{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:8px;height:clamp(300px,50vh,550px);margin:0 auto}
+.erm21 .erm32-navArrow{border:1px solid #71bbd0;background:#ecfaff;color:#087996;border-radius:50%;height:42px;width:42px;cursor:pointer;font:30px Georgia,serif;line-height:36px}
+.erm21 .erm32-navArrow:hover{background:#00cde6;color:#003450}
+.erm21 .erm32-planPhoto{position:relative;display:flex;align-items:center;justify-content:center;height:100%;width:100%;min-height:0;background:#fff;border:1px solid #93c4d4;border-radius:12px;padding:7px;cursor:zoom-in;overflow:hidden}
+.erm21 .erm32-planPhoto img{width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;object-position:center;display:block}
+.erm21 .erm32-planPhoto>span{position:absolute;right:10px;bottom:10px;background:#003e5dcf;border-radius:6px;color:#fff;padding:7px 9px;font:600 10px 'Segoe UI',sans-serif}
+.erm21 .erm32-planPhoto:hover{box-shadow:0 0 0 2px #00cdeb47}
+.erm21 .erm32-planInfo{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.75fr);gap:22px;background:#003451;color:#e9faff;padding:18px 22px;margin:18px 0 0;border-radius:10px}
+.erm21 .erm32-planInfo h2{font:400 27px Georgia,serif;margin:0 0 8px;color:#fff}
+.erm21 .erm32-planInfo p{font-size:13px;line-height:1.5;margin:0 0 6px}
+.erm21 .erm32-planInfo small{font-size:11px;line-height:1.4;color:#a5cbdc;display:block;margin-top:9px}
+.erm21 .erm32-endingPicker{display:flex;flex-direction:column;justify-content:center;gap:10px}
+.erm21 .erm32-endingPicker strong{font:600 11px 'Segoe UI',sans-serif;letter-spacing:.14em;color:#b6effa}
+.erm21 .erm32-endingPicker>div{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px}
+.erm21 .erm32-endingPicker button{border:1px solid #479cb6;background:#075374;border-radius:5px;color:white;font:600 12px 'Segoe UI',sans-serif;min-width:0;height:33px;cursor:pointer}
+.erm21 .erm32-endingPicker button.active,.erm21 .erm32-endingPicker button:hover{background:#01cee9;color:#002d45;border-color:#00e1f8}
+.erm21 .erm32-detailBottom{display:flex;gap:12px;margin-top:12px}
+.erm21 .erm32-detailBottom button{flex:1;padding:12px;font:600 12px 'Segoe UI',sans-serif;color:#e4faff;background:#064a68;border:1px solid #4b9eb6;border-radius:6px;cursor:pointer}
+.erm21 .erm32-detailBottom button.active{background:#00c2df;color:#002d45}
+.erm21 .erm32-lightbox{position:fixed;z-index:999;inset:0;background:#001a2df2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:18px 28px 28px;box-sizing:border-box}
+.erm21 .erm32-lightbox>div{width:100%;display:flex;align-items:center;justify-content:space-between;color:white;font:600 16px 'Segoe UI',sans-serif}
+.erm21 .erm32-lightbox button{background:#074968;border:1px solid #33b9d2;color:white;padding:10px 16px;border-radius:7px;cursor:pointer}
+.erm21 .erm32-lightbox img{max-width:100%;max-height:calc(100% - 50px);min-height:0;object-fit:contain;object-position:center}
+.erm21 .erm32-masterMoved{display:flex;align-items:center;gap:14px;background:#f1fbfe;border:1px solid #a8d4e0;border-radius:9px;padding:17px;color:#034665}
+.erm21 .erm32-masterMoved p{flex:1;margin:0;font:400 12px/1.5 'Segoe UI',sans-serif}
+.erm21 .erm32-masterMoved button{display:flex;align-items:center;gap:9px;padding:11px 14px;border:1px solid #0bb4d2;border-radius:7px;background:#00c8e4;color:#003550;font:600 11px 'Segoe UI',sans-serif;cursor:pointer}
+@media(max-width:1000px){.erm21 .erm32-tipologyCards{grid-template-columns:repeat(2,minmax(0,1fr))}.erm21 .erm32-head{flex-direction:column;gap:4px}.erm21 .erm32-head h1{text-align:left}.erm21 .erm32-planInfo{grid-template-columns:1fr}.erm21 .erm32-masterMoved{flex-wrap:wrap}}
+@media(max-width:600px){.erm21 .erm32-plans{padding:13px 10px 18px}.erm21 .erm32-head h1{font-size:20px}.erm21 .erm32-hint{font-size:11px}.erm21 .erm32-building{aspect-ratio:2500/957;overflow:visible;min-height:0}.erm21 .erm32-unit{min-width:22px;min-height:29px;width:9%;height:40%;border-radius:4px}.erm21 .erm32-tipologyCards{gap:7px}.erm21 .erm32-typeCard>img{height:92px}.erm21 .erm32-typeCard>div{padding:9px 8px;min-height:114px}.erm21 .erm32-typeCard h2{font-size:18px}.erm21 .erm32-typeCard p{font-size:10px}.erm21 .erm32-detailTop{flex-wrap:wrap;gap:9px}.erm21 .erm32-detailTop>div{text-align:left}.erm21 .erm32-planFocus{grid-template-columns:27px minmax(0,1fr) 27px;gap:3px;height:36vh;min-height:230px}.erm21 .erm32-navArrow{width:27px;height:33px;border-radius:6px;font-size:23px}.erm21 .erm32-planPhoto>span{font-size:8px;right:4px;bottom:4px}.erm21 .erm32-planInfo{gap:9px;padding:12px}.erm21 .erm32-endingPicker>div{gap:3px}.erm21 .erm32-endingPicker button{font-size:10px;height:30px}.erm21 .erm32-lightbox{padding:12px}.erm21 .erm32-lightbox>div{font-size:12px}.erm21 .erm32-masterMoved{padding:10px}}
+@media(prefers-reduced-motion:reduce){.erm21 .erm32-typeCard,.erm21 .erm32-unit{transition:none}}

@@ -56,7 +56,7 @@ test('R21: quatro plantas, suas terminacoes e seletor sem inventar estoque', () 
   for(const [id,area] of [['slim','39,19'],['premium','45,21'],['master','47,91'],['spazzio','58,60']])
     assert.match(client,new RegExp(`${id}: \\{ name:.*?${area}`));
   assert.match(client,/endingToType: Record<number, TypeKey>/);
-  assert.match(client,/não indica unidade disponível/);
+  assert.match(client,/não disponibilidade de unidades/);
 });
 test('R21: 33 ambientes registrados em masterplan real do book', () => {
   const nums=[...client.matchAll(/number: (\d+), name:/g)].map(x=>Number(x[1]));
@@ -368,7 +368,7 @@ test('R30: nova imagem anti-recorte é usada nas duas telas com transparência',
 
 // R31 — importação inicial das imagens fornecidas para o masterplan/ambientes.
 test('R31: planta de pavimento tipo é mostrada sem corte, com opção de consultar implantação original', () => {
-  assert.match(client,/erm-pavimento-tipo-r31\.webp/);
+  assert.match(client,/r32Asset\('pavimento-interativo'\)/);
   assert.match(client,/masterImage === 'pavimento'/);
   assert.match(client,/masterImage === 'implantacao'/);
   assert.match(client,/erm-implantacao\.webp/);
@@ -402,13 +402,10 @@ test('R31: quadro superior usa imagem inteira fornecida e não perde nenhuma par
   assert.match(css,/\.erm31-realPlan>img\.erm31-planImage/);
   assert.match(css,/object-fit:contain/);
 });
-test('R31: lista exibe miniaturas; seleção exibe arquivo específico ou aviso neutro de pendência', () => {
-  assert.match(client,/erm31-facilityThumb/);
-  assert.match(client,/erm31-masterPreview/);
-  assert.match(client,/facilityImages\[p\.number\]/);
-  assert.match(client,/facilityFile \?/);
-  assert.match(client,/Imagem ainda não fornecida/);
-  assert.doesNotMatch(client,/ERM_R31_FAKE_IMAGE/);
+test('R31: fotos individuais permanecem preservadas para futura seção de áreas comuns', () => {
+  assert.match(client,/const facilityImages:/);
+  assert.match(client,/const facilityImages:/);
+  assert.match(css,/erm31-masterPreview/);
   assert.match(css,/\.erm31-masterPreview>img\{[^}]*object-fit:contain/);
 });
 test('R31: preserva as 33 identificações e demais telas da R30 sem afetar música, logo ou navegação', () => {
@@ -430,7 +427,55 @@ test('R31: imagem principal tem zoom, arraste, ajuste e ampliação sem cortes',
   assert.match(css,/\.erm31-realPlan>img\.erm31-planImage\{[^}]*object-fit:contain/);
   assert.match(css,/\.erm31-imageOverlay>img\{[^}]*object-fit:contain/);
 });
-test('R31: cards de ambientes têm seleção, imagem individual, miniatura e abertura ampliada', () => {
-  for(const x of ['erm31-facilityThumb','facilityImages[p.number]','setFacilityExpanded(true)','facilityFile','erm31-masterPreview']) assert.ok(client.includes(x),x);
+test('R31: base de imagens e dados permanece disponível para realocação futura', () => {
+  for(const token of ['const facilities:', 'const facilityImages:', 'erm31-facilityPhotoButton'])
+    assert.ok(client.includes(token) || css.includes(token), token);
   assert.match(css,/\.erm31-facilityPhotoButton>img\{[^}]*object-fit:contain/);
+});
+
+
+// R32: navegação fiel à referência gravada com as informações oficiais das plantas.
+test('R32: pavimento tipo contém 8 terminações corretas, uma de cada posição fotografada', () => {
+  const block=client.slice(client.indexOf('const r32UnitPoints'),client.indexOf('const r32Asset'));
+  const found=[...block.matchAll(/ending:(\d+),x:/g)].map(x=>Number(x[1]));
+  assert.deepEqual([...found].sort((a,b)=>a-b),[1,2,3,4,5,6,7,8]);
+  assert.match(client,/endingToType: Record<number, TypeKey>/);
+  assert.match(client,/4: 'spazzio', 5: 'spazzio'/);
+});
+test('R32: associação Slim Premium Master Spazzio é a do livro nas páginas 13 e 14',()=>{
+  const typesBlock=client.slice(client.indexOf('const types:'),client.indexOf('const typeKeys:'));
+  for(const term of ["endings: [1, 8]","endings: [2, 3]","endings: [6, 7]","endings: [4, 5]"])
+    assert.ok(typesBlock.includes(term),term);
+  for(const k of ['slim','premium','master','spazzio'])assert.ok(client.includes(`'planta-${k}`) || client.includes(`planta-${k}`),k);
+});
+test('R32: planta 3D Spazzio identificada sem alegar que existe 2D individual',()=>{
+  assert.match(client,/planta-spazzio-book-3d/);
+  assert.match(client,/planta 2D individual ainda não fornecida/);
+  assert.match(client,/Perspectiva 3D oficial do book/);
+});
+test('R32: todas as plantas WebP oficiais e pavimento completo estão no pacote',()=>{
+  for(const p of ['erm32-pavimento-interativo.webp', 'erm32-planta-slim.webp', 'erm32-planta-premium.webp','erm32-planta-master.webp','erm32-planta-spazzio-book-3d.webp']){
+    const buf=readFileSync(join(assetDir,p));
+    assert.ok(buf.length>30000,p);
+    assert.equal(buf.subarray(0,4).toString('ascii'),'RIFF');
+    assert.equal(buf.subarray(8,12).toString('ascii'),'WEBP');
+  }
+});
+test('R32: planta clicável e seletores abrem tipologia correta e possuem controles de retorno',()=>{
+  for(const x of ['erm32-building','erm32-unit','setSelectedEnding(p.ending)',"chooseTab(\'plantas\')", 'erm32-back','erm32-navArrow','erm32-endingPicker','erm32-lightbox'])
+    assert.ok(client.includes(x),x);
+  assert.match(css,/\.erm21 \.erm32-building>img\{[^}]*object-fit:contain/);
+  assert.match(css,/\.erm21 \.erm32-planPhoto img\{[^}]*object-fit:contain/);
+});
+test('R32: área comum retirada desta seção, materiais e mapa original preservados',()=>{
+  const master=client.slice(client.indexOf("{section === 'lazer'"),client.indexOf("{section === 'plantas'"));
+  assert.doesNotMatch(master,/erm20-masterLower|erm31-facilityThumb|erm31-masterPreview/);
+  assert.match(master,/erm32-masterMoved/);
+  assert.match(client,/erm-implantacao\.webp/);
+});
+test('R32: responsividade, acessibilidade e sem inventar estoque ou preços',()=>{
+  assert.match(css,/@media\(max-width:600px\)/);
+  assert.match(client,/aria-label=\{`Ver planta/);
+  assert.match(client,/não disponibilidade de unidades/);
+  assert.doesNotMatch(client,/R32_ESTOQUE_INVENTADO/);
 });
