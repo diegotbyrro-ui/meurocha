@@ -1013,3 +1013,17 @@
 @media(max-width:1020px){.erm21 .erm36-typesRow{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:15px}.erm21 .erm36-typeLegend h2{font-size:21px}.erm21 .erm36-typeMetric strong{font-size:13px}.erm21 .erm36-typeMetric span{font-size:10px}}
 @media(max-width:560px){.erm21 .erm36-typesRow{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:10px 2px 3px}.erm21 .erm36-typeLegend{padding:0 4px 10px}.erm21 .erm36-typeLegend h2{font-size:16px;gap:5px}.erm21 .erm36-typeSwatch{width:9px;height:9px;flex-basis:9px}.erm21 .erm36-typeMetric strong,.erm21 .erm36-typeMetric span{border-left:1px solid var(--erm33-accent,#00cbe9);font-size:10px;padding:3px 4px}.erm21 .erm36-typeMetric span{font-size:8px}.erm21 .erm36-typeLegend p{font-size:10px}.erm21 .erm36-note{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.erm21 .erm36-typesRow,.erm21 .erm36-typeLegend{transition:none}}
+
+
+/* R38: selecao de tipologia como no Plaza e planta baixa limpa do Spazzio. */
+.erm21 .erm34-zone.isTypeHighlighted{fill-opacity:.28;stroke:var(--erm33-accent);stroke-opacity:1;stroke-width:3;vector-effect:non-scaling-stroke}
+.erm21 .erm34-zone.isTypeHighlighted.isHovered{fill-opacity:.36;stroke-width:3.7}
+.erm21 .erm34-zone.isTypeMuted{fill-opacity:.012;stroke-opacity:.14;stroke-width:1}
+.erm21 .erm33-unit.isTypeMuted .erm33-unitLabel{opacity:.52;filter:saturate(.48);box-shadow:none}
+.erm21 .erm33-unit.isSelected .erm33-unitLabel{opacity:1;filter:none;box-shadow:0 0 0 2px #ffffffdd,0 0 13px var(--erm33-accent)}
+.erm21 .erm38-typeButton{display:block;width:100%;appearance:none;text-align:left;cursor:pointer;border:1px solid transparent;border-radius:7px;transition:background .18s ease,border-color .18s ease,box-shadow .18s ease}
+.erm21 .erm38-typeButton:hover,.erm21 .erm38-typeButton.isChosen{background:color-mix(in srgb,var(--erm33-accent) 9%,transparent);border-color:var(--erm33-accent)}
+.erm21 .erm38-typeButton.isChosen{box-shadow:0 0 0 1px var(--erm33-accent)}
+.erm21 .erm38-typeButton:focus-visible{outline:2px solid var(--erm33-accent);outline-offset:3px}
+.erm21 .erm38-sourceNote{margin:10px auto;text-align:center;color:#386c86;font:600 11px var(--erm24-type-ui,'Segoe UI',sans-serif);letter-spacing:.08em}
+@media(prefers-reduced-motion:reduce){.erm21 .erm38-typeButton,.erm21 .erm34-zone{transition:none}}

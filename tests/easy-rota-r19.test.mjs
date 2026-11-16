@@ -447,10 +447,11 @@ test('R32: associação Slim Premium Master Spazzio é a do livro nas páginas 1
     assert.ok(typesBlock.includes(term),term);
   for(const k of ['slim','premium','master','spazzio'])assert.ok(client.includes(`'planta-${k}`) || client.includes(`planta-${k}`),k);
 });
-test('R32: planta 3D Spazzio identificada sem alegar que existe 2D individual',()=>{
-  assert.match(client,/planta-spazzio-book-3d/);
-  assert.match(client,/planta 2D individual ainda não fornecida/);
-  assert.match(client,/Perspectiva 3D oficial do book/);
+test('R38: Spazzio mostra planta baixa do pavimento original e nao screenshot do book',()=>{
+  assert.doesNotMatch(client,/planta-spazzio-book-3d|Perspectiva do book|Perspectiva 3D oficial do book/);
+  assert.match(client,/erm38-spazzio-\$\{selectedEnding === 5 \? '05' : '04'\}-planta-baixa\.webp/);
+  assert.match(client,/selectedType === 'spazzio' \? <p className="erm38-sourceNote"/);
+  assert.match(client,/sem uma prancha individual com cotas/);
 });
 test('R32: todas as plantas WebP oficiais e pavimento completo estão no pacote',()=>{
   for(const p of ['erm32-pavimento-interativo.webp', 'erm32-planta-slim.webp', 'erm32-planta-premium.webp','erm32-planta-master.webp','erm32-planta-spazzio-book-3d.webp']){
@@ -492,7 +493,7 @@ test('R33 R2: imagens dos 3 tipos derivadas da planta original em TIFF, sem geom
   }
   assert.match(client,/sem modificar a distribuição dos ambientes/);
   assert.match(client,/não são maquetes executivas 3D/);
-  assert.ok(client.includes('erm33-perspectiva-spazzio-book.webp'));
+  assert.ok(client.includes('erm38-spazzio-04-planta-baixa.webp'));
 });
 test('R33: imagens técnicas 2D ainda são mostradas ao abrir tipologia',()=>{
   assert.ok(client.includes('r32Asset(r32PlanFile[selectedType])'));
@@ -542,7 +543,7 @@ test('R33 R2: detalhe alterna Planta técnica ou Perspectiva sem perder a imagem
   assert.match(client,/erm33-viewSwitch/);
   assert.match(client,/setPlant3D\(false\)/);
   assert.match(client,/setPlant3D\(true\)/);
-  assert.match(client,/plant3D \? r33CardAsset\[selectedType\] : r32Asset\(r32PlanFile\[selectedType\]\)/);
+  assert.match(client,/plant3D && selectedType !== 'spazzio' \? r33CardAsset\[selectedType\] : selectedPlanSource/);
   assert.match(client,/aria-pressed=\{plant3D\}/);
   assert.match(css,/\.erm21 \.erm33-viewSwitch button\.active/);
 });
@@ -552,7 +553,7 @@ test('R33 R2: todas as associações de tipologia e fonte oficial preservadas',(
   for (const k of ['slim','premium','master']) {
     assert.match(client,new RegExp(`erm33r2-${k}-oficial-perspectiva\\.webp`));
   }
-  assert.ok(client.includes('planta-spazzio-book-3d'));
+  assert.ok(client.includes('erm38-spazzio-04-planta-baixa.webp'));
   assert.ok(client.includes('Planta técnica'));
 });
 
@@ -604,7 +605,7 @@ test('R35: cores seguem unidade com hover/foco e clique preserva a planta tecnic
   assert.match(client,/hoveredEnding===zone\.ending\?'isHovered'/);
   assert.match(client,/onMouseEnter=\{\(\) => setHoveredEnding\(p\.ending\)\}/);
   assert.match(client,/onFocus=\{\(\) => setHoveredEnding\(p\.ending\)\}/);
-  assert.match(client,/setHoveredEnding\(null\);setSelectedType\(type\);setSelectedEnding\(p\.ending\)/);
+  assert.match(client,/setHoveredEnding\(null\);setHighlightedType\(type\);setSelectedType\(type\);setSelectedEnding\(p\.ending\)/);
   assert.match(css,/\.erm21 \.erm34-zone\.isHovered\{/);
   assert.match(css,/\.erm21 \.erm34-zone\.isSelected\{/);
   assert.match(css,/stroke-width:1\.5/);
@@ -641,8 +642,41 @@ test('R36: quatro legendas de dados reais sem perspectivas no quadro inicial',()
 test('R36: detalhes surgem ao clicar em uma das oito unidades, com retorno funcional',()=>{
   const overview=client.slice(client.indexOf('className="erm34-planStage"'),client.indexOf('className="erm36-typesRow"'));
   assert.match(overview,/r32UnitPoints\.map/);
-  assert.match(overview,/onClick=\{\(\) => \{setHoveredEnding\(null\);setSelectedType\(type\);setSelectedEnding\(p\.ending\);setPlant3D\(false\);chooseTab\('plantas'\);\}\}/);
+  assert.match(overview,/onClick=\{\(\) => \{setHoveredEnding\(null\);setHighlightedType\(type\);setSelectedType\(type\);setSelectedEnding\(p\.ending\);setPlant3D\(false\);chooseTab\('plantas'\);\}\}/);
   assert.match(client,/VOLTAR AO PAVIMENTO TIPO/);
   assert.match(client,/r32Asset\(r32PlanFile\[selectedType\]\)/);
   assert.match(client,/erm33-viewSwitch/);
+});
+
+
+// R38 - tipologias destacadas com selecao acessivel, origem ortogonal do Spazzio.
+test('R38: selecao de tipologia ressalta as duas unidades sem abrir automaticamente a planta',()=>{
+  const overview=client.slice(client.indexOf("{tab === 'tipologias' && <>"),client.indexOf("{tab === 'plantas' && <>"));
+  assert.match(client,/const \[highlightedType, setHighlightedType\] = useState<TypeKey \| null>\(null\)/);
+  assert.match(client,/const activeHighlightType = hoveredEnding !== null \? endingToType\[hoveredEnding\] : \(hoveredLegend \?\? highlightedType\)/);
+  assert.match(overview,/aria-pressed=\{highlightedType===key\}/);
+  assert.match(overview,/setHighlightedType\(prev => prev === key \? null : key\)/);
+  assert.match(overview,/activeHighlightType===key\?'isTypeHighlighted'/);
+  assert.match(overview,/activeHighlightType!==null&&activeHighlightType!==key\?'isTypeMuted'/);
+  assert.match(css,/\.erm21 \.erm34-zone\.isTypeHighlighted\{fill-opacity:\.28/);
+  assert.match(css,/\.erm21 \.erm34-zone\.isTypeMuted\{/);
+});
+test('R38: planta Spazzio tem imagem de cima distinta nas terminacoes 04 e 05',()=>{
+  for (const n of ['04','05']) {
+    const name=`erm38-spazzio-${n}-planta-baixa.webp`;
+    const data=readFileSync(join(assetDir,name));
+    assert.ok(data.length>80000,`${name} demasiado pequeno`);
+    assert.equal(data.subarray(0,4).toString('ascii'),'RIFF');
+    assert.equal(data.subarray(8,12).toString('ascii'),'WEBP');
+  }
+  assert.match(client,/selectedEnding === 5 \? '05' : '04'/);
+  assert.match(client,/selectedPlanSource/);
+  assert.match(client,/selectedType === 'spazzio' \? `Planta baixa Spazzio/);
+});
+test('R38: nao altera sete menus, oito marcadores, nem a descricao comercial',()=>{
+  const block=client.slice(client.indexOf('const platformMenu:'),client.indexOf('function UiIcon'));
+  assert.equal([...block.matchAll(/label: '/g)].length,7);
+  const dots=client.slice(client.indexOf('const r32UnitPoints'),client.indexOf('const r33CardAsset'));
+  assert.equal([...dots.matchAll(/ending:\d+,x:/g)].length,8);
+  for(const s of ['39,19 m²','45,21 m²','47,91 m²','58,60 m²']) assert.ok(client.includes(s));
 });

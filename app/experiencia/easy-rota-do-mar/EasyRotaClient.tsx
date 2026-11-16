@@ -93,7 +93,7 @@ const r33CardAsset: Record<TypeKey,string> = {
   slim: `${BRAND_ASSETS}erm33r2-slim-oficial-perspectiva.webp`,
   premium: `${BRAND_ASSETS}erm33r2-premium-oficial-perspectiva.webp`,
   master: `${BRAND_ASSETS}erm33r2-master-oficial-perspectiva.webp`,
-  spazzio: `${BRAND_ASSETS}erm33-perspectiva-spazzio-book.webp`,
+  spazzio: `${BRAND_ASSETS}erm38-spazzio-04-planta-baixa.webp`,
 };
 // R35: mascaras precisas por unidade, traçadas sobre o pavimento TIFF sem textos.
 // As salas de circulacao, escada e elevadores NAO recebem cor. Em cada extremidade
@@ -112,7 +112,7 @@ const r35Zones: {ending:number; points:string}[] = [
 ];
 
 const r32PlanFile: Record<TypeKey, string> = {
-  slim:'planta-slim', premium:'planta-premium', master:'planta-master', spazzio:'planta-spazzio-book-3d',
+  slim:'planta-slim', premium:'planta-premium', master:'planta-master', spazzio:'planta-spazzio-04',
 };
 const r32PlanDetails: Record<TypeKey,string> = {
   slim:'2 quartos · 1 vaga', premium:'2 quartos · 1 suíte · 1 vaga',
@@ -236,6 +236,8 @@ export default function EasyRotaClient() {
   const [selectedType, setSelectedType] = useState<TypeKey>('spazzio');
   const [selectedEnding, setSelectedEnding] = useState(4);
   const [hoveredEnding, setHoveredEnding] = useState<number | null>(null);
+  const [highlightedType, setHighlightedType] = useState<TypeKey | null>(null);
+  const [hoveredLegend, setHoveredLegend] = useState<TypeKey | null>(null);
   const [plant3D, setPlant3D] = useState(false);
   const [r32Expanded, setR32Expanded] = useState(false);
   const [facility, setFacility] = useState(6);
@@ -335,6 +337,12 @@ export default function EasyRotaClient() {
   const images = gallery.filter((p) => p.category === tab);
   const image = images[imageIndex % Math.max(1, images.length)];
   const selected = types[selectedType];
+  const activeHighlightType = hoveredEnding !== null ? endingToType[hoveredEnding] : (hoveredLegend ?? highlightedType);
+  // R38: para Spazzio, vista de cima EXTRAIDA do TIFF original, sem recorte de pagina do book.
+  // 04 e 05 possuem orientacoes distintas no pavimento tipo; nao inventar planta independente.
+  const selectedPlanSource = selectedType === 'spazzio'
+    ? `${BRAND_ASSETS}erm38-spazzio-${selectedEnding === 5 ? '05' : '04'}-planta-baixa.webp`
+    : r32Asset(r32PlanFile[selectedType]);
   const setType = (type: TypeKey) => { tone(); setSelectedType(type); setSelectedEnding(types[type].endings[0]); setPlant3D(false); };
   const setTypeAndShow = (type: TypeKey) => { setType(type); setTab('plantas'); };
   const stepType = (dir: number) => setType(typeKeys[(typeKeys.indexOf(selectedType) + dir + typeKeys.length) % typeKeys.length]);
@@ -494,7 +502,7 @@ export default function EasyRotaClient() {
                 <SectionBanner title="PAVIMENTO TIPO" caption="08 terminações · 04 opções de planta" />
                 <h1>ESCOLHA A PLANTA QUE COMBINA COM VOCÊ</h1>
               </div>
-              <p className="erm32-hint">Toque no número de um apartamento no pavimento para abrir a planta individual. As tipologias e especificações estão abaixo.</p>
+              <p className="erm32-hint">Selecione uma tipologia abaixo para destacar suas duas terminações. Toque no número de um apartamento para abrir a planta baixa.</p>
               <div className="erm32-building erm33-building" aria-label="Pavimento tipo com oito terminações interativas e cores por tipologia">
                 <div className="erm34-planStage">
                   <img src={`${BRAND_ASSETS}erm34-pavimento-limpo.webp`} alt="Pavimento tipo oficial sem rotulos impressos, com oito unidades e circulacao preservada" draggable={false} />
@@ -502,16 +510,16 @@ export default function EasyRotaClient() {
                     {r35Zones.map((zone) => {
                       const key = endingToType[zone.ending];
                       return <polygon key={zone.ending} points={zone.points}
-                        className={`erm34-zone erm33-${key} ${selectedEnding===zone.ending?'isSelected':''} ${hoveredEnding===zone.ending?'isHovered':''}`} />;
+                        className={`erm34-zone erm33-${key} ${activeHighlightType===key?'isTypeHighlighted':''} ${activeHighlightType!==null&&activeHighlightType!==key?'isTypeMuted':''} ${hoveredEnding===zone.ending?'isHovered':''}`} />;
                     })}
                   </svg>
                   {r32UnitPoints.map((p) => {
                     const type = endingToType[p.ending];
-                    return <button key={p.ending} type="button" className={`erm32-unit erm33-unit erm33-${type} ${selectedEnding===p.ending?'isSelected':''}`} style={{left:`${p.x}%`,top:`${p.y}%`}}
+                    return <button key={p.ending} type="button" className={`erm32-unit erm33-unit erm33-${type} ${activeHighlightType===type?'isSelected':''} ${activeHighlightType!==null&&activeHighlightType!==type?'isTypeMuted':''}`} style={{left:`${p.x}%`,top:`${p.y}%`}}
                       aria-label={`Ver planta ${types[type].name}, terminação ${String(p.ending).padStart(2,'0')}`} title={`${String(p.ending).padStart(2,'0')} · ${types[type].name}`}
                       onMouseEnter={() => setHoveredEnding(p.ending)} onMouseLeave={() => setHoveredEnding(null)}
                       onFocus={() => setHoveredEnding(p.ending)} onBlur={() => setHoveredEnding(null)}
-                      onClick={() => {setHoveredEnding(null);setSelectedType(type);setSelectedEnding(p.ending);setPlant3D(false);chooseTab('plantas');}}>
+                      onClick={() => {setHoveredEnding(null);setHighlightedType(type);setSelectedType(type);setSelectedEnding(p.ending);setPlant3D(false);chooseTab('plantas');}}>
                       <span className="erm33-unitLabel"><b>{String(p.ending).padStart(2,'0')}</b><span>{types[type].name.toUpperCase()}</span></span>
                     </button>;
                   })}
@@ -519,11 +527,17 @@ export default function EasyRotaClient() {
               </div>
                              {/* R36: sem imagens nos resumos; especificacoes no mesmo formato editorial do Plaza. */}
                <div className="erm36-typesRow" aria-label="Resumo de tipologias do Easy Rota do Mar">
-                 {typeKeys.map((key) => <article key={key} className={`erm36-typeLegend erm33-${key}`}>
+                 {typeKeys.map((key) => <button type="button" key={key}
+                   className={`erm36-typeLegend erm38-typeButton erm33-${key} ${highlightedType===key?'isChosen':''}`}
+                   aria-pressed={highlightedType===key}
+                   aria-label={`Destacar as terminações ${types[key].endings.map(n=>String(n).padStart(2,'0')).join(' e ')} da tipologia ${types[key].name}`}
+                   onClick={() => setHighlightedType(prev => prev === key ? null : key)}
+                   onMouseEnter={() => setHoveredLegend(key)} onMouseLeave={() => setHoveredLegend(null)}
+                   onFocus={() => setHoveredLegend(key)} onBlur={() => setHoveredLegend(null)}>
                    <h2><span className="erm36-typeSwatch" aria-hidden="true" />{types[key].name.toUpperCase()}</h2>
                    <div className="erm36-typeMetric"><strong>{types[key].area}</strong><span>TERMINAÇÕES {types[key].endings.map(n=>String(n).padStart(2,'0')).join(', ')}</span></div>
                    <p>{r32PlanDetails[key]}</p>
-                 </article>)}
+                 </button>)}
                </div>
                <p className="erm36-note">Selecione a identificação de um dos oito apartamentos no pavimento para consultar sua planta. As cores indicam tipologias, não disponibilidade de unidades.</p>
             </>}
@@ -532,25 +546,26 @@ export default function EasyRotaClient() {
                 <button type="button" className="erm32-back" onClick={() => chooseTab('tipologias')}>‹ VOLTAR AO PAVIMENTO TIPO</button>
                 <div><small>PLANTA SELECIONADA · TERMINAÇÃO {String(selectedEnding).padStart(2,'0')}</small><h1>{selected.name.toUpperCase()}</h1><strong>{selected.area}</strong></div>
               </div>
-              <div className="erm33-viewSwitch" role="group" aria-label="Modo de visualização da planta">
-                <button type="button" className={!plant3D ? 'active' : ''} aria-pressed={!plant3D} onClick={() => setPlant3D(false)}>Planta técnica</button>
-                <button type="button" className={plant3D ? 'active' : ''} aria-pressed={plant3D} onClick={() => setPlant3D(true)}>{selectedType==='spazzio' ? 'Perspectiva do book' : 'Perspectiva da planta'}</button>
-              </div>
+              {selectedType === 'spazzio' ? <p className="erm38-sourceNote">PLANTA BAIXA · VISTA SUPERIOR DO PAVIMENTO TIPO ORIGINAL</p> :
+                <div className="erm33-viewSwitch" role="group" aria-label="Modo de visualização da planta">
+                  <button type="button" className={!plant3D ? 'active' : ''} aria-pressed={!plant3D} onClick={() => setPlant3D(false)}>Planta técnica</button>
+                  <button type="button" className={plant3D ? 'active' : ''} aria-pressed={plant3D} onClick={() => setPlant3D(true)}>Perspectiva da planta</button>
+                </div>}
               <div className="erm32-planFocus">
                 <button type="button" aria-label="Ver tipologia anterior" className="erm32-navArrow" onClick={() => stepType(-1)}>‹</button>
                 <button type="button" className="erm32-planPhoto" onClick={() => setR32Expanded(true)} aria-label={`Ampliar a planta ${selected.name}`}>
-                  <img src={plant3D ? r33CardAsset[selectedType] : r32Asset(r32PlanFile[selectedType])} alt={plant3D ? `Perspectiva da planta ${selected.name}, imagem inteira sem cortes` : `Planta original ${selected.name} do Easy Rota do Mar, sem cortes`} draggable={false}/>
+                  <img src={plant3D && selectedType !== 'spazzio' ? r33CardAsset[selectedType] : selectedPlanSource} alt={selectedType === 'spazzio' ? `Planta baixa Spazzio ${String(selectedEnding).padStart(2,'0')} extraída do pavimento tipo original` : plant3D ? `Perspectiva da planta ${selected.name}, imagem inteira sem cortes` : `Planta original ${selected.name} do Easy Rota do Mar, sem cortes`} draggable={false}/>
                   <span>⛶ AMPLIAR PLANTA</span>
                 </button>
                 <button type="button" aria-label="Ver próxima tipologia" className="erm32-navArrow" onClick={() => stepType(1)}>›</button>
               </div>
               <div className="erm32-planInfo">
-                <div><h2>{selected.name}</h2><p>{r32PlanDetails[selectedType]}</p><p>{selected.description}</p><small>{selectedType==='spazzio'?'Perspectiva 3D oficial do book; planta 2D individual ainda não fornecida.':'A planta técnica original é a referência de geometria. As perspectivas são projeções visuais, sem modificar a distribuição dos ambientes; não são maquetes executivas 3D.'}</small></div>
+                <div><h2>{selected.name}</h2><p>{r32PlanDetails[selectedType]}</p><p>{selected.description}</p><small>{selectedType==='spazzio'?'Planta baixa extraída do pavimento tipo original da Rocha, sem uma prancha individual com cotas. A geometria foi preservada.':'A planta técnica original é a referência de geometria. As perspectivas são projeções visuais, sem modificar a distribuição dos ambientes; não são maquetes executivas 3D.'}</small></div>
                 <div className="erm32-endingPicker"><strong>ESCOLHA A TERMINAÇÃO</strong><div>{Array.from({length:8},(_,i)=>i+1).map(n=><button key={n} type="button" className={selectedEnding===n?'active':''} aria-pressed={selectedEnding===n} onClick={() => {setSelectedEnding(n);setSelectedType(endingToType[n]);setPlant3D(false);}} title={`Terminação ${n}: ${types[endingToType[n]].name}`}>{String(n).padStart(2,'0')}</button>)}</div><small>Representação das tipologias, sem informação de estoque.</small></div>
               </div>
               {r32Expanded && <div className="erm32-lightbox" role="dialog" aria-modal="true" aria-label={`Planta ampliada ${selected.name}`}>
                 <div><strong>{selected.name} · {selected.area}</strong><button type="button" onClick={() => setR32Expanded(false)} aria-label="Fechar planta ampliada">✕ FECHAR</button></div>
-                <img src={plant3D ? r33CardAsset[selectedType] : r32Asset(r32PlanFile[selectedType])} alt={plant3D ? `Perspectiva ampliada ${selected.name}` : `Planta original ampliada ${selected.name}`} />
+                <img src={plant3D && selectedType !== 'spazzio' ? r33CardAsset[selectedType] : selectedPlanSource} alt={selectedType === 'spazzio' ? `Planta baixa Spazzio ${String(selectedEnding).padStart(2,'0')} ampliada` : plant3D ? `Perspectiva ampliada ${selected.name}` : `Planta original ampliada ${selected.name}`} />
               </div>}
             </>}
           </div>}
