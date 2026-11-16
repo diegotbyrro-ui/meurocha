@@ -169,6 +169,22 @@ const facilityImages: Partial<Record<number, string>> = {
   30: 'erm-amb-30-pista-de-cooper',
   31: 'erm-amb-31-recarga-veiculos-eletricos',
 };
+// R39: associacao com os numerais VISIVEIS na implantacao oficial do TIFF.
+// facilityId corresponde ao cadastro de imagens R31; mapLabel ao identificador no desenho.
+// EV nao tem circulo numerado na imagem original, usa a indicacao textual ELETRICO.
+const r39Places: { facilityId:number; mapLabel:string; name:string; x:number; y:number }[] = [
+  {facilityId:6,mapLabel:'02',name:'Piscina adulto',x:26.7,y:68.9},
+  {facilityId:9,mapLabel:'05',name:'Espaco Grill',x:33.7,y:81.2},
+  {facilityId:10,mapLabel:'06',name:'Espaco Gourmet',x:39.4,y:78.3},
+  {facilityId:11,mapLabel:'07',name:'Espaco Fitness',x:38.1,y:72.5},
+  {facilityId:12,mapLabel:'08',name:'Easy Play / Sala Gamer',x:38.1,y:68.4},
+  {facilityId:14,mapLabel:'10',name:'Espaco Beleza',x:38.4,y:64.5},
+  {facilityId:22,mapLabel:'14',name:'Easy Wash / Lavanderia',x:80.8,y:60.5},
+  {facilityId:17,mapLabel:'18',name:'Bicicletarios',x:83.3,y:75.4},
+  {facilityId:30,mapLabel:'20',name:'Pista de Cooper',x:68.1,y:5.8},
+  {facilityId:31,mapLabel:'EV',name:'Recarga de veiculos eletricos',x:38.1,y:42.8},
+];
+// Os nomes R31 sao mantidos nos detalhes: fotografia original em cada ponto.
 const gallery = [
   { id: 'hero', name: 'Vista geral', category: 'areas' },
   { id: 'fachada', name: 'Fachada do empreendimento', category: 'areas' },
@@ -315,8 +331,9 @@ export default function EasyRotaClient() {
   useEffect(() => { if (centralMenuOpen && !soundPrompt) { document.getElementById('erm25-menu-first')?.focus(); } }, [centralMenuOpen, soundPrompt]);
   const feature = facilities.find((p) => p.number === facility) || facilities[0];
   const facilityFile = facilityImages[feature.number];
-  const currentMasterSource = masterImage === 'implantacao' ? `${BRAND_ASSETS}erm-implantacao.webp` : r32Asset('pavimento-interativo');
-  const currentMasterAlt = masterImage === 'implantacao' ? 'Implantação completa do Easy Rota do Mar, fornecida no book oficial' : 'Planta completa do pavimento tipo Easy Rota do Mar, imagem enviada para a apresentação';
+  const currentMasterSource = masterImage === 'implantacao' ? `${BRAND_ASSETS}erm39-implantacao-recortada.webp` : r32Asset('pavimento-interativo');
+  const currentMasterAlt = masterImage === 'implantacao' ? 'Implantação original do Easy Rota do Mar, TIFF oficial recortado sem distorcer ou alterar sua geometria' : 'Planta completa do pavimento tipo Easy Rota do Mar, imagem enviada para a apresentação';
+  const r39ChosenPlace = r39Places.find(p => p.facilityId === facility) || r39Places[0];
   const changeMaster = (next: 'implantacao' | 'pavimento') => { setMasterImage(next); setMasterZoom(1); setMasterOffset({x:0,y:0}); };
   const changeMasterZoom = (next: number) => { const z = Math.max(1,Math.min(2.5,+next.toFixed(2))); setMasterZoom(z); if (z===1) setMasterOffset({x:0,y:0}); };
   const moveMaster = (event: PointerEvent<HTMLDivElement>) => {
@@ -478,21 +495,62 @@ export default function EasyRotaClient() {
                 <button type="button" aria-label="Abrir imagem em tela ampliada" onClick={() => setMasterExpanded(true)}>⛶ Ampliar</button>
               </div>
             </div>
-            <div className="erm20-masterVisual erm21-realMaster erm31-realPlan" aria-label={currentMasterAlt}
+            {masterImage === 'implantacao' ? <div className="erm39-layout" aria-label="Implantacao oficial e visita interativa dos ambientes">
+              <nav className="erm39-placeList" aria-label="Escolher ambiente do condominio">
+                <strong>ESCOLHA UM AMBIENTE</strong>
+                <small>Selecione um ponto na implantacao para ver a fotografia ao lado.</small>
+                <div className="erm39-placeButtons">
+                  {r39Places.map((point) => <button key={point.facilityId} type="button" className={facility===point.facilityId?'active':''}
+                    aria-pressed={facility===point.facilityId} onClick={()=>{setFacility(point.facilityId);tone();}}>
+                    <span>{point.mapLabel}</span>{point.name}
+                  </button>)}
+                </div>
+              </nav>
+              <div className="erm39-mapFrame" aria-label="Implantacao original com pontos interativos"
+                onPointerDown={event => {if(masterZoom>1 && !(event.target as HTMLElement).closest('button')){masterPointer.current={x:event.clientX,y:event.clientY};event.currentTarget.setPointerCapture(event.pointerId);}}}
+                onPointerMove={moveMaster}
+                onPointerUp={event => {masterPointer.current=null;if(event.currentTarget.hasPointerCapture(event.pointerId))event.currentTarget.releasePointerCapture(event.pointerId);}}
+                onPointerCancel={()=>{masterPointer.current=null;}}>
+                <div className="erm39-mapCanvas" style={{transform:`translate(${masterOffset.x}px,${masterOffset.y}px) scale(${masterZoom})`}}>
+                  <img src={`${BRAND_ASSETS}erm39-implantacao-recortada.webp`} alt="Implantacao oficial completa, com numeracao original e areas comuns" draggable={false} loading="lazy" decoding="async" />
+                  {r39Places.map((point) => <button key={point.facilityId} type="button" className={`erm39-mapPin ${facility===point.facilityId?'active':''}`}
+                    style={{left:`${point.x}%`,top:`${point.y}%`}} title={`Visualizar ${point.name}`} aria-label={`Selecionar ${point.name} na implantacao`}
+                    aria-pressed={facility===point.facilityId} onClick={()=>{setFacility(point.facilityId);tone();}}><span>{point.mapLabel}</span></button>)}
+                </div>
+                <small>IMPLANTAÇÃO DO BOOK OFICIAL · posições aproximadas · use + para explorar</small>
+              </div>
+              <aside className="erm39-photoPanel" aria-live="polite">
+                <button type="button" className="erm39-photoOpen" onClick={()=>setFacilityExpanded(true)} aria-label={`Ampliar fotografia de ${r39ChosenPlace.name}`}>
+                  <img key={r39ChosenPlace.facilityId} src={`${BRAND_ASSETS}${facilityImages[r39ChosenPlace.facilityId]}.webp`} alt={`Imagem oficial do ambiente ${r39ChosenPlace.name}`} loading="lazy" decoding="async" />
+                  <span><UiIcon name="image" size={17}/> Ampliar fotografia</span>
+                </button>
+                <div className="erm39-photoDescription">
+                  <span className="erm39-eyebrow">AMBIENTE SELECIONADO · {r39ChosenPlace.mapLabel}</span>
+                  <h2>{r39ChosenPlace.name}</h2>
+                  <p>Imagem do material fornecido pela Rocha. Escolha outro ponto no mapa ou na lista para conhecer os ambientes.</p>
+                  <small>Perspectiva ilustrativa do empreendimento. A localização dos pontos no desenho é aproximada.</small>
+                  <a className="erm39-originalLink" href={`${BRAND_ASSETS}erm-implantacao.webp`} target="_blank" rel="noopener noreferrer">Consultar a imagem original do book ↗</a>
+                </div>
+              </aside>
+            </div> : <div className="erm20-masterVisual erm21-realMaster erm31-realPlan" aria-label={currentMasterAlt}
               onPointerDown={event => { if(masterZoom>1){masterPointer.current={x:event.clientX,y:event.clientY};event.currentTarget.setPointerCapture(event.pointerId);} }}
               onPointerMove={moveMaster}
               onPointerUp={event => {masterPointer.current=null;if(event.currentTarget.hasPointerCapture(event.pointerId))event.currentTarget.releasePointerCapture(event.pointerId);}}
               onPointerCancel={()=>{masterPointer.current=null;}}>
               <img className="erm31-planImage" src={currentMasterSource} alt={currentMasterAlt} draggable={false} loading="lazy" decoding="async" style={{transform:`translate(${masterOffset.x}px,${masterOffset.y}px) scale(${masterZoom})`}} />
-              <small>{masterImage === 'implantacao' ? 'IMPLANTAÇÃO DO BOOK OFICIAL · IMAGEM INTEIRA SEM CORTES' : 'PAVIMENTO TIPO · IMAGEM INTEIRA SEM CORTES'} · {masterZoom>1?'Arraste para explorar':'Use + para explorar detalhes'}</small>
-            </div>
+              <small>PAVIMENTO TIPO · IMAGEM INTEIRA SEM CORTES · {masterZoom>1?'Arraste para explorar':'Use + para explorar detalhes'}</small>
+            </div>}
             {masterExpanded && <div className="erm31-imageOverlay" role="dialog" aria-modal="true" aria-label="Visualização ampliada da imagem principal">
               <div className="erm31-overlayTop"><strong>{masterImage === 'implantacao' ? 'Implantação geral' : 'Planta do pavimento tipo'}</strong><button type="button" onClick={() => setMasterExpanded(false)} aria-label="Fechar imagem ampliada">✕ Fechar</button></div>
               <img src={currentMasterSource} alt={currentMasterAlt} draggable={false} />
             </div>}
+            {facilityExpanded && <div className="erm31-imageOverlay" role="dialog" aria-modal="true" aria-label={`Fotografia ampliada: ${r39ChosenPlace.name}`}>
+              <div className="erm31-overlayTop"><strong>{r39ChosenPlace.name} · Perspectiva ilustrativa</strong><button type="button" onClick={() => setFacilityExpanded(false)}>✕ Fechar</button></div>
+              <img src={`${BRAND_ASSETS}${facilityImages[r39ChosenPlace.facilityId]}.webp`} alt={`Fotografia ampliada de ${r39ChosenPlace.name}`} />
+            </div>}
             <div className="erm32-masterMoved">
               <UiIcon name="floor" size={24}/>
-              <p>A apresentação de áreas comuns será organizada em uma seção própria. Os materiais já enviados foram preservados.</p>
+              <p>Conheça os ambientes na implantação interativa acima. Os pontos apresentados utilizam fotografias do material enviado; novos ambientes poderão ser incluídos após conferência.</p>
               <button type="button" onClick={() => { goto('plantas','tipologias'); setSelectedNav('plantas'); }}>EXPLORAR PAVIMENTO TIPO <UiIcon name="arrow" size={16}/></button>
             </div>
           </div>}

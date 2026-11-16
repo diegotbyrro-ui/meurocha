@@ -680,3 +680,32 @@ test('R38: nao altera sete menus, oito marcadores, nem a descricao comercial',()
   assert.equal([...dots.matchAll(/ending:\d+,x:/g)].length,8);
   for(const s of ['39,19 m²','45,21 m²','47,91 m²','58,60 m²']) assert.ok(client.includes(s));
 });
+
+// R39 - mapa real, imagens enviadas e interacao no painel lateral.
+test('R39: 10 ambientes com fotografia oficial e posicoes na implantacao sem distorcer imagem',()=>{
+  const block=client.slice(client.indexOf('const r39Places:'),client.indexOf('// Os nomes R31'));
+  const selected=[...block.matchAll(/facilityId:(\d+),mapLabel:'([^']+)',name:'([^']+)',x:([\d.]+),y:([\d.]+)/g)];
+  assert.equal(selected.length,10);
+  assert.equal(new Set(selected.map(a=>a[1])).size,10);
+  for(const v of selected){assert.ok(Number(v[4])>=2&&Number(v[4])<=98);assert.ok(Number(v[5])>=2&&Number(v[5])<=98)}
+  assert.match(client,/erm39-implantacao-recortada\.webp/);
+  assert.match(client,/r39Places\.map/);
+  assert.match(client,/aria-pressed=\{facility===point\.facilityId\}/);
+  assert.match(client,/setFacility\(point\.facilityId\)/);
+  assert.match(client,/erm39-photoPanel/);
+  assert.match(client,/facilityImages\[r39ChosenPlace\.facilityId\]/);
+  assert.match(css,/\.erm21 \.erm39-layout/);
+  assert.match(css,/object-fit:contain/);
+  const fs=readFileSync(join(assetDir,'erm39-implantacao-recortada.webp'));
+  assert.ok(fs.length>150000);
+  assert.equal(fs.subarray(0,4).toString('ascii'),'RIFF');
+  assert.equal(fs.subarray(8,12).toString('ascii'),'WEBP');
+});
+test('R39: mantem modulos existentes, zoom e modal com fotografia de ambiente',()=>{
+  assert.match(client,/masterImage === 'implantacao' \? <div className="erm39-layout"/);
+  assert.match(client,/masterZoom>1/);
+  assert.match(client,/facilityExpanded && <div className="erm31-imageOverlay"/);
+  assert.match(client,/setFacilityExpanded\(true\)/);
+  assert.match(client,/setFacilityExpanded\(false\)/);
+  assert.match(client,/r32Asset\('pavimento-interativo'\)/);
+});

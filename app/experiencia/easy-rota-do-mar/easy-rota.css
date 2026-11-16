@@ -1027,3 +1027,39 @@
 .erm21 .erm38-typeButton:focus-visible{outline:2px solid var(--erm33-accent);outline-offset:3px}
 .erm21 .erm38-sourceNote{margin:10px auto;text-align:center;color:#386c86;font:600 11px var(--erm24-type-ui,'Segoe UI',sans-serif);letter-spacing:.08em}
 @media(prefers-reduced-motion:reduce){.erm21 .erm38-typeButton,.erm21 .erm34-zone{transition:none}}
+
+/* R39 - Implantacao original em composicao horizontal, com selecao de ambiente e foto lateral.
+   A imagem do mapa permanece vertical, SEM distorcao; o conjunto usa tres colunas no desktop.
+   Pontos usam posicoes aproximadas obtidas da implantacao oficial; sem coordenadas inventadas. */
+.erm21 .erm39-layout{display:grid;grid-template-columns:minmax(135px,185px) minmax(250px,1fr) minmax(240px,32%);align-items:stretch;gap:12px;min-height:clamp(460px,60vh,645px);width:100%;margin-top:10px;color:#e6faff}
+.erm21 .erm39-placeList,.erm21 .erm39-mapFrame,.erm21 .erm39-photoPanel{min-width:0;overflow:hidden;border:1px solid #0c8fbd7a;border-radius:13px;background:linear-gradient(160deg,#002b49,#001d35);box-shadow:0 8px 28px #001e3850}
+.erm21 .erm39-placeList{padding:13px 9px;display:flex;flex-direction:column;gap:8px}
+.erm21 .erm39-placeList>strong{font:700 11px/1.4 var(--erm24-type-ui,'Segoe UI',sans-serif);color:#72f0ff;letter-spacing:.12em}
+.erm21 .erm39-placeList>small{font:400 10px/1.5 var(--erm24-type-ui,'Segoe UI',sans-serif);color:#accbdc}
+.erm21 .erm39-placeButtons{display:flex;flex-direction:column;gap:6px;overflow-y:auto;min-height:0;scrollbar-color:#0dc7eb #002c49}
+.erm21 .erm39-placeButtons button{border:1px solid #16789899;border-radius:9px;background:#073e5d;color:#e7f8ff;display:flex;align-items:center;gap:7px;text-align:left;padding:6px;min-height:36px;font:600 10px/1.2 var(--erm24-type-ui,'Segoe UI',sans-serif);cursor:pointer;transition:background .18s,border-color .18s,box-shadow .18s}
+.erm21 .erm39-placeButtons button span{display:grid;place-items:center;flex:0 0 26px;height:26px;border:1px solid #49def2;border-radius:50%;background:#005e83;color:#b8faff;font-weight:800}
+.erm21 .erm39-placeButtons button:is(:hover,:focus-visible,.active){background:#05bcd2;color:#00243b;border-color:#7df4ff;box-shadow:0 0 15px #04d5f250}
+.erm21 .erm39-placeButtons button:is(:hover,:focus-visible,.active) span{background:#003c5c;color:#fff}
+.erm21 .erm39-mapFrame{position:relative;display:flex;align-items:center;justify-content:center;padding:12px 10px 25px;isolation:isolate;cursor:default;touch-action:pan-y}
+.erm21 .erm39-mapCanvas{position:relative;width:auto;max-width:100%;max-height:100%;aspect-ratio:3340/3550;height:min(54vh,590px);transition:transform .14s ease;transform-origin:center;will-change:transform}
+.erm21 .erm39-mapCanvas>img{display:block;max-width:100%;width:100%;height:100%;object-fit:contain;user-select:none;pointer-events:none}
+.erm21 .erm39-mapPin{position:absolute;display:grid;place-items:center;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:100%;border:2px solid #83efff;color:white;background:#067f9cbb;box-shadow:0 0 0 2px #00294399,0 0 15px #09cffbaa;cursor:pointer;z-index:1;font:800 10px/1 var(--erm24-type-ui,'Segoe UI',sans-serif);transition:background .15s,box-shadow .15s,scale .15s}
+.erm21 .erm39-mapPin:is(:hover,:focus-visible,.active){scale:1.13;background:#02e4ed;color:#002842;box-shadow:0 0 0 5px #00deec55,0 0 24px #0cfff0}
+.erm21 .erm39-mapPin:focus-visible{outline:2px solid white;outline-offset:5px}
+.erm21 .erm39-mapFrame>small{position:absolute;bottom:7px;left:12px;right:12px;z-index:2;font:500 9px/1.25 var(--erm24-type-ui,'Segoe UI',sans-serif);color:#b1d9e7;pointer-events:none;text-align:center}
+.erm21 .erm39-photoPanel{display:flex;flex-direction:column;min-height:0}
+.erm21 .erm39-photoOpen{display:flex;flex-direction:column;flex:none;width:100%;padding:9px;border:0;background:transparent;color:#a6efff;cursor:zoom-in;gap:7px}
+.erm21 .erm39-photoOpen img{display:block;width:100%;height:clamp(180px,28vh,345px);object-fit:contain;object-position:center;border-radius:9px;background:#003551;animation:erm31ImageReveal .3s ease both}
+.erm21 .erm39-photoOpen>span{display:flex;align-items:center;justify-content:center;gap:6px;font:600 10px var(--erm24-type-ui,'Segoe UI',sans-serif)}
+.erm21 .erm39-photoOpen:hover>span{text-decoration:underline}
+.erm21 .erm39-photoDescription{padding:7px 15px 20px;overflow:auto}
+.erm21 .erm39-eyebrow{color:#10dbec;font:700 10px/1.4 var(--erm24-type-ui,'Segoe UI',sans-serif);letter-spacing:.11em}
+.erm21 .erm39-photoDescription h2{color:#fff;font:400 clamp(22px,2.2vw,33px)/1.15 var(--erm24-type-editorial,Georgia,serif);margin:9px 0 15px}
+.erm21 .erm39-photoDescription p{color:#d8f5ff;font:400 12px/1.7 var(--erm24-type-ui,'Segoe UI',sans-serif);margin:0 0 10px}
+.erm21 .erm39-photoDescription small{color:#a8c9d6;font:400 10px/1.5 var(--erm24-type-ui,'Segoe UI',sans-serif)}
+@media(max-width:1150px){.erm21 .erm39-layout{grid-template-columns:1fr minmax(235px,40%);height:auto;min-height:440px}.erm21 .erm39-placeList{grid-column:1/-1;padding:9px 10px}.erm21 .erm39-placeList>small{display:none}.erm21 .erm39-placeButtons{flex-direction:row;overflow-x:auto;padding-bottom:4px}.erm21 .erm39-placeButtons button{flex:none;max-width:165px}.erm21 .erm39-mapFrame{min-height:460px}}
+@media(max-width:680px){.erm21 .erm39-layout{display:flex;flex-direction:column;gap:9px}.erm21 .erm39-mapFrame{min-height:345px;height:420px}.erm21 .erm39-mapCanvas{height:390px}.erm21 .erm39-photoOpen img{height:230px}.erm21 .erm39-photoDescription{padding:9px 13px 16px}.erm21 .erm39-placeButtons button{font-size:10px}.erm21 .erm39-placeList{min-height:80px}}
+@media(prefers-reduced-motion:reduce){.erm21 .erm39-mapPin,.erm21 .erm39-photoOpen img,.erm21 .erm39-mapCanvas{transition:none;animation:none}}
+
+.erm21 .erm39-originalLink{display:block;font:600 10px var(--erm24-type-ui,'Segoe UI',sans-serif);color:#72ebfd;text-decoration:underline;margin-top:11px}
