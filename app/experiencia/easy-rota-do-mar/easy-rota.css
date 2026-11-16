@@ -1081,3 +1081,10 @@
 .erm21 .erm40-decorGallery .erm20-photoCaption{color:#447d8e;letter-spacing:.02em;font:500 11px/1.5 var(--erm24-type-ui)}
 @media(max-width:740px){.erm21 .erm40-decorGallery .erm20-galleryStage{height:min(57vh,480px);min-height:240px;padding:5px;gap:3px}.erm21 .erm40-decorGallery .erm20-galleryPrev,.erm21 .erm40-decorGallery .erm20-galleryNext{flex-basis:27px;width:27px;height:40px;font-size:23px}.erm21 .erm40-decorGallery .erm20-galleryThumbs{height:75px}.erm21 .erm40-decorGallery .erm20-galleryThumbs button{height:63px;flex-basis:94px;width:94px}.erm21 .erm40-decorMeta{font-size:8px;letter-spacing:.07em}.erm21 .erm40-decorGallery>h2{font-size:17px}}
 @media(prefers-reduced-motion:reduce){.erm21 .erm40-decorGallery .erm20-galleryPrev,.erm21 .erm40-decorGallery .erm20-galleryNext{transition:none}}
+
+/* R41 - IMPLANTACAO LIMPA. Proporcao nativa 1350 x 1461, sem esticar.
+   Os pinos R39 mantem coordenadas percentuais e a rosa fica fora do zoom. */
+.erm21 .erm39-mapCanvas{width:min(100%,49.9vh,545px);height:auto;max-width:100%;aspect-ratio:1350/1461}
+.erm21 .erm41-compass{position:absolute;right:12px;bottom:26px;width:104px;height:104px;z-index:3;pointer-events:none;border:1px solid #19c7e7a8;border-radius:50%;background:#00253cb0;box-shadow:0 3px 16px #001d33bb;display:grid;place-items:center}
+.erm21 .erm41-compass>svg{width:96%;height:96%;display:block}
+@media(max-width:680px){.erm21 .erm39-mapCanvas{width:min(100%,350px);height:auto}.erm21 .erm41-compass{width:77px;height:77px;right:7px;bottom:28px}}

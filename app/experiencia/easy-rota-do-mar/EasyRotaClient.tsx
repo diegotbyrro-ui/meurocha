@@ -341,7 +341,7 @@ export default function EasyRotaClient() {
   useEffect(() => { if (centralMenuOpen && !soundPrompt) { document.getElementById('erm25-menu-first')?.focus(); } }, [centralMenuOpen, soundPrompt]);
   const feature = facilities.find((p) => p.number === facility) || facilities[0];
   const facilityFile = facilityImages[feature.number];
-  const currentMasterSource = masterImage === 'implantacao' ? `${BRAND_ASSETS}erm39-implantacao-recortada.webp` : r32Asset('pavimento-interativo');
+  const currentMasterSource = masterImage === 'implantacao' ? `${BRAND_ASSETS}erm41-implantacao-limpa.webp` : r32Asset('pavimento-interativo');
   const currentMasterAlt = masterImage === 'implantacao' ? 'Implantação original do Easy Rota do Mar, TIFF oficial recortado sem distorcer ou alterar sua geometria' : 'Planta completa do pavimento tipo Easy Rota do Mar, imagem enviada para a apresentação';
   const r39ChosenPlace = r39Places.find(p => p.facilityId === facility) || r39Places[0];
   const changeMaster = (next: 'implantacao' | 'pavimento') => { setMasterImage(next); setMasterZoom(1); setMasterOffset({x:0,y:0}); };
@@ -522,10 +522,28 @@ export default function EasyRotaClient() {
                 onPointerUp={event => {masterPointer.current=null;if(event.currentTarget.hasPointerCapture(event.pointerId))event.currentTarget.releasePointerCapture(event.pointerId);}}
                 onPointerCancel={()=>{masterPointer.current=null;}}>
                 <div className="erm39-mapCanvas" style={{transform:`translate(${masterOffset.x}px,${masterOffset.y}px) scale(${masterZoom})`}}>
-                  <img src={`${BRAND_ASSETS}erm39-implantacao-recortada.webp`} alt="Implantacao oficial completa, com numeracao original e areas comuns" draggable={false} loading="lazy" decoding="async" />
+                  <img src={`${BRAND_ASSETS}erm41-implantacao-limpa.webp`} alt="Implantacao atualizada sem numeracao impressa, com pontos interativos sobrepostos" draggable={false} loading="lazy" decoding="async" />
                   {r39Places.map((point) => <button key={point.facilityId} type="button" className={`erm39-mapPin ${facility===point.facilityId?'active':''}`}
                     style={{left:`${point.x}%`,top:`${point.y}%`}} title={`Visualizar ${point.name}`} aria-label={`Selecionar ${point.name} na implantacao`}
                     aria-pressed={facility===point.facilityId} onClick={()=>{setFacility(point.facilityId);tone();}}><span>{point.mapLabel}</span></button>)}
+                </div>
+                <div className="erm41-compass" role="img" aria-label="Rosa dos ventos: norte a direita, leste abaixo, sul a esquerda e oeste acima">
+                  <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                    <circle cx="60" cy="60" r="29" fill="#002942" stroke="#6feaff" strokeWidth="1.2" opacity="0.92"/>
+                    <circle cx="60" cy="60" r="4" fill="#fff"/>
+                    <path d="M60 60 L99 60 L64 51 Z" fill="#10e7ff"/>
+                    <path d="M60 60 L99 60 L64 69 Z" fill="#e6fbff"/>
+                    <path d="M60 60 L21 60 L56 51 Z" fill="#397c98"/>
+                    <path d="M60 60 L21 60 L56 69 Z" fill="#96bbcc"/>
+                    <path d="M60 60 L60 20 L51 56 Z" fill="#548ca5"/>
+                    <path d="M60 60 L60 20 L69 56 Z" fill="#c3e6ed"/>
+                    <path d="M60 60 L60 100 L51 64 Z" fill="#4c839d"/>
+                    <path d="M60 60 L60 100 L69 64 Z" fill="#c0e7ef"/>
+                    <g fontFamily="Arial, sans-serif" fontSize="13" fontWeight="700" fill="#c7f9ff" textAnchor="middle">
+                      <text x="111" y="64">N</text><text x="9" y="64">S</text>
+                      <text x="60" y="12">O</text><text x="60" y="116">L</text>
+                    </g>
+                  </svg>
                 </div>
                 <small>IMPLANTAÇÃO DO BOOK OFICIAL · posições aproximadas · use + para explorar</small>
               </div>

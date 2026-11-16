@@ -688,7 +688,7 @@ test('R39: 10 ambientes com fotografia oficial e posicoes na implantacao sem dis
   assert.equal(selected.length,10);
   assert.equal(new Set(selected.map(a=>a[1])).size,10);
   for(const v of selected){assert.ok(Number(v[4])>=2&&Number(v[4])<=98);assert.ok(Number(v[5])>=2&&Number(v[5])<=98)}
-  assert.match(client,/erm39-implantacao-recortada\.webp/);
+  assert.match(client,/erm41-implantacao-limpa\.webp/);
   assert.match(client,/r39Places\.map/);
   assert.match(client,/aria-pressed=\{facility===point\.facilityId\}/);
   assert.match(client,/setFacility\(point\.facilityId\)/);
@@ -731,4 +731,22 @@ test('R40: galeria com conteudo real, fotos sem corte e lightbox preservado', ()
   assert.match(client,/setOpenLightbox\(true\)/);
   assert.match(css,/\.erm21 \.erm40-decorGallery \.erm20-galleryPhoto>img\{[^}]+object-fit:contain!important/);
   assert.match(css,/\.erm21 \.erm40-decorGallery \.erm20-galleryThumbs img\{[^}]+object-fit:contain!important/);
+});
+
+// R41: imagem transparente fornecida pelo usuario; pinagem R39 inalterada; N a direita.
+test('R41: mapa novo, pinos preservados e rosa dos ventos', () => {
+  const filename = join(assetDir,'erm41-implantacao-limpa.webp');
+  assert.ok(existsSync(filename), 'Asset R41 nao encontrado');
+  const image = readFileSync(filename);
+  assert.equal(image.toString('ascii',0,4),'RIFF');
+  assert.equal(image.toString('ascii',8,12),'WEBP');
+  assert.equal((client.match(/erm41-implantacao-limpa\.webp/g)||[]).length,2);
+  const start = client.indexOf('const r39Places:');
+  const end = client.indexOf('];', start);
+  assert.ok(start>0 && end>start);
+  assert.equal((client.slice(start,end).match(/\{facilityId:/g)||[]).length,10);
+  assert.match(client,/erm41-compass/);
+  assert.match(client,/Rosa dos ventos: norte a direita/);
+  assert.match(css,/\.erm21 \.erm39-mapCanvas\{width:min\(100%,49\.9vh,545px\);height:auto;max-width:100%;aspect-ratio:1350\/1461\}/);
+  assert.match(css,/\.erm21 \.erm41-compass/);
 });
