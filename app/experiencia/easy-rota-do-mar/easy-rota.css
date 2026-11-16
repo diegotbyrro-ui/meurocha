@@ -937,10 +937,10 @@
 @media(prefers-reduced-motion:reduce){.erm21 .erm32-typeCard,.erm21 .erm32-unit{transition:none}}
 
 /* R33 — 3D ilustrativo nos cartoes, cores de tipologia e realce sutil, sem alterar a planta oficial do detalhe. */
-.erm21 .erm33-slim{--erm33-accent:#00cbe9;--erm33-pale:#cdf5ff;--erm33-soft:#a9eaff;--erm33-ink:#004663}
-.erm21 .erm33-premium{--erm33-accent:#00ad92;--erm33-pale:#d4f7eb;--erm33-soft:#acf0df;--erm33-ink:#005a54}
-.erm21 .erm33-master{--erm33-accent:#c39a49;--erm33-pale:#fff2da;--erm33-soft:#f0deae;--erm33-ink:#655021}
-.erm21 .erm33-spazzio{--erm33-accent:#7960d4;--erm33-pale:#e6dfff;--erm33-soft:#bfb3f7;--erm33-ink:#443385}
+.erm21 .erm33-slim{--erm33-accent:#10d7f7;--erm33-pale:#d9f8ff;--erm33-soft:#b8efff;--erm33-ink:#00455c}
+.erm21 .erm33-premium{--erm33-accent:#06d8a5;--erm33-pale:#dbfbf2;--erm33-soft:#bff6e6;--erm33-ink:#005a49}
+.erm21 .erm33-master{--erm33-accent:#d2a53d;--erm33-pale:#fff4d8;--erm33-soft:#f7e4b2;--erm33-ink:#6b5319}
+.erm21 .erm33-spazzio{--erm33-accent:#8a63ff;--erm33-pale:#eee4ff;--erm33-soft:#d2c0ff;--erm33-ink:#4b2fa8}
 .erm21 .erm33-plans .erm32-head{margin-bottom:7px}
 .erm21 .erm33-plans .erm32-hint{margin-bottom:7px}
 .erm21 .erm33-building{background:radial-gradient(ellipse at 50% 45%,#075678 0%,#003957 65%,#002a45 100%);border:1px solid #19a7c9;box-shadow:0 8px 23px #003b5f40;aspect-ratio:2500/957;max-height:min(48vh,465px)}
@@ -986,10 +986,10 @@
 .erm21 .erm34-zones{position:absolute;inset:0;width:100%;height:100%;z-index:1;overflow:visible;pointer-events:none;mask-image:url('/experiencia/easy-rota-do-mar/erm34-pavimento-limpo.webp');mask-size:100% 100%;-webkit-mask-image:url('/experiencia/easy-rota-do-mar/erm34-pavimento-limpo.webp');-webkit-mask-size:100% 100%}
 /* R35: cores contidas nas oito poligonais individuais, sem faixas no corredor.
    Realce sutil quando selecionado ou sob mouse/teclado; sem bordas grossas. */
-.erm21 .erm34-zone{fill:var(--erm33-accent);fill-opacity:.052;stroke:transparent;stroke-width:0;transition:fill-opacity .18s ease,stroke .18s ease;stroke-linejoin:round}
-.erm21 .erm34-zone.isHovered{fill-opacity:.12;stroke:var(--erm33-accent);stroke-opacity:.25;stroke-width:1}
-.erm21 .erm34-zone.isSelected{fill-opacity:.15;stroke:var(--erm33-accent);stroke-opacity:.4;stroke-width:1.5}
-.erm21 .erm34-zone.isSelected.isHovered{fill-opacity:.18;stroke-opacity:.5}
+.erm21 .erm34-zone{fill:var(--erm33-accent);fill-opacity:.052;stroke:var(--erm33-accent);stroke-opacity:.85;stroke-width:1.5;vector-effect:non-scaling-stroke;transition:fill-opacity .18s ease,stroke .18s ease,stroke-width .18s ease;stroke-linejoin:round}
+.erm21 .erm34-zone.isHovered{fill-opacity:.12;stroke:var(--erm33-accent);stroke-opacity:1;stroke-width:2.2}
+.erm21 .erm34-zone.isSelected{fill-opacity:.15;stroke:var(--erm33-accent);stroke-opacity:1;stroke-width:2.8}
+.erm21 .erm34-zone.isSelected.isHovered{fill-opacity:.18;stroke-opacity:1}
 @media(prefers-reduced-motion:reduce){.erm21 .erm34-zone{transition:none}}
 .erm21 .erm34-planStage{position:relative;aspect-ratio:2500/957;height:100%;max-width:100%;flex:0 1 auto;min-width:0}
 .erm21 .erm33-building{display:flex;align-items:center;justify-content:center}
