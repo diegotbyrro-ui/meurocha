@@ -709,3 +709,26 @@ test('R39: mantem modulos existentes, zoom e modal com fotografia de ambiente',(
   assert.match(client,/setFacilityExpanded\(false\)/);
   assert.match(client,/r32Asset\('pavimento-interativo'\)/);
 });
+
+// R40: fotografias verdadeiras do decorado, selecionadas sem fotos iguais ou plantas na aba Apartamentos.
+test('R40: onze fotografias distintas do decorado substituem plantas na galeria Apartamentos', () => {
+  const records=[...client.matchAll(/\{ id: '(erm40-decor-[^']+)', name: '([^']+)', category: 'apartamentos' \}/g)];
+  assert.equal(records.length,11);
+  assert.equal(new Set(records.map(x=>x[1])).size,11);
+  assert.ok(!/\{ id: '(?:slim|premium|master|spazzio)', name: 'Planta/.test(client.slice(client.indexOf('const gallery ='),client.indexOf('const mediaList'))));
+  for (const record of records) for (const suffix of ['', '-thumb']) {
+    const path=join(assetDir,record[1]+suffix+'.webp');
+    assert.ok(existsSync(path),'Foto do decorado ausente: '+path);
+    const b=readFileSync(path);
+    assert.equal(b.toString('ascii',0,4),'RIFF');
+    assert.equal(b.toString('ascii',8,12),'WEBP');
+  }
+});
+test('R40: galeria com conteudo real, fotos sem corte e lightbox preservado', () => {
+  assert.match(client,/FOTOGRAFIAS REAIS DO APARTAMENTO DECORADO/);
+  assert.match(client,/id\.startsWith\('erm40-decor-'\)/);
+  assert.match(client,/p\.id}-thumb/);
+  assert.match(client,/setOpenLightbox\(true\)/);
+  assert.match(css,/\.erm21 \.erm40-decorGallery \.erm20-galleryPhoto>img\{[^}]+object-fit:contain!important/);
+  assert.match(css,/\.erm21 \.erm40-decorGallery \.erm20-galleryThumbs img\{[^}]+object-fit:contain!important/);
+});

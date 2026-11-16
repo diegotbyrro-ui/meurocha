@@ -193,10 +193,19 @@ const gallery = [
   { id: 'fitness', name: 'Espaço fitness', category: 'lazer' },
   { id: 'market', name: 'Easy Market', category: 'areas' },
   { id: 'recarga', name: 'Recarga para veículos elétricos', category: 'areas' },
-  { id: 'slim', name: 'Planta Slim', category: 'apartamentos' },
-  { id: 'premium', name: 'Planta Premium', category: 'apartamentos' },
-  { id: 'master', name: 'Planta Master', category: 'apartamentos' },
-  { id: 'spazzio', name: 'Planta Spazzio', category: 'apartamentos' },
+  // R40: onze fotografias distintas do apartamento decorado, selecionadas
+  // entre as 60 fotos originais enviadas. Plantas ficam apenas na secao Plantas.
+  { id: 'erm40-decor-sala-integrada', name: 'Sala integrada com cozinha e jantar', category: 'apartamentos' },
+  { id: 'erm40-decor-jantar', name: 'Mesa de jantar do apartamento decorado', category: 'apartamentos' },
+  { id: 'erm40-decor-cozinha', name: 'Cozinha planejada', category: 'apartamentos' },
+  { id: 'erm40-decor-painel-tv', name: 'Painel de TV da sala', category: 'apartamentos' },
+  { id: 'erm40-decor-sala-outro-angulo', name: 'Sala de estar — outra perspectiva', category: 'apartamentos' },
+  { id: 'erm40-decor-quarto-casal', name: 'Dormitório principal', category: 'apartamentos' },
+  { id: 'erm40-decor-segundo-quarto', name: 'Segundo dormitório', category: 'apartamentos' },
+  { id: 'erm40-decor-bancada-estudo', name: 'Bancada de estudo e TV', category: 'apartamentos' },
+  { id: 'erm40-decor-armarios', name: 'Armários e marcenaria', category: 'apartamentos' },
+  { id: 'erm40-decor-banheiro', name: 'Banheiro do apartamento decorado', category: 'apartamentos' },
+  { id: 'erm40-decor-circulacao', name: 'Circulação e acabamento', category: 'apartamentos' },
 ];
 const mediaList = [
   { name: 'Vista geral do empreendimento', image: 'hero' },
@@ -209,7 +218,8 @@ function Photo({ id, alt, className = '', fit = 'cover' }: { id: string; alt: st
   const [error, setError] = useState(false);
   useEffect(() => setError(false), [id]);
   if (error) return <div className={`erm20-photoFallback ${className}`} role="img" aria-label={`${alt}. Imagem não carregada.`}><span>✧</span><strong>Imagem do empreendimento</strong><small>Arquivo temporariamente indisponível</small></div>;
-  return <img src={media(id)} alt={alt} className={className} style={{ objectFit: fit }} onError={() => setError(true)} loading="lazy" />;
+  const src = id.startsWith('erm40-decor-') ? `${BRAND_ASSETS}${id}.webp` : media(id);
+  return <img src={src} alt={alt} className={className} style={{ objectFit: fit }} onError={() => setError(true)} loading="lazy" decoding="async" />;
 }
 
 function Brand({ compact = false }: { compact?: boolean }) {
@@ -628,7 +638,13 @@ export default function EasyRotaClient() {
             </>}
           </div>}
 
-          {section === 'imagens' && <div className="erm20-content erm20-images"><SectionBanner title={`IMAGENS / ${tab === 'apartamentos' ? 'APARTAMENTOS' : tab === 'areas' ? 'ÁREAS COMUNS' : 'LAZER'}`}/><h2>{image?.name || 'Galeria do Easy Rota do Mar'}</h2><div className="erm20-galleryStage"><button type="button" className="erm20-galleryPrev" aria-label="Imagem anterior" onClick={() => setImageIndex((i)=>(i+images.length-1)%images.length)}>‹</button>{image && <button type="button" className="erm20-galleryPhoto" aria-label="Ampliar imagem" onClick={() => setOpenLightbox(true)}><Photo id={image.id} alt={image.name} fit={tab === 'apartamentos' ? 'contain' : 'cover'}/></button>}<button type="button" className="erm20-galleryNext" aria-label="Próxima imagem" onClick={() => setImageIndex((i)=>(i+1)%images.length)}>›</button></div><div className="erm20-galleryThumbs">{images.map((p,i)=><button type="button" key={p.id} aria-pressed={imageIndex%images.length===i} className={imageIndex%images.length===i?'active':''} onClick={()=>setImageIndex(i)}><Photo id={p.id} alt={p.name}/></button>)}</div><span className="erm20-photoCaption">Perspectivas meramente ilustrativas · {images.length} imagens</span></div>}
+          {section === 'imagens' && <div className={`erm20-content erm20-images ${tab === 'apartamentos' ? 'erm40-decorGallery' : ''}`}><SectionBanner title={`IMAGENS / ${tab === 'apartamentos' ? 'APARTAMENTO DECORADO' : tab === 'areas' ? 'ÁREAS COMUNS' : 'LAZER'}`}/>
+            {tab === 'apartamentos' && <div className="erm40-decorMeta"><span>FOTOGRAFIAS REAIS DO APARTAMENTO DECORADO</span><span>{String(imageIndex%Math.max(1,images.length)+1).padStart(2,'0')} / {String(images.length).padStart(2,'0')}</span></div>}
+            <h2>{image?.name || 'Galeria do Easy Rota do Mar'}</h2>
+            <div className="erm20-galleryStage"><button type="button" className="erm20-galleryPrev" aria-label="Imagem anterior" onClick={() => setImageIndex((i)=>(i+images.length-1)%images.length)}>‹</button>{image && <button type="button" className="erm20-galleryPhoto" aria-label="Ampliar imagem" onClick={() => setOpenLightbox(true)}><Photo id={image.id} alt={image.name} fit={tab === 'apartamentos' ? 'contain' : 'cover'}/></button>}<button type="button" className="erm20-galleryNext" aria-label="Próxima imagem" onClick={() => setImageIndex((i)=>(i+1)%images.length)}>›</button></div>
+            <div className="erm20-galleryThumbs">{images.map((p,i)=><button type="button" key={p.id} aria-label={`Ver ${p.name}`} aria-pressed={imageIndex%images.length===i} className={imageIndex%images.length===i?'active':''} onClick={()=>setImageIndex(i)}><Photo id={tab === 'apartamentos' ? `${p.id}-thumb` : p.id} alt={p.name} fit={tab === 'apartamentos' ? 'contain' : 'cover'}/></button>)}</div>
+            <span className="erm20-photoCaption">{tab === 'apartamentos' ? `Fotografias do decorado · ${images.length} ângulos selecionados · Clique para ampliar` : `Perspectivas meramente ilustrativas · ${images.length} imagens`}</span>
+          </div>}
 
           {section === 'videos' && <div className="erm20-content erm20-videos"><SectionBanner title="VÍDEOS"/><div className="erm20-videoGrid"><div className="erm20-videoFocus"><div className="erm20-videoPoster"><Photo id={mediaList[videoIndex].image} alt={mediaList[videoIndex].name}/><span className="erm20-filmStatus">{tab === 'perspectivas' ? 'PERSPECTIVAS ANIMADAS' : tab === 'empreendimento' ? 'EMPREENDIMENTO' : 'SHORT VÍDEOS'}</span></div><h2>{mediaList[videoIndex].name}</h2><p>Prévia visual. O vídeo correspondente será vinculado assim que a Rocha selecionar e aprovar o arquivo original.</p></div><div className="erm20-videoList">{mediaList.map((v,i)=><button key={`${v.name}-${i}`} type="button" className={videoIndex===i?'active':''} onClick={()=>setVideoIndex(i)}><b>{String(i+1).padStart(2,'0')}</b><span>{v.name}</span></button>)}</div></div></div>}
 

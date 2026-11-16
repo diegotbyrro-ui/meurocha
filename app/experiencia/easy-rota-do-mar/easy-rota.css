@@ -1063,3 +1063,21 @@
 @media(prefers-reduced-motion:reduce){.erm21 .erm39-mapPin,.erm21 .erm39-photoOpen img,.erm21 .erm39-mapCanvas{transition:none;animation:none}}
 
 .erm21 .erm39-originalLink{display:block;font:600 10px var(--erm24-type-ui,'Segoe UI',sans-serif);color:#72ebfd;text-decoration:underline;margin-top:11px}
+
+/* R40 - fotos REAIS do decorado, sem cortes na imagem principal.
+   Apenas a aba Imagens > Apartamentos; nao afeta plantas nem outras galerias. */
+.erm21 .erm40-decorGallery{padding-bottom:18px}
+.erm21 .erm40-decorMeta{display:flex;justify-content:space-between;gap:12px;align-items:center;color:#1b7890;font:700 10px/1.4 var(--erm24-type-ui);letter-spacing:.12em;margin:0 0 8px}
+.erm21 .erm40-decorGallery>h2{font-family:var(--erm24-type-editorial);font-weight:400;font-size:clamp(18px,2vw,28px);margin:0 0 12px;text-align:left;color:#003b5b}
+.erm21 .erm40-decorGallery .erm20-galleryStage{flex:none;width:100%;height:clamp(260px,57vh,620px);max-height:none;min-height:0;background:radial-gradient(circle at 50% 45%,#0b5474,#003047 70%,#002239);border:1px solid #34b9d4;border-radius:12px;padding:10px;box-sizing:border-box;gap:7px;overflow:hidden}
+.erm21 .erm40-decorGallery .erm20-galleryPhoto{display:flex;justify-content:center;align-items:center;min-width:0;width:100%;height:100%;background:transparent;cursor:zoom-in;overflow:hidden}
+.erm21 .erm40-decorGallery .erm20-galleryPhoto>img{width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain!important;object-position:center;display:block}
+.erm21 .erm40-decorGallery .erm20-galleryPrev,.erm21 .erm40-decorGallery .erm20-galleryNext{flex:0 0 38px;height:44px;border-radius:8px;background:#004566;border:1px solid #4ccee4;color:#d7faff;cursor:pointer;z-index:2;transition:background .18s,box-shadow .18s}
+.erm21 .erm40-decorGallery .erm20-galleryPrev:hover,.erm21 .erm40-decorGallery .erm20-galleryNext:hover{background:#007e9b;box-shadow:0 0 14px #18dafa50}
+.erm21 .erm40-decorGallery .erm20-galleryThumbs{justify-content:flex-start;width:100%;height:93px;max-width:100%;padding:4px 1px 7px;gap:8px;margin-top:9px;scrollbar-color:#0aa9c1 #d7edf4;scrollbar-width:thin}
+.erm21 .erm40-decorGallery .erm20-galleryThumbs button{border:2px solid #a8d6e3;background:#053750;border-radius:7px;overflow:hidden;width:131px;height:80px;box-sizing:border-box;cursor:pointer;flex:0 0 131px}
+.erm21 .erm40-decorGallery .erm20-galleryThumbs button.active{border-color:#00e8ff;box-shadow:0 0 0 2px #00d2ed43}
+.erm21 .erm40-decorGallery .erm20-galleryThumbs img{display:block;width:100%;height:100%;object-fit:contain!important;object-position:center}
+.erm21 .erm40-decorGallery .erm20-photoCaption{color:#447d8e;letter-spacing:.02em;font:500 11px/1.5 var(--erm24-type-ui)}
+@media(max-width:740px){.erm21 .erm40-decorGallery .erm20-galleryStage{height:min(57vh,480px);min-height:240px;padding:5px;gap:3px}.erm21 .erm40-decorGallery .erm20-galleryPrev,.erm21 .erm40-decorGallery .erm20-galleryNext{flex-basis:27px;width:27px;height:40px;font-size:23px}.erm21 .erm40-decorGallery .erm20-galleryThumbs{height:75px}.erm21 .erm40-decorGallery .erm20-galleryThumbs button{height:63px;flex-basis:94px;width:94px}.erm21 .erm40-decorMeta{font-size:8px;letter-spacing:.07em}.erm21 .erm40-decorGallery>h2{font-size:17px}}
+@media(prefers-reduced-motion:reduce){.erm21 .erm40-decorGallery .erm20-galleryPrev,.erm21 .erm40-decorGallery .erm20-galleryNext{transition:none}}
