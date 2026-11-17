@@ -744,8 +744,8 @@ export default function EasyRotaClient() {
                 </article>)}
               </div>
               <p className="erm20-disclaimer erm44-disclaimer">Projeto de referência para homologação: 2 blocos, 208 apartamentos e 4 tipologias. Vagas, dados comerciais e disponibilidade devem ser confirmados com a Rocha.</p>
-              <img className="erm44-foliageCorner" src={`${BRAND_ASSETS}erm44-folhagem-canto.webp`} alt="" aria-hidden="true" loading="lazy" decoding="async"/>
             </div>
+            <img className="erm44-foliageCorner" src={`${BRAND_ASSETS}erm44-folhagem-canto.webp`} alt="" aria-hidden="true" loading="lazy" decoding="async"/>
           </div>}          {section === 'simulacao' && <div className="erm20-content erm21-simulation">
             <SectionBanner title="SIMULAÇÃO" caption="Apresentação em homologação"/>
             <div className="erm21-simulationBox"><UiIcon name="calculator" size={46}/><h2>Simulação financeira</h2><p>O painel visual está preparado para receber parâmetros comerciais aprovados pela Rocha. Nenhum preço, condição ou disponibilidade foi inventado nesta versão.</p><a href={official} rel="noopener noreferrer" target="_blank">CONHECER O EMPREENDIMENTO NO SITE OFICIAL ↗</a></div>

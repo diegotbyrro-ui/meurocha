@@ -877,3 +877,20 @@ test('R46: layouts responsivos mantem altura fluida, sem esconder o painel infor
   assert.doesNotMatch(r46,/\.erm21 \.erm44-hero\{[^}]*height:clamp\(/);
   assert.match(r46,/\.erm21 \.erm44-typeGrid\{[^}]*grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
 });
+// R47: acabamento final para alinhar as folhagens com os limites corretos da composicao.
+test('R47: ficha tecnica alinha folhagens ao limite do painel e da secao', () => {
+  assert.ok(css.includes('/* R47 - acabamento final da ficha tecnica: reposicionar folhagens e alinhar com os limites da estrutura. */'), 'CSS R47 ausente');
+  const start = client.indexOf("{section === 'ficha' &&");
+  const end = client.indexOf("{section === 'simulacao' &&", start);
+  const spec = client.slice(start,end);
+  assert.ok(spec.includes('            </div>\n            <img className="erm44-foliageCorner"'), 'Folhagem inferior nao foi movida para fora do painel interno');
+  assert.ok(spec.includes("goto('plantas','plantas');setTypeAndShow(k);"), 'Navegacao das plantas deve permanecer');
+  for (const marker of [
+    '.erm21 .erm44-overview{overflow:hidden}',
+    '.erm21 .erm44-foliagePanel{right:0;bottom:0;width:clamp(168px,20vw,290px);max-width:50%;opacity:.88;filter:blur(1.8px)}',
+    '.erm21 .erm44-sheet{overflow:hidden}',
+    '.erm21 .erm44-spec>.erm44-foliageCorner{position:absolute;right:0;bottom:0;width:clamp(250px,27vw,405px);height:auto;z-index:4;opacity:.86;filter:blur(1.15px);pointer-events:none;user-select:none;mask-image:linear-gradient(to bottom,transparent 0%,#000 48%);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 48%)}'
+  ]) {
+    assert.ok(css.includes(marker), `Marcador CSS R47 ausente: ${marker}`);
+  }
+});
