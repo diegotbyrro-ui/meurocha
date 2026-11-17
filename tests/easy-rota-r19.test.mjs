@@ -834,3 +834,16 @@ test('R44: ficha tecnica premium em azul e ciano, imagens reais, vegetacao e lin
   assert.match(css,/@media\(max-width:560px\).*?\.erm44-typeGrid\{grid-template-columns:1fr/s);
   assert.match(css,/@media\(prefers-reduced-motion:reduce\).*?\.erm44-typeCard/s);
 });
+// R45: correcao fina para aproximar a Ficha Tecnica do mockup aprovado, sem mudar a navegacao.
+test('R45: ficha tecnica ajusta enquadramento, folhagens e proporcao premium dos cards', () => {
+  assert.ok(css.includes('/* R45 - correcao fina da ficha tecnica premium para aproximar da referencia aprovada. */'), 'CSS R45 ausente');
+  for (const marker of [
+    '.erm21 .erm44-hero{grid-template-columns:minmax(0,1.11fr) minmax(0,.89fr);height:clamp(305px,38vh,410px);border-radius:20px}',
+    '.erm21 .erm44-heroVisual img{object-position:52% 58%;filter:saturate(1.055) contrast(1.015)}',
+    '.erm21 .erm44-foliagePanel{right:-4px;bottom:-12px;width:clamp(185px,24vw,335px);opacity:.9;filter:blur(2.2px)}',
+    '.erm21 .erm44-typeCard{min-height:290px;padding:clamp(18px,1.65vw,26px);border-radius:18px}',
+    '.erm21 .erm44-foliageCorner{right:-14px;bottom:-42px;width:clamp(240px,34vw,480px);opacity:.88;filter:blur(1.25px)}'
+  ]) {
+    assert.ok(css.includes(marker), `Marcador CSS R45 ausente: ${marker}`);
+  }
+});

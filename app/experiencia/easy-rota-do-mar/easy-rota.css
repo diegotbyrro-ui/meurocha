@@ -1150,3 +1150,33 @@
 @media(max-width:900px){.erm21 .erm44-hero{height:auto;grid-template-columns:1fr}.erm21 .erm44-heroVisual{height:clamp(240px,36vw,365px)}.erm21 .erm44-overview{border-left:0;border-top:1px solid #31b5d8a8;margin-left:0;border-radius:0;min-height:230px}.erm21 .erm44-overviewContent{padding:23px 27px}.erm21 .erm44-overview h2{font-size:clamp(25px,3vw,34px)}.erm21 .erm44-typeGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.erm21 .erm44-foliageCorner{width:min(38%,300px)}}
 @media(max-width:560px){.erm21 .erm44-spec{padding:8px}.erm21 .erm44-sheet{padding:10px;border-radius:12px}.erm21 .erm44-sheet>.erm20-sectionBanner{margin:4px 0 12px}.erm21 .erm44-sheet>.erm20-sectionBanner::before{flex-basis:20px}.erm21 .erm44-sheet>.erm20-sectionBanner>span{font-size:15px;letter-spacing:.1em}.erm21 .erm44-hero{border-radius:12px}.erm21 .erm44-heroVisual{height:235px}.erm21 .erm44-heroVisual img{object-position:center 52%}.erm21 .erm44-overview{min-height:265px}.erm21 .erm44-overviewContent{padding:19px}.erm21 .erm44-overview h2{font-size:clamp(22px,6vw,29px);margin:10px 0}.erm21 .erm44-metric{grid-template-columns:36px 54px 1fr;min-height:44px;column-gap:8px}.erm21 .erm44-metricIcon{width:31px;height:31px}.erm21 .erm44-metric b{font-size:24px}.erm21 .erm44-typeGrid{grid-template-columns:1fr;gap:10px;margin-top:12px}.erm21 .erm44-typeCard{padding:15px}.erm21 .erm44-cardDetails{margin:8px 0 11px}.erm21 .erm44-cardDetails p{font-size:12px;padding:6px 0}.erm21 .erm44-cardAction{min-height:44px}.erm21 .erm44-disclaimer{font-size:10px;margin-top:15px;max-width:90%;padding:0}.erm21 .erm44-foliageCorner{width:180px;right:-52px;bottom:-30px;opacity:.55}}
 @media(prefers-reduced-motion:reduce){.erm21 .erm44-typeCard,.erm21 .erm44-cardAction{transition:none}}
+/* R45 - correcao fina da ficha tecnica premium para aproximar da referencia aprovada. */
+.erm21 .erm44-sheet{max-width:1715px;padding:clamp(16px,1.7vw,28px)}
+.erm21 .erm44-sheet>.erm20-sectionBanner{margin:2px 0 18px}
+.erm21 .erm44-sheet>.erm20-sectionBanner::before{flex-basis:50px}
+.erm21 .erm44-sheet>.erm20-sectionBanner>span{font-size:clamp(17px,1.52vw,25px);letter-spacing:.14em}
+.erm21 .erm44-hero{grid-template-columns:minmax(0,1.11fr) minmax(0,.89fr);height:clamp(305px,38vh,410px);border-radius:20px}
+.erm21 .erm44-heroVisual img{object-position:52% 58%;filter:saturate(1.055) contrast(1.015)}
+.erm21 .erm44-overview{border-radius:18px 0 0 18px;background:radial-gradient(ellipse at 96% 100%,#0b5d78 0%,transparent 68%),linear-gradient(135deg,#001d38 0%,#002c4f 100%)}
+.erm21 .erm44-overviewContent{padding:clamp(24px,2.85vw,48px);max-width:665px}
+.erm21 .erm44-overview h2{max-width:615px;margin:14px 0 19px;font-size:clamp(28px,2.42vw,46px);line-height:1.05}
+.erm21 .erm44-metrics{max-width:526px}
+.erm21 .erm44-metric{grid-template-columns:52px 82px 1fr;column-gap:18px;min-height:59px}
+.erm21 .erm44-metricIcon{width:42px;height:42px;border-radius:12px}
+.erm21 .erm44-metric b{font-size:clamp(25px,2.2vw,39px)}
+.erm21 .erm44-metric>span:last-child{font-size:clamp(11px,1vw,15px)}
+.erm21 .erm44-foliagePanel{right:-4px;bottom:-12px;width:clamp(185px,24vw,335px);opacity:.9;filter:blur(2.2px)}
+.erm21 .erm44-typeGrid{gap:18px;margin-top:18px}
+.erm21 .erm44-typeCard{min-height:290px;padding:clamp(18px,1.65vw,26px);border-radius:18px}
+.erm21 .erm44-typeCard::before{top:-70px;right:-48px;width:192px;height:120px}
+.erm21 .erm44-cardHead h3{margin:0 0 6px;font-size:clamp(28px,2.28vw,38px)}
+.erm21 .erm44-cardHead strong{font-size:clamp(17px,1.35vw,22px)}
+.erm21 .erm44-cardDetails{margin:14px 0 17px}
+.erm21 .erm44-cardDetails p{min-height:36px;padding:8px 0;font-size:clamp(11px,.88vw,14px)}
+.erm21 .erm44-cardDetails svg{flex-basis:20px}
+.erm21 .erm44-cardAction{min-height:48px;border-radius:12px;font-size:clamp(11px,.9vw,14px)}
+.erm21 .erm44-disclaimer{margin:17px 0 0;max-width:1100px;padding:0 2px}
+.erm21 .erm44-foliageCorner{right:-14px;bottom:-42px;width:clamp(240px,34vw,480px);opacity:.88;filter:blur(1.25px)}
+@media(max-width:1200px){.erm21 .erm44-hero{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)}.erm21 .erm44-overviewContent{padding:22px}.erm21 .erm44-overview h2{font-size:clamp(24px,2.15vw,34px)}.erm21 .erm44-metric{grid-template-columns:44px 68px 1fr;column-gap:12px;min-height:52px}.erm21 .erm44-typeGrid{gap:14px}.erm21 .erm44-typeCard{min-height:276px}}
+@media(max-width:900px){.erm21 .erm44-hero{height:auto;grid-template-columns:1fr}.erm21 .erm44-heroVisual{height:clamp(250px,38vw,360px)}.erm21 .erm44-heroVisual img{object-position:52% 56%}.erm21 .erm44-overview{border-left:0;border-top:1px solid #31b5d8a8;border-radius:0;min-height:246px}.erm21 .erm44-overviewContent{padding:24px 28px}.erm21 .erm44-typeGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.erm21 .erm44-foliagePanel{width:240px;right:-2px;bottom:-8px}.erm21 .erm44-foliageCorner{width:min(44%,320px);right:-28px;bottom:-28px}}
+@media(max-width:560px){.erm21 .erm44-sheet{padding:11px;border-radius:13px}.erm21 .erm44-sheet>.erm20-sectionBanner{margin:4px 0 12px}.erm21 .erm44-sheet>.erm20-sectionBanner::before{flex-basis:22px}.erm21 .erm44-sheet>.erm20-sectionBanner>span{font-size:15px;letter-spacing:.11em}.erm21 .erm44-hero{border-radius:12px}.erm21 .erm44-heroVisual{height:225px}.erm21 .erm44-heroVisual img{object-position:52% 54%}.erm21 .erm44-overview{min-height:275px}.erm21 .erm44-overviewContent{padding:18px}.erm21 .erm44-overview h2{font-size:clamp(22px,6vw,29px);margin:10px 0 12px}.erm21 .erm44-metric{grid-template-columns:34px 54px 1fr;column-gap:8px;min-height:44px}.erm21 .erm44-metricIcon{width:31px;height:31px}.erm21 .erm44-typeGrid{grid-template-columns:1fr;gap:10px;margin-top:12px}.erm21 .erm44-typeCard{min-height:0;padding:15px}.erm21 .erm44-cardHead h3{font-size:clamp(24px,8vw,30px)}.erm21 .erm44-cardDetails{margin:9px 0 12px}.erm21 .erm44-cardDetails p{font-size:12px;padding:6px 0;min-height:30px}.erm21 .erm44-cardAction{min-height:44px}.erm21 .erm44-disclaimer{font-size:10px;max-width:92%}.erm21 .erm44-foliagePanel{width:180px;right:-18px;bottom:-18px;opacity:.7}.erm21 .erm44-foliageCorner{width:176px;right:-52px;bottom:-28px;opacity:.62}}
