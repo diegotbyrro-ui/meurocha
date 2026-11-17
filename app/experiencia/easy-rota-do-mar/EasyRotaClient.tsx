@@ -173,7 +173,10 @@ const facilityImages: Partial<Record<number, string>> = {
 // facilityId corresponde ao cadastro de imagens R31; mapLabel ao identificador no desenho.
 // EV nao tem circulo numerado na imagem original, usa a indicacao textual ELETRICO.
 const r39Places: { facilityId:number; mapLabel:string; name:string; x:number; y:number }[] = [
+  {facilityId:3,mapLabel:'01',name:'Portaria',x:29.2,y:49.4},
   {facilityId:6,mapLabel:'02',name:'Piscina adulto',x:26.7,y:68.9},
+  {facilityId:7,mapLabel:'03',name:'Piscina infantil',x:25.3,y:79.8},
+  {facilityId:8,mapLabel:'04',name:'Area de lazer da piscina',x:27.3,y:85.1},
   {facilityId:9,mapLabel:'05',name:'Espaco Grill',x:33.7,y:81.2},
   {facilityId:10,mapLabel:'06',name:'Espaco Gourmet',x:39.4,y:78.3},
   {facilityId:11,mapLabel:'07',name:'Espaco Fitness',x:38.1,y:72.5},
@@ -181,9 +184,22 @@ const r39Places: { facilityId:number; mapLabel:string; name:string; x:number; y:
   {facilityId:14,mapLabel:'10',name:'Espaco Beleza',x:38.4,y:64.5},
   {facilityId:22,mapLabel:'14',name:'Easy Wash / Lavanderia',x:80.8,y:60.5},
   {facilityId:17,mapLabel:'18',name:'Bicicletarios',x:83.3,y:75.4},
+  {facilityId:25,mapLabel:'19',name:'Pet Place',x:88.6,y:50.9},
   {facilityId:30,mapLabel:'20',name:'Pista de Cooper',x:68.1,y:5.8},
+  {facilityId:29,mapLabel:'21',name:'Playground',x:69.2,y:12.2},
+  {facilityId:33,mapLabel:'23',name:'Lixeira',x:26.6,y:2.9},
   {facilityId:31,mapLabel:'EV',name:'Recarga de veiculos eletricos',x:38.1,y:42.8},
 ];
+// R42: seis fotos numeradas EXATAMENTE segundo a implantacao conferida pelo cliente.
+// Sem alterar a associacao das dez perspectivas ja existentes (R39/R41).
+const r42PointPhotos: Partial<Record<number,string>> = {
+  3: 'erm42-ponto-01-portaria.jpg',
+  7: 'erm42-ponto-03-piscina-infantil.jpg',
+  8: 'erm42-ponto-04-lazer-piscina.jpg',
+  25: 'erm42-ponto-19-pet-place.jpg',
+  29: 'erm42-ponto-21-playground.jpg',
+  33: 'erm42-ponto-23-lixeira.jpg',
+};
 // Os nomes R31 sao mantidos nos detalhes: fotografia original em cada ponto.
 const gallery = [
   { id: 'hero', name: 'Vista geral', category: 'areas' },
@@ -344,6 +360,7 @@ export default function EasyRotaClient() {
   const currentMasterSource = masterImage === 'implantacao' ? `${BRAND_ASSETS}erm41-implantacao-limpa.webp` : r32Asset('pavimento-interativo');
   const currentMasterAlt = masterImage === 'implantacao' ? 'Implantação original do Easy Rota do Mar, TIFF oficial recortado sem distorcer ou alterar sua geometria' : 'Planta completa do pavimento tipo Easy Rota do Mar, imagem enviada para a apresentação';
   const r39ChosenPlace = r39Places.find(p => p.facilityId === facility) || r39Places[0];
+  const r42ChosenPhoto = r42PointPhotos[r39ChosenPlace.facilityId] || `${facilityImages[r39ChosenPlace.facilityId]}.webp`;
   const changeMaster = (next: 'implantacao' | 'pavimento') => { setMasterImage(next); setMasterZoom(1); setMasterOffset({x:0,y:0}); };
   const changeMasterZoom = (next: number) => { const z = Math.max(1,Math.min(2.5,+next.toFixed(2))); setMasterZoom(z); if (z===1) setMasterOffset({x:0,y:0}); };
   const moveMaster = (event: PointerEvent<HTMLDivElement>) => {
@@ -527,21 +544,22 @@ export default function EasyRotaClient() {
                     style={{left:`${point.x}%`,top:`${point.y}%`}} title={`Visualizar ${point.name}`} aria-label={`Selecionar ${point.name} na implantacao`}
                     aria-pressed={facility===point.facilityId} onClick={()=>{setFacility(point.facilityId);tone();}}><span>{point.mapLabel}</span></button>)}
                 </div>
-                <div className="erm41-compass" role="img" aria-label="Rosa dos ventos: norte a direita, leste abaixo, sul a esquerda e oeste acima">
+                <div className="erm41-compass" role="img" aria-label="Rosa dos ventos: norte a esquerda, leste acima, sul a direita e oeste abaixo">
                   <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
-                    <circle cx="60" cy="60" r="29" fill="#002942" stroke="#6feaff" strokeWidth="1.2" opacity="0.92"/>
-                    <circle cx="60" cy="60" r="4" fill="#fff"/>
-                    <path d="M60 60 L99 60 L64 51 Z" fill="#10e7ff"/>
-                    <path d="M60 60 L99 60 L64 69 Z" fill="#e6fbff"/>
-                    <path d="M60 60 L21 60 L56 51 Z" fill="#397c98"/>
-                    <path d="M60 60 L21 60 L56 69 Z" fill="#96bbcc"/>
-                    <path d="M60 60 L60 20 L51 56 Z" fill="#548ca5"/>
-                    <path d="M60 60 L60 20 L69 56 Z" fill="#c3e6ed"/>
-                    <path d="M60 60 L60 100 L51 64 Z" fill="#4c839d"/>
-                    <path d="M60 60 L60 100 L69 64 Z" fill="#c0e7ef"/>
-                    <g fontFamily="Arial, sans-serif" fontSize="13" fontWeight="700" fill="#c7f9ff" textAnchor="middle">
-                      <text x="111" y="64">N</text><text x="9" y="64">S</text>
-                      <text x="60" y="12">O</text><text x="60" y="116">L</text>
+                    <path d="M60 60 L19 60 L56 50 Z" fill="#11e5f5"/>
+                    <path d="M60 60 L19 60 L56 70 Z" fill="#8de9f5"/>
+                    <path d="M60 60 L101 60 L64 50 Z" fill="#34778e"/>
+                    <path d="M60 60 L101 60 L64 70 Z" fill="#579caf"/>
+                    <path d="M60 60 L60 19 L50 56 Z" fill="#58c8de"/>
+                    <path d="M60 60 L60 19 L70 56 Z" fill="#b1eff7"/>
+                    <path d="M60 60 L60 101 L50 64 Z" fill="#2d7e99"/>
+                    <path d="M60 60 L60 101 L70 64 Z" fill="#57abc2"/>
+                    <circle cx="60" cy="60" r="5.2" fill="#e9fcff"/>
+                    <g fontFamily="Arial, sans-serif" fontSize="13" fontWeight="800" fill="#64dff4" textAnchor="middle">
+                      <text x="10" y="44">N</text>
+                      <text x="60" y="12">L</text>
+                      <text x="111" y="44">S</text>
+                      <text x="60" y="116">O</text>
                     </g>
                   </svg>
                 </div>
@@ -549,7 +567,7 @@ export default function EasyRotaClient() {
               </div>
               <aside className="erm39-photoPanel" aria-live="polite">
                 <button type="button" className="erm39-photoOpen" onClick={()=>setFacilityExpanded(true)} aria-label={`Ampliar fotografia de ${r39ChosenPlace.name}`}>
-                  <img key={r39ChosenPlace.facilityId} src={`${BRAND_ASSETS}${facilityImages[r39ChosenPlace.facilityId]}.webp`} alt={`Imagem oficial do ambiente ${r39ChosenPlace.name}`} loading="lazy" decoding="async" />
+                  <img key={r39ChosenPlace.facilityId} src={`${BRAND_ASSETS}${r42ChosenPhoto}`} alt={`Imagem oficial do ambiente ${r39ChosenPlace.name}`} loading="lazy" decoding="async" />
                   <span><UiIcon name="image" size={17}/> Ampliar fotografia</span>
                 </button>
                 <div className="erm39-photoDescription">
@@ -574,7 +592,7 @@ export default function EasyRotaClient() {
             </div>}
             {facilityExpanded && <div className="erm31-imageOverlay" role="dialog" aria-modal="true" aria-label={`Fotografia ampliada: ${r39ChosenPlace.name}`}>
               <div className="erm31-overlayTop"><strong>{r39ChosenPlace.name} · Perspectiva ilustrativa</strong><button type="button" onClick={() => setFacilityExpanded(false)}>✕ Fechar</button></div>
-              <img src={`${BRAND_ASSETS}${facilityImages[r39ChosenPlace.facilityId]}.webp`} alt={`Fotografia ampliada de ${r39ChosenPlace.name}`} />
+              <img src={`${BRAND_ASSETS}${r42ChosenPhoto}`} alt={`Fotografia ampliada de ${r39ChosenPlace.name}`} />
             </div>}
             <div className="erm32-masterMoved">
               <UiIcon name="floor" size={24}/>

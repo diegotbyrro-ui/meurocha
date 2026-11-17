@@ -682,11 +682,11 @@ test('R38: nao altera sete menus, oito marcadores, nem a descricao comercial',()
 });
 
 // R39 - mapa real, imagens enviadas e interacao no painel lateral.
-test('R39: 10 ambientes com fotografia oficial e posicoes na implantacao sem distorcer imagem',()=>{
+test('R39/R42: 16 pontos no mapa sem distorcer a imagem',()=>{
   const block=client.slice(client.indexOf('const r39Places:'),client.indexOf('// Os nomes R31'));
   const selected=[...block.matchAll(/facilityId:(\d+),mapLabel:'([^']+)',name:'([^']+)',x:([\d.]+),y:([\d.]+)/g)];
-  assert.equal(selected.length,10);
-  assert.equal(new Set(selected.map(a=>a[1])).size,10);
+  assert.equal(selected.length,16);
+  assert.equal(new Set(selected.map(a=>a[1])).size,16);
   for(const v of selected){assert.ok(Number(v[4])>=2&&Number(v[4])<=98);assert.ok(Number(v[5])>=2&&Number(v[5])<=98)}
   assert.match(client,/erm41-implantacao-limpa\.webp/);
   assert.match(client,/r39Places\.map/);
@@ -744,9 +744,42 @@ test('R41: mapa novo, pinos preservados e rosa dos ventos', () => {
   const start = client.indexOf('const r39Places:');
   const end = client.indexOf('];', start);
   assert.ok(start>0 && end>start);
-  assert.equal((client.slice(start,end).match(/\{facilityId:/g)||[]).length,10);
+  assert.equal((client.slice(start,end).match(/\{facilityId:/g)||[]).length,16);
   assert.match(client,/erm41-compass/);
-  assert.match(client,/Rosa dos ventos: norte a direita/);
+  assert.match(client,/Rosa dos ventos: norte a esquerda/);
   assert.match(css,/\.erm21 \.erm39-mapCanvas\{width:min\(100%,49\.9vh,545px\);height:auto;max-width:100%;aspect-ratio:1350\/1461\}/);
   assert.match(css,/\.erm21 \.erm41-compass/);
+});
+// R42: numeros vindos do mapa anotado, com seis fotografias originais sem recompresao.
+test('R42: seis fotos de lazer, portaria e lixeira nos pontos numerados', () => {
+  const added = [
+    [3,'01','Portaria',29.2,49.4,'erm42-ponto-01-portaria.jpg'],
+    [7,'03','Piscina infantil',25.3,79.8,'erm42-ponto-03-piscina-infantil.jpg'],
+    [8,'04','Area de lazer da piscina',27.3,85.1,'erm42-ponto-04-lazer-piscina.jpg'],
+    [25,'19','Pet Place',88.6,50.9,'erm42-ponto-19-pet-place.jpg'],
+    [29,'21','Playground',69.2,12.2,'erm42-ponto-21-playground.jpg'],
+    [33,'23','Lixeira',26.6,2.9,'erm42-ponto-23-lixeira.jpg'],
+  ];
+  for (const [id,num,name,x,y,file] of added) {
+    assert.ok(client.includes(`{facilityId:${id},mapLabel:'${num}',name:'${name}',x:${x},y:${y}}`),`Pino ${num} posicionado incorretamente`);
+    assert.ok(client.includes(`${id}: '${file}'`),`Fotografia nao ligada ao ponto ${num}`);
+    const bytes=readFileSync(join(assetDir,file));
+    assert.ok(bytes.length>100000,`Imagem ${file} muito pequena`);
+    assert.equal(bytes[0],255); assert.equal(bytes[1],216); assert.equal(bytes[2],255);
+  }
+  const previous=[
+    [6,'02','Piscina adulto',26.7,68.9],[9,'05','Espaco Grill',33.7,81.2],
+    [10,'06','Espaco Gourmet',39.4,78.3],[11,'07','Espaco Fitness',38.1,72.5],
+    [12,'08','Easy Play / Sala Gamer',38.1,68.4],[14,'10','Espaco Beleza',38.4,64.5],
+    [22,'14','Easy Wash / Lavanderia',80.8,60.5],[17,'18','Bicicletarios',83.3,75.4],
+    [30,'20','Pista de Cooper',68.1,5.8],[31,'EV','Recarga de veiculos eletricos',38.1,42.8],
+  ];
+  for(const [id,num,name,x,y] of previous) {
+    assert.ok(client.includes(`{facilityId:${id},mapLabel:'${num}',name:'${name}',x:${x},y:${y}}`),`Pino anterior ${num} alterado`);
+  }
+  assert.match(client,/Rosa dos ventos: norte a esquerda, leste acima, sul a direita e oeste abaixo/);
+  assert.ok(client.includes('<text x="10" y="44">N</text>'));
+  assert.match(client,/const r42ChosenPhoto = r42PointPhotos\[r39ChosenPlace\.facilityId\]/);
+  assert.equal((client.match(/src=\{`\$\{BRAND_ASSETS\}\$\{r42ChosenPhoto\}`\}/g)||[]).length,2);
+  assert.match(css,/\/\* R42 - Rosa dos ventos sem aro/);
 });
