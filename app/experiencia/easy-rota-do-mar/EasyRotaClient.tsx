@@ -181,14 +181,14 @@ const r39Places: { facilityId:number; mapLabel:string; name:string; x:number; y:
   {facilityId:10,mapLabel:'06',name:'Espaco Gourmet',x:39.4,y:78.3},
   {facilityId:11,mapLabel:'07',name:'Espaco Fitness',x:38.1,y:72.5},
   {facilityId:12,mapLabel:'08',name:'Easy Play / Sala Gamer',x:38.1,y:68.4},
-  {facilityId:14,mapLabel:'10',name:'Espaco Beleza',x:38.4,y:64.5},
-  {facilityId:22,mapLabel:'14',name:'Easy Wash / Lavanderia',x:80.8,y:60.5},
-  {facilityId:17,mapLabel:'18',name:'Bicicletarios',x:83.3,y:75.4},
-  {facilityId:25,mapLabel:'19',name:'Pet Place',x:88.6,y:50.9},
-  {facilityId:30,mapLabel:'20',name:'Pista de Cooper',x:68.1,y:5.8},
-  {facilityId:29,mapLabel:'21',name:'Playground',x:69.2,y:12.2},
-  {facilityId:33,mapLabel:'23',name:'Lixeira',x:26.6,y:2.9},
-  {facilityId:31,mapLabel:'EV',name:'Recarga de veiculos eletricos',x:38.1,y:42.8},
+  {facilityId:14,mapLabel:'09',name:'Espaco Beleza',x:38.4,y:64.5},
+  {facilityId:22,mapLabel:'10',name:'Easy Wash / Lavanderia',x:80.8,y:60.5},
+  {facilityId:17,mapLabel:'11',name:'Bicicletarios',x:83.3,y:75.4},
+  {facilityId:25,mapLabel:'12',name:'Pet Place',x:88.6,y:50.9},
+  {facilityId:30,mapLabel:'13',name:'Pista de Cooper',x:68.1,y:5.8},
+  {facilityId:29,mapLabel:'14',name:'Playground',x:69.2,y:12.2},
+  {facilityId:33,mapLabel:'15',name:'Lixeira',x:26.6,y:2.9},
+  {facilityId:31,mapLabel:'16',name:'Recarga de veiculos eletricos',x:38.1,y:42.8},
 ];
 // R42: seis fotos numeradas EXATAMENTE segundo a implantacao conferida pelo cliente.
 // Sem alterar a associacao das dez perspectivas ja existentes (R39/R41).
@@ -544,22 +544,46 @@ export default function EasyRotaClient() {
                     style={{left:`${point.x}%`,top:`${point.y}%`}} title={`Visualizar ${point.name}`} aria-label={`Selecionar ${point.name} na implantacao`}
                     aria-pressed={facility===point.facilityId} onClick={()=>{setFacility(point.facilityId);tone();}}><span>{point.mapLabel}</span></button>)}
                 </div>
-                <div className="erm41-compass" role="img" aria-label="Rosa dos ventos: norte a esquerda, leste acima, sul a direita e oeste abaixo">
-                  <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
-                    <path d="M60 60 L19 60 L56 50 Z" fill="#11e5f5"/>
-                    <path d="M60 60 L19 60 L56 70 Z" fill="#8de9f5"/>
-                    <path d="M60 60 L101 60 L64 50 Z" fill="#34778e"/>
-                    <path d="M60 60 L101 60 L64 70 Z" fill="#579caf"/>
-                    <path d="M60 60 L60 19 L50 56 Z" fill="#58c8de"/>
-                    <path d="M60 60 L60 19 L70 56 Z" fill="#b1eff7"/>
-                    <path d="M60 60 L60 101 L50 64 Z" fill="#2d7e99"/>
-                    <path d="M60 60 L60 101 L70 64 Z" fill="#57abc2"/>
-                    <circle cx="60" cy="60" r="5.2" fill="#e9fcff"/>
-                    <g fontFamily="Arial, sans-serif" fontSize="13" fontWeight="800" fill="#64dff4" textAnchor="middle">
-                      <text x="10" y="44">N</text>
-                      <text x="60" y="12">L</text>
-                      <text x="111" y="44">S</text>
-                      <text x="60" y="116">O</text>
+                <div className="erm41-compass" role="img" aria-label="Rosa dos ventos: norte a esquerda, leste acima, sul a direita e oeste abaixo; acabamento premium">
+                  <svg viewBox="0 0 160 160" aria-hidden="true" focusable="false">
+                    <defs>
+                      <linearGradient id="erm43NorthGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#fff8d5"/>
+                        <stop offset="48%" stopColor="#e8cc80"/>
+                        <stop offset="100%" stopColor="#ae8b45"/>
+                      </linearGradient>
+                      <linearGradient id="erm43Aqua" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#ecffff"/>
+                        <stop offset="45%" stopColor="#83dce7"/>
+                        <stop offset="100%" stopColor="#1e768e"/>
+                      </linearGradient>
+                    </defs>
+                    <circle cx="80" cy="80" r="56" fill="#06283b" fillOpacity="0.55" stroke="#afcbd2" strokeOpacity="0.33" strokeWidth="1" />
+                    <circle cx="80" cy="80" r="50" fill="none" stroke="#c0a56c" strokeOpacity="0.55" strokeWidth="0.8" />
+                    <circle cx="80" cy="80" r="45" fill="none" stroke="#8abecb" strokeOpacity="0.28" strokeWidth="0.7" />
+                    <g stroke="#93c6d1" strokeOpacity="0.68" strokeLinecap="round">
+                      <path d="M80 28 V33 M132 80 H127 M80 132 V127 M28 80 H33" strokeWidth="1.7"/>
+                      <path d="M44 44 L48 48 M116 44 L112 48 M116 116 L112 112 M44 116 L48 112" strokeWidth="0.9" />
+                    </g>
+                    <path d="M80 80 L27 80 L76 67 Z" fill="url(#erm43NorthGold)" />
+                    <path d="M80 80 L27 80 L76 93 Z" fill="#d0a552" />
+                    <path d="M80 80 L80 32 L70 76 Z" fill="url(#erm43Aqua)" />
+                    <path d="M80 80 L80 32 L90 76 Z" fill="#76ccdc" />
+                    <path d="M80 80 L133 80 L84 67 Z" fill="#45738a" />
+                    <path d="M80 80 L133 80 L84 93 Z" fill="#24556e" />
+                    <path d="M80 80 L80 128 L70 84 Z" fill="#2a6279" />
+                    <path d="M80 80 L80 128 L90 84 Z" fill="#153f54" />
+                    <path d="M80 80 L49 49 L76 70 Z" fill="#b0e2e6" fillOpacity="0.78" />
+                    <path d="M80 80 L111 49 L84 70 Z" fill="#719fb2" fillOpacity="0.70" />
+                    <path d="M80 80 L111 111 L84 90 Z" fill="#49748a" fillOpacity="0.70" />
+                    <path d="M80 80 L49 111 L76 90 Z" fill="#d0e5e6" fillOpacity="0.70" />
+                    <circle cx="80" cy="80" r="7.2" fill="#f7fcf6" stroke="#ab8e54" strokeWidth="1.3" />
+                    <circle cx="80" cy="80" r="2.4" fill="#207a91" />
+                    <g fontFamily="Arial, sans-serif" fontSize="13" fontWeight="700" letterSpacing="1.2" textAnchor="middle">
+                      <text x="12" y="84" fill="#f4d48f">N</text>
+                      <text x="80" y="16" fill="#c9eef3">L</text>
+                      <text x="148" y="84" fill="#c9eef3">S</text>
+                      <text x="80" y="157" fill="#c9eef3">O</text>
                     </g>
                   </svg>
                 </div>

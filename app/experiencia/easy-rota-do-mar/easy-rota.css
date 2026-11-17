@@ -1090,3 +1090,7 @@
 @media(max-width:680px){.erm21 .erm39-mapCanvas{width:min(100%,350px);height:auto}.erm21 .erm41-compass{width:77px;height:77px;right:7px;bottom:28px}}
 /* R42 - Rosa dos ventos sem aro: mesma orientacao do mapa fornecido pelo cliente. */
 .erm21 .erm41-compass{border:0;border-radius:0;background:transparent;box-shadow:none}
+/* R43 - rosa dos ventos premium sem alterar mapa nem zoom */
+.erm21 .erm41-compass{width:136px;height:136px;right:13px;bottom:24px;border:0;border-radius:50%;background:transparent;box-shadow:none;display:grid;place-items:center;filter:drop-shadow(0 8px 13px rgba(0,0,0,.30))}
+.erm21 .erm41-compass>svg{width:100%;height:100%;display:block}
+@media(max-width:680px){.erm21 .erm41-compass{width:94px;height:94px;right:7px;bottom:25px}}
