@@ -802,3 +802,35 @@ test('R43: sequencia continua 01-16 e rosa dos ventos premium', () => {
     assert.ok(existsSync(join(assetDir,file)));
   }
 });
+// R44: somente a Ficha Tecnica recebe o layout premium; navegacao real das plantas preservada.
+test('R44: ficha tecnica premium em azul e ciano, imagens reais, vegetacao e links funcionais', () => {
+  const start = client.indexOf("{section === 'ficha' &&");
+  const end = client.indexOf("{section === 'simulacao' &&", start);
+  assert.ok(start > 0 && end > start, 'Secao de Ficha Tecnica nao encontrada');
+  const spec = client.slice(start,end);
+  for (const marker of ['erm44-spec','erm44-sheet','erm44-heroVisual','erm44-overview','erm44-typeGrid','erm44-typeCard','erm44-cardAction','erm44-foliagePanel','erm44-foliageCorner']) assert.ok(spec.includes(marker), `Layout R44 ausente: ${marker}`);
+  for (const name of ['erm44-fachada-bloco.webp','erm44-folhagem-painel.webp','erm44-folhagem-canto.webp']) {
+    assert.ok(spec.includes(name), `Asset nao referenciado: ${name}`);
+    const path = join(assetDir,name);
+    assert.ok(existsSync(path), `Asset ausente: ${name}`);
+    const bytes=readFileSync(path);
+    assert.ok(bytes.length>3000,`Asset incompleto: ${name}`);
+    assert.equal(bytes.toString('ascii',0,4),'RIFF');
+    assert.equal(bytes.toString('ascii',8,12),'WEBP');
+  }
+  assert.match(spec,/typeKeys\.map\(\(k\)=>/);
+  assert.match(spec,/goto\('plantas','plantas'\);setTypeAndShow\(k\)/);
+  assert.match(spec,/types\[k\]\.name/);
+  assert.match(spec,/types\[k\]\.area/);
+  assert.match(spec,/types\[k\]\.rooms/);
+  assert.match(spec,/types\[k\]\.parking/);
+  assert.match(spec,/types\[k\]\.endings/);
+  assert.match(spec,/208/);
+  assert.match(spec,/04/);
+  assert.match(spec,/FICHA TÉCNICA/);
+  assert.match(css,/\/\* R44 - ficha tecnica premium, azul-marinho e ciano/);
+  assert.match(css,/\.erm21 \.erm44-hero/);
+  assert.match(css,/\.erm21 \.erm44-cardAction:focus-visible/);
+  assert.match(css,/@media\(max-width:560px\).*?\.erm44-typeGrid\{grid-template-columns:1fr/s);
+  assert.match(css,/@media\(prefers-reduced-motion:reduce\).*?\.erm44-typeCard/s);
+});

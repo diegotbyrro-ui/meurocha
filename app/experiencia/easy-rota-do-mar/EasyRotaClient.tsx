@@ -59,6 +59,10 @@ function UiIcon({ name, size = 20 }: { name: string; size?: number }) {
   if (name === 'arrow') return <svg {...common}><path d="M4 12h16m-6-6 6 6-6 6"/></svg>;
   if (name === 'calculator') return <svg {...common}><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8M8 11h2m4 0h2m-8 4h2m4 0h2m-8 4h8"/></svg>;
   if (name === 'file') return <svg {...common}><path d="M6 2h9l4 4v16H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M14 2v5h5M8 12h8M8 16h8"/></svg>;
+  if (name === 'key') return <svg {...common}><circle cx="8" cy="15" r="4"/><path d="M11.3 12.3 21 3v5l-3 2-2-1-3 3"/></svg>;
+  if (name === 'bed') return <svg {...common}><path d="M3 19V7m18 12V7M3 16h18M5 12V6h14v6M7 12V9h4v3m2 0V9h4v3"/></svg>;
+  if (name === 'car') return <svg {...common}><path d="m5 11 2-6h10l2 6M4 11h16a2 2 0 0 1 2 2v5H2v-5a2 2 0 0 1 2-2Zm1 7v2h3v-2m8 0v2h3v-2M6 14h2m8 0h2"/></svg>;
+  if (name === 'calendar') return <svg {...common}><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6m10-6v6M3 10h18m-13 4h3m-3 3h3"/></svg>;
   return <svg {...common}><circle cx="12" cy="12" r="9"/></svg>;
 }
 const subtabs: Record<Section, { id: string; label: string }[]> = {
@@ -708,9 +712,41 @@ export default function EasyRotaClient() {
 
           {section === 'videos' && <div className="erm20-content erm20-videos"><SectionBanner title="VÍDEOS"/><div className="erm20-videoGrid"><div className="erm20-videoFocus"><div className="erm20-videoPoster"><Photo id={mediaList[videoIndex].image} alt={mediaList[videoIndex].name}/><span className="erm20-filmStatus">{tab === 'perspectivas' ? 'PERSPECTIVAS ANIMADAS' : tab === 'empreendimento' ? 'EMPREENDIMENTO' : 'SHORT VÍDEOS'}</span></div><h2>{mediaList[videoIndex].name}</h2><p>Prévia visual. O vídeo correspondente será vinculado assim que a Rocha selecionar e aprovar o arquivo original.</p></div><div className="erm20-videoList">{mediaList.map((v,i)=><button key={`${v.name}-${i}`} type="button" className={videoIndex===i?'active':''} onClick={()=>setVideoIndex(i)}><b>{String(i+1).padStart(2,'0')}</b><span>{v.name}</span></button>)}</div></div></div>}
 
-          {section === 'ficha' && <div className="erm20-content erm20-spec"><SectionBanner title="FICHA TÉCNICA"/><div className="erm20-specHero"><Photo id="fachada" alt="Perspectiva da fachada do Easy Rota do Mar"/><div><span>CONHEÇA O PROJETO</span><h2>Um empreendimento pensado para viver <em>além do comum.</em></h2><div><b>02</b><small>Torres</small><b>208</b><small>Unidades</small><b>04</b><small>Tipologias</small></div></div></div><div className="erm20-specColumns">{typeKeys.map((k)=><article key={k}><h3>{types[k].name}</h3><strong>{types[k].area}</strong><p>{types[k].rooms}</p><p>{types[k].parking}</p><p>Terminações {types[k].endings.map((x)=>String(x).padStart(2,'0')).join(' e ')}</p><button type="button" onClick={()=>{goto('plantas','plantas');setTypeAndShow(k);}}>VER PLANTA ↗</button></article>)}</div><p className="erm20-disclaimer">Projeto de referência para homologação: 2 blocos, 208 apartamentos e 4 tipologias. Vagas, dados comerciais e disponibilidade devem ser confirmados com a Rocha.</p></div>}
-
-          {section === 'simulacao' && <div className="erm20-content erm21-simulation">
+          {section === 'ficha' && <div className="erm20-content erm20-spec erm44-spec">
+            <div className="erm44-sheet">
+              <SectionBanner title="FICHA TÉCNICA"/>
+              <div className="erm44-hero">
+                <div className="erm44-heroVisual">
+                  <img src={`${BRAND_ASSETS}erm44-fachada-bloco.webp`} alt="Fachada oficial do Easy Rota do Mar ao entardecer" loading="lazy" decoding="async"/>
+                </div>
+                <div className="erm44-overview">
+                  <div className="erm44-overviewContent">
+                    <span className="erm44-eyebrow">CONHEÇA O PROJETO</span>
+                    <h2>Um empreendimento pensado para viver <em>além do comum.</em></h2>
+                    <div className="erm44-metrics" aria-label="Dados gerais do empreendimento">
+                      <div className="erm44-metric"><span className="erm44-metricIcon"><UiIcon name="building" size={22}/></span><b>02</b><span>Torres</span></div>
+                      <div className="erm44-metric"><span className="erm44-metricIcon"><UiIcon name="key" size={22}/></span><b>208</b><span>Unidades</span></div>
+                      <div className="erm44-metric"><span className="erm44-metricIcon"><UiIcon name="layers" size={22}/></span><b>04</b><span>Tipologias</span></div>
+                    </div>
+                  </div>
+                  <img className="erm44-foliagePanel" src={`${BRAND_ASSETS}erm44-folhagem-painel.webp`} alt="" aria-hidden="true" loading="lazy" decoding="async"/>
+                </div>
+              </div>
+              <div className="erm44-typeGrid" aria-label="Tipologias do Easy Rota do Mar">
+                {typeKeys.map((k)=><article className="erm44-typeCard" key={k}>
+                  <div className="erm44-cardHead"><h3>{types[k].name}</h3><strong>{types[k].area}</strong></div>
+                  <div className="erm44-cardDetails">
+                    <p><UiIcon name="bed" size={18}/><span>{types[k].rooms}</span></p>
+                    <p><UiIcon name="car" size={18}/><span>{types[k].parking}</span></p>
+                    <p><UiIcon name="calendar" size={18}/><span>Terminações {types[k].endings.map((x)=>String(x).padStart(2,'0')).join(' e ')}</span></p>
+                  </div>
+                  <button className="erm44-cardAction" type="button" onClick={()=>{goto('plantas','plantas');setTypeAndShow(k);}}>VER PLANTA <UiIcon name="arrow" size={17}/></button>
+                </article>)}
+              </div>
+              <p className="erm20-disclaimer erm44-disclaimer">Projeto de referência para homologação: 2 blocos, 208 apartamentos e 4 tipologias. Vagas, dados comerciais e disponibilidade devem ser confirmados com a Rocha.</p>
+              <img className="erm44-foliageCorner" src={`${BRAND_ASSETS}erm44-folhagem-canto.webp`} alt="" aria-hidden="true" loading="lazy" decoding="async"/>
+            </div>
+          </div>}          {section === 'simulacao' && <div className="erm20-content erm21-simulation">
             <SectionBanner title="SIMULAÇÃO" caption="Apresentação em homologação"/>
             <div className="erm21-simulationBox"><UiIcon name="calculator" size={46}/><h2>Simulação financeira</h2><p>O painel visual está preparado para receber parâmetros comerciais aprovados pela Rocha. Nenhum preço, condição ou disponibilidade foi inventado nesta versão.</p><a href={official} rel="noopener noreferrer" target="_blank">CONHECER O EMPREENDIMENTO NO SITE OFICIAL ↗</a></div>
           </div>}
