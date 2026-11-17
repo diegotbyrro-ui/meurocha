@@ -847,3 +847,33 @@ test('R45: ficha tecnica ajusta enquadramento, folhagens e proporcao premium dos
     assert.ok(css.includes(marker), `Marcador CSS R45 ausente: ${marker}`);
   }
 });
+// R46: corrige o recorte da fachada e impede corte do titulo e das tres metricas.
+test('R46: fachada integral com laterais harmonizadas e altura guiada pelo conteudo', () => {
+  const r46 = css.slice(css.indexOf('/* R46 - Ficha Tecnica:'));
+  assert.ok(r46.startsWith('/* R46 - Ficha Tecnica:'), 'CSS de correcao R46 nao encontrado');
+  assert.match(r46,/\.erm21 \.erm44-hero\{[^}]*height:auto;[^}]*min-height:350px;/);
+  assert.match(r46,/\.erm21 \.erm44-heroVisual::before\{[^}]*background-image:url\('\/experiencia\/easy-rota-do-mar\/erm44-fachada-bloco\.webp'\)/);
+  assert.match(r46,/\.erm21 \.erm44-heroVisual img\{[^}]*object-fit:contain;[^}]*object-position:center center;/);
+  assert.match(r46,/\.erm21 \.erm44-overview\{[^}]*height:auto;[^}]*overflow:hidden;/);
+});
+
+test('R46: folhagens permanecem visiveis e os dados dos quatro cards nao mudam', () => {
+  const r46 = css.slice(css.indexOf('/* R46 - Ficha Tecnica:'));
+  assert.match(r46,/\.erm21 \.erm44-foliagePanel\{[^}]*opacity:\.86;/);
+  assert.match(r46,/\.erm21 \.erm44-foliageCorner\{[^}]*bottom:-2px;[^}]*opacity:\.8;/);
+  const start = client.indexOf("{section === 'ficha' &&");
+  const end = client.indexOf("{section === 'simulacao' &&", start);
+  const ficha = client.slice(start,end);
+  assert.match(ficha,/goto\('plantas','plantas'\);setTypeAndShow\(k\)/);
+  assert.match(ficha,/erm44-fachada-bloco\.webp/);
+  for (const label of ["'Slim'", "'Premium'", "'Master'", "'Spazzio'"]) assert.ok(client.includes(label));
+});
+
+test('R46: layouts responsivos mantem altura fluida, sem esconder o painel informativo', () => {
+  const r46 = css.slice(css.indexOf('/* R46 - Ficha Tecnica:'));
+  assert.match(r46,/@media\(min-width:901px\) and \(max-width:1450px\)/);
+  assert.match(r46,/@media\(max-width:900px\)/);
+  assert.match(r46,/@media\(max-width:560px\)/);
+  assert.doesNotMatch(r46,/\.erm21 \.erm44-hero\{[^}]*height:clamp\(/);
+  assert.match(r46,/\.erm21 \.erm44-typeGrid\{[^}]*grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
+});

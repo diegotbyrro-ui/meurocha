@@ -1180,3 +1180,230 @@
 @media(max-width:1200px){.erm21 .erm44-hero{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)}.erm21 .erm44-overviewContent{padding:22px}.erm21 .erm44-overview h2{font-size:clamp(24px,2.15vw,34px)}.erm21 .erm44-metric{grid-template-columns:44px 68px 1fr;column-gap:12px;min-height:52px}.erm21 .erm44-typeGrid{gap:14px}.erm21 .erm44-typeCard{min-height:276px}}
 @media(max-width:900px){.erm21 .erm44-hero{height:auto;grid-template-columns:1fr}.erm21 .erm44-heroVisual{height:clamp(250px,38vw,360px)}.erm21 .erm44-heroVisual img{object-position:52% 56%}.erm21 .erm44-overview{border-left:0;border-top:1px solid #31b5d8a8;border-radius:0;min-height:246px}.erm21 .erm44-overviewContent{padding:24px 28px}.erm21 .erm44-typeGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.erm21 .erm44-foliagePanel{width:240px;right:-2px;bottom:-8px}.erm21 .erm44-foliageCorner{width:min(44%,320px);right:-28px;bottom:-28px}}
 @media(max-width:560px){.erm21 .erm44-sheet{padding:11px;border-radius:13px}.erm21 .erm44-sheet>.erm20-sectionBanner{margin:4px 0 12px}.erm21 .erm44-sheet>.erm20-sectionBanner::before{flex-basis:22px}.erm21 .erm44-sheet>.erm20-sectionBanner>span{font-size:15px;letter-spacing:.11em}.erm21 .erm44-hero{border-radius:12px}.erm21 .erm44-heroVisual{height:225px}.erm21 .erm44-heroVisual img{object-position:52% 54%}.erm21 .erm44-overview{min-height:275px}.erm21 .erm44-overviewContent{padding:18px}.erm21 .erm44-overview h2{font-size:clamp(22px,6vw,29px);margin:10px 0 12px}.erm21 .erm44-metric{grid-template-columns:34px 54px 1fr;column-gap:8px;min-height:44px}.erm21 .erm44-metricIcon{width:31px;height:31px}.erm21 .erm44-typeGrid{grid-template-columns:1fr;gap:10px;margin-top:12px}.erm21 .erm44-typeCard{min-height:0;padding:15px}.erm21 .erm44-cardHead h3{font-size:clamp(24px,8vw,30px)}.erm21 .erm44-cardDetails{margin:9px 0 12px}.erm21 .erm44-cardDetails p{font-size:12px;padding:6px 0;min-height:30px}.erm21 .erm44-cardAction{min-height:44px}.erm21 .erm44-disclaimer{font-size:10px;max-width:92%}.erm21 .erm44-foliagePanel{width:180px;right:-18px;bottom:-18px;opacity:.7}.erm21 .erm44-foliageCorner{width:176px;right:-52px;bottom:-28px;opacity:.62}}
+/* R46 - Ficha Tecnica: imagem integral, altura por conteudo e detalhes visuais seguros. */
+/* O mesmo bloco de texto determina a altura do painel; a fachada nunca e cortada. */
+.erm21 .erm44-spec{
+  overflow-x:clip;
+}
+.erm21 .erm44-sheet{
+  overflow:hidden;
+  padding:clamp(16px,1.65vw,26px);
+  background:linear-gradient(160deg,#002341 0%,#001e38 48%,#002949 100%);
+}
+.erm21 .erm44-sheet>.erm20-sectionBanner{
+  margin:0 0 17px;
+  gap:17px;
+}
+.erm21 .erm44-sheet>.erm20-sectionBanner::before{
+  flex-basis:43px;
+}
+.erm21 .erm44-sheet>.erm20-sectionBanner>span{
+  font-size:clamp(18px,1.35vw,23px);
+  text-decoration:none;
+  letter-spacing:.14em;
+}
+.erm21 .erm44-hero{
+  display:grid;
+  grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);
+  height:auto;
+  min-height:350px;
+  border-radius:20px;
+  align-items:stretch;
+  overflow:hidden;
+  isolation:isolate;
+}
+.erm21 .erm44-heroVisual{
+  position:relative;
+  min-height:350px;
+  height:auto;
+  overflow:hidden;
+  background:#0e3150;
+  isolation:isolate;
+}
+/* Extendemos o ambiente do proprio render pelas laterais, sem inserir outra foto. */
+.erm21 .erm44-heroVisual::before{
+  content:'';
+  position:absolute;
+  inset:-24px;
+  z-index:0;
+  background-image:url('/experiencia/easy-rota-do-mar/erm44-fachada-bloco.webp');
+  background-position:center 55%;
+  background-size:cover;
+  filter:blur(22px) brightness(.72) saturate(.9);
+  transform:scale(1.035);
+  pointer-events:none;
+}
+.erm21 .erm44-heroVisual::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background:linear-gradient(90deg,#031b3625 0%,transparent 18%,transparent 82%,#031b3637 100%);
+}
+.erm21 .erm44-heroVisual img{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  display:block;
+  width:100%;
+  height:100%;
+  max-width:100%;
+  object-fit:contain;
+  object-position:center center;
+  filter:saturate(1.065) contrast(1.02) drop-shadow(0 1px 12px #00162b6b);
+}
+.erm21 .erm44-overview{
+  align-self:stretch;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:stretch;
+  min-height:350px;
+  height:auto;
+  overflow:hidden;
+  border-radius:18px 0 0 18px;
+  background:radial-gradient(ellipse at 108% 105%,#0a5c76 0%,transparent 65%),linear-gradient(125deg,#00233d,#003254);
+}
+.erm21 .erm44-overviewContent{
+  position:relative;
+  z-index:3;
+  width:100%;
+  max-width:none;
+  min-width:0;
+  padding:22px clamp(20px,2.15vw,34px) 23px;
+  box-sizing:border-box;
+}
+.erm21 .erm44-eyebrow{
+  font-size:clamp(10px,.78vw,12px);
+  line-height:1.4;
+}
+.erm21 .erm44-overview h2{
+  max-width:570px;
+  margin:12px 0 14px;
+  font-size:clamp(25px,2.07vw,36px);
+  line-height:1.09;
+  letter-spacing:-.012em;
+  text-wrap:balance;
+}
+.erm21 .erm44-metrics{
+  max-width:510px;
+}
+.erm21 .erm44-metric{
+  grid-template-columns:43px 72px minmax(0,1fr);
+  column-gap:13px;
+  min-height:51px;
+}
+.erm21 .erm44-metricIcon{
+  width:37px;
+  height:37px;
+  border-radius:10px;
+}
+.erm21 .erm44-metric b{
+  font-size:clamp(25px,1.92vw,34px);
+}
+.erm21 .erm44-metric>span:last-child{
+  font-size:clamp(11px,.82vw,14px);
+}
+.erm21 .erm44-foliagePanel{
+  z-index:1;
+  width:clamp(190px,21vw,295px);
+  max-width:50%;
+  right:-15px;
+  bottom:-11px;
+  opacity:.86;
+  filter:blur(2px);
+  pointer-events:none;
+}
+.erm21 .erm44-typeGrid{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:clamp(10px,1.13vw,18px);
+  margin-top:17px;
+}
+.erm21 .erm44-typeCard{
+  min-height:286px;
+  padding:clamp(15px,1.45vw,23px);
+  border-radius:17px;
+}
+.erm21 .erm44-cardHead h3{
+  font-size:clamp(27px,2.03vw,35px);
+  margin-bottom:5px;
+}
+.erm21 .erm44-cardHead strong{
+  font-size:clamp(16px,1.2vw,20px);
+}
+.erm21 .erm44-cardDetails{
+  margin:13px 0 14px;
+}
+.erm21 .erm44-cardDetails p{
+  gap:10px;
+  padding:7px 0;
+  min-height:34px;
+  font-size:clamp(11px,.82vw,13px);
+}
+.erm21 .erm44-cardAction{
+  min-height:45px;
+  font-size:clamp(10px,.85vw,13px);
+}
+.erm21 .erm44-disclaimer{
+  max-width:calc(100% - 200px);
+  margin:16px 0 0;
+  padding:0 2px;
+  line-height:1.55;
+}
+.erm21 .erm44-foliageCorner{
+  z-index:3;
+  width:clamp(300px,32vw,480px);
+  height:auto;
+  right:-15px;
+  bottom:-2px;
+  opacity:.8;
+  filter:blur(1.2px);
+}
+.erm21 .erm44-sheet::before,.erm21 .erm44-sheet::after{
+  opacity:.6;
+}
+/* Notebooks: preservar espaco do texto. O conteudo pode rolar, sem ser escondido. */
+@media(min-width:901px) and (max-width:1450px){
+  .erm21 .erm44-hero{grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);min-height:342px}
+  .erm21 .erm44-heroVisual,.erm21 .erm44-overview{min-height:342px}
+  .erm21 .erm44-overviewContent{padding:20px 22px}
+  .erm21 .erm44-overview h2{font-size:clamp(25px,2.05vw,31px);margin:10px 0 11px}
+  .erm21 .erm44-metric{min-height:48px;grid-template-columns:39px 65px minmax(0,1fr);column-gap:9px}
+  .erm21 .erm44-metricIcon{width:34px;height:34px}
+  .erm21 .erm44-typeCard{min-height:274px;padding:15px}
+  .erm21 .erm44-disclaimer{max-width:calc(100% - 160px)}
+}
+@media(max-width:900px){
+  .erm21 .erm44-hero{grid-template-columns:minmax(0,1fr);min-height:0;height:auto}
+  .erm21 .erm44-heroVisual{min-height:0;height:clamp(260px,48vw,420px)}
+  .erm21 .erm44-overview{min-height:0;height:auto;border-radius:0}
+  .erm21 .erm44-overviewContent{padding:25px clamp(20px,4vw,32px)}
+  .erm21 .erm44-overview h2{font-size:clamp(26px,4.1vw,35px)}
+  .erm21 .erm44-typeGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .erm21 .erm44-foliagePanel{width:min(260px,33%);bottom:-6px}
+  .erm21 .erm44-foliageCorner{width:min(330px,44%)}
+  .erm21 .erm44-disclaimer{max-width:calc(100% - 150px)}
+}
+@media(max-width:560px){
+  .erm21 .erm44-sheet{padding:11px}
+  .erm21 .erm44-sheet>.erm20-sectionBanner{margin:4px 0 12px}
+  .erm21 .erm44-sheet>.erm20-sectionBanner::before{flex-basis:22px}
+  .erm21 .erm44-sheet>.erm20-sectionBanner>span{font-size:15px}
+  .erm21 .erm44-hero{border-radius:12px}
+  .erm21 .erm44-heroVisual{height:255px;min-height:0}
+  .erm21 .erm44-overviewContent{padding:20px 19px}
+  .erm21 .erm44-overview h2{font-size:clamp(24px,6vw,29px);margin:10px 0 12px}
+  .erm21 .erm44-metric{grid-template-columns:37px 55px minmax(0,1fr);min-height:47px;column-gap:8px}
+  .erm21 .erm44-metricIcon{width:31px;height:31px}
+  .erm21 .erm44-metric b{font-size:25px}
+  .erm21 .erm44-typeGrid{grid-template-columns:1fr;gap:11px;margin-top:13px}
+  .erm21 .erm44-typeCard{min-height:0;padding:16px}
+  .erm21 .erm44-cardHead h3{font-size:29px}
+  .erm21 .erm44-cardHead strong{font-size:17px}
+  .erm21 .erm44-cardDetails p{font-size:12px}
+  .erm21 .erm44-cardAction{min-height:44px}
+  .erm21 .erm44-foliagePanel{width:190px;max-width:50%;right:-24px;bottom:-20px;opacity:.69}
+  .erm21 .erm44-foliageCorner{width:200px;right:-40px;bottom:-6px;opacity:.58}
+  .erm21 .erm44-disclaimer{max-width:calc(100% - 50px);padding-bottom:17px;font-size:10px}
+}
