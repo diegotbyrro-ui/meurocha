@@ -480,7 +480,7 @@ export default function EasyRotaClient() {
       </aside>
 
       <section className="erm20-main">
-        {section !== 'plantas' && !(section === 'localizacao' && tab === 'ultratour') && <nav className="erm21-subTabs" aria-label="Abas da seção">{subtabs[section].map((t) => <button key={t.id} type="button" className={tab === t.id ? 'active' : ''} onClick={() => chooseTab(t.id)}>{t.label}</button>)}</nav>}
+        {section !== 'plantas' && section !== 'lazer' && section !== 'institucional' && !(section === 'localizacao' && tab === 'ultratour') && <nav className="erm21-subTabs" aria-label="Abas da seção">{subtabs[section].map((t) => <button key={t.id} type="button" className={tab === t.id ? 'active' : ''} onClick={() => chooseTab(t.id)}>{t.label}</button>)}</nav>}
         <div className="erm20-panel" key={section}>
           {section === 'localizacao' && <div className="erm20-content erm20-location">
             {tab === 'ultratour' && <div className="erm20-immersive" role="region" aria-label="Visão aérea de referência do empreendimento">
@@ -751,7 +751,46 @@ export default function EasyRotaClient() {
             <div className="erm21-simulationBox"><UiIcon name="calculator" size={46}/><h2>Simulação financeira</h2><p>O painel visual está preparado para receber parâmetros comerciais aprovados pela Rocha. Nenhum preço, condição ou disponibilidade foi inventado nesta versão.</p><a href={official} rel="noopener noreferrer" target="_blank">CONHECER O EMPREENDIMENTO NO SITE OFICIAL ↗</a></div>
           </div>}
 
-          {section === 'institucional' && <div className="erm20-content erm20-institutional"><div className="erm20-institutionalHero"><Photo id="fachada" alt="Empreendimento Rocha Empreendimentos"/><div><SectionBanner title="INSTITUCIONAL"/><span className="erm20-overline">ROCHA EMPREENDIMENTOS · DESDE 2009</span><h2>HÁ HISTÓRIAS QUE SÓ O TEMPO CONSEGUE CONSTRUIR.</h2><p>Projetos que acompanham novos capítulos. O Easy Rota do Mar faz parte dessa trajetória de construir possibilidades em Alagoas.</p><div className="erm20-institutionalMetrics"><div><b>2009</b><small>Início da trajetória</small></div><div><b>17</b><small>Anos em 2026</small></div><div><b>208</b><small>Unidades Easy Rota do Mar</small></div></div><h3>Viva além do comum.</h3><p>Conheça os empreendimentos e iniciativas da Rocha.</p><a href="https://meurocha.com.br" target="_blank" rel="noopener noreferrer">SITE OFICIAL ↗</a><div className="erm20-rochaSignature">ROCHA <small>EMPREENDIMENTOS</small></div></div></div></div>}
+          {section === 'institucional' && <div className="erm20-content erm20-institutional erm50-institutional">
+            <div className="erm50-stage">
+              <div className="erm50-visual" aria-label="Fachada oficial do empreendimento Easy Rota do Mar">
+                <div className="erm50-photoFrame">
+                  <img className="erm50-facade" src={`${BRAND_ASSETS}erm50-fachada-oficial.jpg`} alt="Fachada ilustrativa oficial do Easy Rota do Mar, preservada do material do empreendimento" loading="lazy" decoding="async" />
+                </div>
+                <span className="erm50-photoCaption">EASY ROTA DO MAR · PERSPECTIVA ILUSTRATIVA</span>
+              </div>
+              <article className="erm50-story" aria-labelledby="erm50-title">
+                <div className="erm50-kicker">ROCHA EMPREENDIMENTOS <span>·</span> DESDE 2010</div>
+                <h1 id="erm50-title">Construímos histórias.<br/>Entregamos novos começos.</h1>
+                <p className="erm50-intro">Qualidade, confiança e inovação para viver além do comum.</p>
+                <p className="erm50-slogan">Viva além do comum.</p>
+                <div className="erm50-valuesGrid" aria-label="Missão, visão e valores da Rocha">
+                  <section className="erm50-valueCard">
+                    <span className="erm50-cardIcon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M16 3 28 10 16 17 4 10 16 3ZM4 16l12 7 12-7M4 22l12 7 12-7" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg></span>
+                    <h2>MISSÃO</h2><p>Construir com qualidade e entregar experiências além do comum.</p>
+                  </section>
+                  <section className="erm50-valueCard">
+                    <span className="erm50-cardIcon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M6 28V16h5v12M14 28V10h5v18M22 28V4h5v24" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg></span>
+                    <h2>VISÃO</h2><p>Ser referência em Alagoas na construção de lares, com tecnologia e sustentabilidade.</p>
+                  </section>
+                  <section className="erm50-valueCard">
+                    <span className="erm50-cardIcon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="m16 3 11 4v8c0 7-4.7 11.7-11 14-6.3-2.3-11-7-11-14V7l11-4Z" stroke="currentColor" strokeWidth="1.8"/><path d="m10 16 4 4 8-8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
+                    <h2>VALORES</h2><p>Segurança, qualidade, transparência, foco no cliente, satisfação do time e inovação.</p>
+                  </section>
+                </div>
+                <div className="erm50-quality" aria-label="Fundação e certificações da construtora">
+                  <div><span className="erm50-qualityIcon" aria-hidden="true">▣</span><span><strong>2010</strong><small>Fundação</small></span></div>
+                  <div><span className="erm50-qualityIcon" aria-hidden="true">✧</span><span><strong>ISO 9001:2015</strong><small>Certificação</small></span></div>
+                  <div><span className="erm50-qualityIcon" aria-hidden="true">◈</span><span><strong>PBQP-H</strong><small>Nível A (SiAC)</small></span></div>
+                </div>
+                <footer className="erm50-footer">
+                  <a href="https://meurocha.com.br/rocha" target="_blank" rel="noopener noreferrer">CONHEÇA A ROCHA <span aria-hidden="true">↗</span></a>
+                  <img className="erm50-brandLogo" src={`${BRAND_ASSETS}erm50-rocha-logo-original.png`} alt="Logomarca original da Rocha Empreendimentos" loading="lazy" decoding="async" />
+                </footer>
+                <div className="erm50-strapline">INCORPORAÇÃO <span>·</span> CONSTRUÇÃO <span>·</span> QUALIDADE <span>·</span> SUSTENTABILIDADE</div>
+              </article>
+            </div>
+          </div>}
         </div>
               </section>
     </div>}

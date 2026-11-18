@@ -1421,3 +1421,85 @@
 .erm21 .erm44-foliagePanel{right:-12px;bottom:0;width:clamp(170px,21vw,304px);opacity:.86;filter:blur(1.85px);transform:none}
 @media(max-width:900px){.erm21 .erm44-foliagePanel{right:-8px;bottom:0;width:198px;opacity:.82}}
 @media(max-width:560px){.erm21 .erm44-foliagePanel{right:-10px;bottom:-2px;width:156px;opacity:.72}}
+
+/* R49 R1 — Masterplan concentrado em uma tela no desktop.
+   Somente layout/UI. Mapa, pinos, fotografias e coordenadas originais intactos.
+   Rosa: direcao do book (N esquerda/acima, L acima/direita, S direita/abaixo, O abaixo/esquerda). */
+.erm21 .erm20-leisure>.erm20-sectionBanner{display:none}
+.erm21 .erm20-leisure .erm31-planModeButtons{display:none}
+.erm21 .erm20-leisure>.erm32-masterMoved{display:none}
+.erm21 .erm20-leisure .erm31-planControls{justify-content:flex-end;gap:0;margin:0 0 4px}
+.erm21 .erm20-leisure .erm41-compass{left:8px;right:auto;bottom:20px;width:102px;height:102px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.28))}
+.erm21 .erm20-leisure .erm41-compass>svg{transform:rotate(14deg);transform-origin:50% 50%}
+.erm21 .erm20-leisure .erm41-compass svg text{transform:rotate(-14deg);transform-box:fill-box;transform-origin:center}
+@media(min-width:1151px) and (min-height:680px){
+  .erm21 .erm20-main:has(.erm20-leisure) .erm20-panel{overflow-y:hidden}
+  .erm21 .erm20-leisure{height:100%;min-height:0;overflow:hidden;display:flex;flex-direction:column;gap:4px;padding:10px 14px}
+  .erm21 .erm20-leisure>.erm31-planControls{flex:0 0 auto;min-height:32px;margin:0;align-items:center}
+  .erm21 .erm20-leisure>.erm39-layout{flex:1 1 auto;display:grid;grid-template-columns:minmax(148px,164px) minmax(0,1fr) minmax(270px,30%);gap:8px;min-height:0;height:auto;margin:0;align-items:stretch}
+  .erm21 .erm20-leisure .erm39-placeList{padding:8px 6px;gap:4px;min-height:0}
+  .erm21 .erm20-leisure .erm39-placeList>small{display:none}
+  .erm21 .erm20-leisure .erm39-placeButtons{gap:3px;min-height:0;overflow-y:auto;scrollbar-width:none}
+  .erm21 .erm20-leisure .erm39-placeButtons::-webkit-scrollbar{display:none}
+  .erm21 .erm20-leisure .erm39-placeButtons button{min-height:28px;padding:2px 4px;border-radius:6px;gap:5px;font-size:9px;line-height:1.14;flex:0 0 auto}
+  .erm21 .erm20-leisure .erm39-placeButtons button span{width:22px;height:22px;flex-basis:22px;font-size:9px}
+  .erm21 .erm20-leisure .erm39-mapFrame{min-height:0;height:100%;padding:4px 4px 13px;overflow:hidden}
+  .erm21 .erm20-leisure .erm39-mapCanvas{width:min(100%,75svh,710px);height:auto;max-width:100%;max-height:100%;aspect-ratio:1350/1461}
+  .erm21 .erm20-leisure .erm39-mapFrame>small{bottom:4px;font-size:8px}
+  .erm21 .erm20-leisure .erm39-photoPanel{min-height:0;height:100%}
+  .erm21 .erm20-leisure .erm39-photoOpen{gap:4px;padding:8px}
+  .erm21 .erm20-leisure .erm39-photoOpen img{height:clamp(165px,32svh,330px)}
+  .erm21 .erm20-leisure .erm39-photoDescription{padding:6px 11px 11px;overflow:auto}
+  .erm21 .erm20-leisure .erm39-photoDescription h2{margin:5px 0 10px;font-size:clamp(22px,2vw,30px)}
+  .erm21 .erm20-leisure .erm41-compass{bottom:17px}
+}
+@media(max-width:1150px){
+  .erm21 .erm20-leisure .erm41-compass{width:80px;height:80px;bottom:17px;left:8px;right:auto}
+}
+@media(max-width:680px){
+  .erm21 .erm20-leisure .erm41-compass{width:70px;height:70px;bottom:28px;left:5px;right:auto}
+}
+
+/* R49 R2 - INSTITUCIONAL PREMIUM APROVADO; ARTE ORIGINAL DA ROCHA.
+   Fachada oficial preservada: efeito de profundidade apenas em CSS, sem alterar arquitetura.
+   Logo PNG original fornecida pelo cliente, sem redesenho ou geracao por IA. */
+.erm21 .erm50-institutional{height:100%;min-height:0;padding:10px;background:radial-gradient(ellipse at 95% -15%,#0c5074,#001b34 62%);color:#00253e}
+.erm21 .erm50-stage{isolation:isolate;display:grid;grid-template-columns:minmax(300px,38%) minmax(0,62%);height:100%;min-height:0;max-width:1760px;margin:0 auto;border:1px solid #36c7e7;border-radius:18px;background:#e8f6fc;box-shadow:0 18px 42px #00162678;overflow:hidden}
+.erm21 .erm50-visual{position:relative;isolation:isolate;min-height:0;display:flex;align-items:stretch;background:linear-gradient(135deg,#013653,#00172e);perspective:1300px}
+.erm21 .erm50-visual::before{content:'';position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse at 95% 48%,#26cce533,transparent 66%)}
+.erm21 .erm50-photoFrame{position:relative;z-index:2;width:calc(100% + 19px);height:100%;margin-right:-19px;border-radius:15px;overflow:hidden;transform:perspective(1300px) rotateY(-3.8deg) translateX(8px);transform-origin:left center;box-shadow:19px 9px 30px #00152755,2px 0 0 #26e8ff77;animation:erm50-enter 1050ms cubic-bezier(.18,.83,.28,1) both;transition:transform .55s ease,box-shadow .55s ease}
+.erm21 .erm50-visual:hover .erm50-photoFrame{transform:perspective(1300px) rotateY(-1.5deg) translateX(13px);box-shadow:23px 12px 36px #00152755,2px 0 0 #27efff88}
+.erm21 .erm50-photoFrame::after{content:'';position:absolute;inset:0;pointer-events:none;border:1px solid #71ecff6b;border-radius:15px;box-shadow:inset -12px 0 20px #08284333}
+.erm21 .erm50-facade{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 47%;user-select:none;pointer-events:none}
+.erm21 .erm50-photoCaption{position:absolute;bottom:14px;left:18px;z-index:3;background:#001d36bd;color:#effbff;font:600 9px/1.3 var(--erm24-type-ui,'Segoe UI',sans-serif);letter-spacing:.13em;padding:8px 10px;border-radius:4px;pointer-events:none}
+.erm21 .erm50-story{z-index:1;min-width:0;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:0;padding:clamp(24px,3.1vw,54px) clamp(23px,3.3vw,61px) clamp(15px,1.4vw,23px) clamp(44px,3.9vw,75px);background:radial-gradient(ellipse at 100% 100%,#b6effb66,transparent 45%),linear-gradient(135deg,#f5fbfe 0%,#e6f4fa 100%);overflow-y:auto;scrollbar-width:thin;scrollbar-color:#9bc7d6 transparent}
+.erm21 .erm50-kicker{font:700 11px/1.3 var(--erm24-type-ui,'Segoe UI',sans-serif);letter-spacing:.18em;color:#194562;white-space:normal}
+.erm21 .erm50-kicker::after{content:'';display:block;width:72px;height:3px;margin-top:10px;background:#00cbe3}
+.erm21 .erm50-kicker span{color:#11aec7}
+.erm21 .erm50-story h1{font:400 clamp(28px,2.75vw,51px)/1.06 var(--erm24-type-editorial,Georgia,serif);letter-spacing:-.023em;color:#002543;margin:clamp(16px,2vw,26px) 0 clamp(11px,1.4vw,18px)}
+.erm21 .erm50-intro{font:400 clamp(13px,1.17vw,18px)/1.45 var(--erm24-type-ui,'Segoe UI',sans-serif);color:#355669;margin:0}
+.erm21 .erm50-slogan{font:italic 400 clamp(21px,2.25vw,36px)/1.1 var(--erm24-type-editorial,Georgia,serif);color:#0798b9;margin:clamp(9px,1.25vw,18px) 0 clamp(15px,1.8vw,25px)}
+.erm21 .erm50-valuesGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:0 0 clamp(12px,1.35vw,19px)}
+.erm21 .erm50-valueCard{min-width:0;min-height:155px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;background:linear-gradient(145deg,#00334e,#00203d 90%);border:1px solid #50b9d6;border-radius:13px;padding:clamp(13px,1.2vw,19px);box-shadow:0 7px 17px #00283e22;color:#eafaff}
+.erm21 .erm50-cardIcon{display:block;width:27px;height:27px;color:#06e0ed}
+.erm21 .erm50-cardIcon svg{display:block;width:100%;height:100%}
+.erm21 .erm50-valueCard h2{margin:1px 0 0;font:800 clamp(11px,1.0vw,15px)/1.15 var(--erm24-type-ui,'Segoe UI',sans-serif);letter-spacing:.10em;color:#f7fdff}
+.erm21 .erm50-valueCard p{margin:0;font:400 clamp(10px,.86vw,13px)/1.36 var(--erm24-type-ui,'Segoe UI',sans-serif);color:#e5f7ff}
+.erm21 .erm50-quality{border:1px solid #99cadd;border-radius:12px;background:#ffffff56;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));min-height:61px;align-items:center;padding:5px 4px;color:#002b49}
+.erm21 .erm50-quality>div{display:flex;justify-content:center;align-items:center;min-width:0;gap:8px;padding:5px 8px}
+.erm21 .erm50-quality>div+div{border-left:1px solid #a4cad9}
+.erm21 .erm50-qualityIcon{font-size:21px;line-height:1;color:#057da4}
+.erm21 .erm50-quality strong{display:block;font:700 clamp(11px,.96vw,15px)/1.25 var(--erm24-type-ui,'Segoe UI',sans-serif)}
+.erm21 .erm50-quality small{display:block;font:500 clamp(9px,.75vw,11px)/1.2 var(--erm24-type-ui,'Segoe UI',sans-serif);color:#506e7d}
+.erm21 .erm50-footer{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:clamp(12px,1.6vw,22px)}
+.erm21 .erm50-footer a{flex:0 0 auto;display:inline-flex;align-items:center;gap:10px;padding:10px 15px;border:1px solid #002b4c;border-radius:7px;color:#00233d;background:#ffffff55;text-decoration:none;font:700 11px/1.25 var(--erm24-type-ui,'Segoe UI',sans-serif);letter-spacing:.09em;transition:background .18s,box-shadow .18s}
+.erm21 .erm50-footer a:hover{background:#d3f4fb;box-shadow:0 0 0 2px #11bbd527}
+.erm21 .erm50-brandLogo{display:block;width:min(36%,230px);height:auto;aspect-ratio:1738/512;object-fit:contain;object-position:center right;flex:0 1 auto}
+.erm21 .erm50-strapline{margin-top:clamp(10px,1.3vw,17px);padding-top:10px;border-top:1px solid #a9cfde;font:600 clamp(8px,.72vw,10px)/1.45 var(--erm24-type-ui,'Segoe UI',sans-serif);color:#53748a;letter-spacing:.13em}
+.erm21 .erm50-strapline span{color:#0bb7cd;margin:0 2px}
+@keyframes erm50-enter{from{opacity:.6;transform:perspective(1300px) rotateY(-10deg) translateX(-24px) scale(.975)}to{opacity:1;transform:perspective(1300px) rotateY(-3.8deg) translateX(8px) scale(1)}}
+@media(min-width:1101px) and (min-height:700px){.erm21 .erm20-main:has(.erm50-institutional) .erm20-panel{overflow-y:hidden}}
+@media(max-width:1350px){.erm21 .erm50-stage{grid-template-columns:minmax(285px,39%) minmax(0,61%)}.erm21 .erm50-story{padding:22px 24px 15px 43px}.erm21 .erm50-story h1{font-size:clamp(28px,2.75vw,43px)}.erm21 .erm50-valueCard{min-height:143px;padding:12px}.erm21 .erm50-valueCard p{font-size:11px}}
+@media(max-width:1100px){.erm21 .erm50-institutional{height:auto;min-height:100%;padding:9px}.erm21 .erm50-stage{height:auto;min-height:0;grid-template-columns:minmax(240px,36%) minmax(0,64%)}.erm21 .erm50-story{overflow:visible;padding:24px 19px 20px 31px}.erm21 .erm50-valuesGrid{grid-template-columns:1fr;gap:7px}.erm21 .erm50-valueCard{min-height:0;padding:12px;display:grid;grid-template-columns:25px 1fr;align-items:center;gap:2px 10px}.erm21 .erm50-valueCard h2{margin:0}.erm21 .erm50-valueCard p{grid-column:2}.erm21 .erm50-visual{min-height:670px}}
+@media(max-width:680px){.erm21 .erm50-stage{display:block;border-radius:12px}.erm21 .erm50-visual{height:320px;min-height:320px;overflow:hidden}.erm21 .erm50-photoFrame{width:100%;margin:0;transform:none;box-shadow:none;animation:none;border-radius:0}.erm21 .erm50-visual:hover .erm50-photoFrame{transform:none;box-shadow:none}.erm21 .erm50-photoCaption{bottom:10px;left:9px;font-size:8px}.erm21 .erm50-story{padding:23px 17px 21px}.erm21 .erm50-story h1{font-size:clamp(29px,8.2vw,41px);line-height:1.08}.erm21 .erm50-kicker{font-size:9px}.erm21 .erm50-quality{gap:2px}.erm21 .erm50-quality>div{flex-direction:column;text-align:center;gap:3px;padding:5px 2px}.erm21 .erm50-quality strong{font-size:10px}.erm21 .erm50-quality small{font-size:9px}.erm21 .erm50-footer{gap:12px}.erm21 .erm50-footer a{padding:9px 10px;font-size:10px}.erm21 .erm50-brandLogo{width:47%;max-width:220px}.erm21 .erm50-strapline{font-size:8px;letter-spacing:.07em}}
+@media(prefers-reduced-motion:reduce){.erm21 .erm50-photoFrame{animation:none!important;transition:none!important;transform:none!important}.erm21 .erm50-valueCard,.erm21 .erm50-footer a{transition:none!important}}

@@ -905,3 +905,55 @@ test('R48: ficha tecnica aproxima a folhagem superior da borda direita do painel
     assert.ok(css.includes(marker), `Marcador CSS R48 ausente: ${marker}`);
   }
 });
+
+// R49: tela de implantacao ampliada sem alterar o asset original nem o mapeamento de pinos.
+test('R49: remove barras redundantes apenas do masterplan e preserva navegacao principal', () => {
+  assert.match(client, /section !== 'plantas' && section !== 'lazer'/);
+  assert.match(css, /\.erm21 \.erm20-leisure>\.erm20-sectionBanner\{display:none\}/);
+  assert.match(css, /\.erm21 \.erm20-leisure \.erm31-planModeButtons\{display:none\}/);
+  assert.match(css, /\.erm21 \.erm20-leisure>\.erm32-masterMoved\{display:none\}/);
+  assert.match(client, /section === 'plantas' &&/);
+});
+test('R49: imagem oficial inteira ampliada e 16 pinos sem mudar suas coordenadas', () => {
+  assert.match(css, /\.erm21 \.erm20-leisure \.erm39-mapCanvas\{width:min\(100%,75svh,710px\)/);
+  assert.match(css, /\.erm21 \.erm20-leisure\{height:100%;min-height:0;overflow:hidden/);
+  assert.match(client, /erm41-implantacao-limpa\.webp/);
+  const start = client.indexOf('const r39Places:');
+  const end = client.indexOf('];', start);
+  const spots = [...client.slice(start, end).matchAll(/\{facilityId:\d+,mapLabel:'\d+',name:'[^']+',x:[\d.]+,y:[\d.]+\}/g)];
+  assert.equal(spots.length, 16);
+  assert.match(client, /style=\{\{left:`\$\{point.x\}%`,top:`\$\{point.y\}%`\}\}/);
+});
+test('R49: rosa deslocada ao canto esquerdo e inclinada conforme referencia do book', () => {
+  assert.match(css, /\.erm21 \.erm20-leisure \.erm41-compass\{left:8px;right:auto/);
+  assert.match(css, /\.erm21 \.erm20-leisure \.erm41-compass>svg\{transform:rotate\(14deg\)/);
+  assert.match(css, /\.erm21 \.erm20-leisure \.erm41-compass svg text\{transform:rotate\(-14deg\)/);
+  for (const c of ['N','L','S','O']) assert.ok(client.includes(`>${c}</text>`));
+});
+
+// R49 R2: institucional conforme mockup aprovado, com logo PNG ORIGINAL e foto oficial intacta.
+test('R49 R2: institucional premium usa marca Rocha original e fotografia oficial', () => {
+  const start = client.indexOf("{section === 'institucional' &&");
+  const end = client.indexOf("\n        </div>", start);
+  const fragment = client.slice(start,end);
+  assert.ok(start > 0 && end > start, 'Institucional nao encontrado');
+  for (const marker of ['erm50-institutional','erm50-stage','erm50-photoFrame','erm50-facade','erm50-brandLogo','erm50-fachada-oficial.jpg','erm50-rocha-logo-original.png']) assert.ok(fragment.includes(marker), `Falta elemento institucional ${marker}`);
+  assert.match(fragment,/href="https:\/\/meurocha\.com\.br\/rocha"/);
+  assert.ok(!fragment.includes('DESDE 2009'), 'Ano antigo nao pode aparecer');
+  assert.ok(fragment.includes('DESDE 2010'), 'Fundacao institucional conforme site oficial');
+  for(const name of ['erm50-fachada-oficial.jpg','erm50-rocha-logo-original.png']) {
+    const file = readFileSync(join(assetDir,name));
+    assert.ok(file.length > 15000, 'Asset incompleto: ' + name);
+    if(name.endsWith('.png')) assert.equal(file.subarray(0,8).toString('hex'),'89504e470d0a1a0a');
+    else { assert.equal(file[0],255);assert.equal(file[1],216);assert.equal(file[2],255); }
+  }
+  assert.match(css,/\/\* R49 R2 - INSTITUCIONAL PREMIUM APROVADO/);
+});
+
+test('R49 R2: missao visao e valores oficiais e acessibilidade', () => {
+  const fragment = client.slice(client.indexOf("{section === 'institucional' &&"), client.indexOf("\n        </div>",client.indexOf("{section === 'institucional' &&")));
+  for(const s of ['Construímos histórias.','Entregamos novos começos.','Construir com qualidade e entregar experiências além do comum.','VISÃO','MISSÃO','VALORES','ISO 9001:2015','PBQP-H','Satisfação do time','Viva além do comum.']) assert.ok(fragment.toLocaleLowerCase('pt-BR').includes(s.toLocaleLowerCase('pt-BR')), 'Texto institucional ausente: '+s);
+  assert.match(fragment,/aria-labelledby="erm50-title"/);
+  assert.match(fragment,/alt="Logomarca original da Rocha Empreendimentos"/);
+  assert.match(css,/@media\(prefers-reduced-motion:reduce\)\{\.erm21 \.erm50-photoFrame/);
+});
