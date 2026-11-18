@@ -1064,3 +1064,26 @@ test('R53: aspecto aprovado e usado apenas na fachada com conteudo HTML preserva
   assert.ok(institutional.includes('erm50-fachada-oficial.jpg'));
   assert.ok(institutional.includes('erm50-footer'));
 });
+
+// ROCHA R54: ultima arte aprovada sem legenda; icones premium permanecem SVG reais.
+test('R54: iconografia premium e botao Conheca a Rocha editaveis; legenda retirada', () => {
+  const institutional=client.slice(client.indexOf("{section === 'institucional' &&"));
+  assert.ok(!institutional.includes('erm50-photoCaption'), 'Legenda HTML da fachada deve sair da tela');
+  assert.ok(!institutional.includes('EASY ROTA DO MAR · PERSPECTIVA ILUSTRATIVA'), 'Texto da legenda nao pode reaparecer');
+  assert.equal((institutional.match(/erm54-cardIcon/g)||[]).length,3, 'Missao/visao/valores exigem 3 icones SVG premium');
+  assert.equal((institutional.match(/erm54-qualityIcon/g)||[]).length,3, 'Fundacao e selos exigem 3 icones SVG premium');
+  assert.ok(institutional.includes('erm54-ctaLabel'), 'CTA da Rocha precisa ser HTML editavel');
+  assert.ok(institutional.includes('erm54-ctaArrow'), 'CTA deve manter seta vetorial');
+  assert.ok(institutional.includes('href="https://meurocha.com.br/rocha"'), 'Link externo oficial da Rocha deve continuar funcional');
+  assert.ok(institutional.includes('erm50-rocha-logo-original.png'), 'Marca oficial Rocha intacta');
+  assert.ok(institutional.includes('erm50-fachada-oficial.jpg'), 'Foto oficial preservada para telas pequenas');
+  assert.match(css,/ROCHA R54 R1 - ACABAMENTO PREMIUM DO INSTITUCIONAL APROVADO/);
+  assert.match(css,/erm54-fachada-conceito-sem-legenda\.jpg/);
+  assert.match(css,/\.erm21 \.erm50-photoCaption \{display:none!important\}/);
+  assert.match(css,/\.erm21 \.erm50-footer a:focus-visible/);
+  assert.match(css,/@media\(max-width:680px\)/);
+  assert.match(css, /@media\(prefers-reduced-motion:reduce\)/);
+  const asset=readFileSync(join(assetDir,'erm54-fachada-conceito-sem-legenda.jpg'));
+  assert.equal(asset.subarray(0,2).toString('hex'),'ffd8');
+  assert.equal(createHash('sha256').update(asset).digest('hex'),'c4475ff94944193ca366c7391a3b79874ee359b620f32e4348902d90d0c388ff');
+});

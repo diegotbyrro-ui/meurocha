@@ -757,7 +757,7 @@ export default function EasyRotaClient() {
                 <div className="erm50-photoFrame">
                   <img className="erm50-facade" src={`${BRAND_ASSETS}erm50-fachada-oficial.jpg`} alt="Fachada ilustrativa oficial do Easy Rota do Mar, preservada do material do empreendimento" loading="lazy" decoding="async" />
                 </div>
-                <span className="erm50-photoCaption">EASY ROTA DO MAR · PERSPECTIVA ILUSTRATIVA</span>
+
               </div>
               <article className="erm50-story" aria-labelledby="erm50-title">
                 <div className="erm50-kicker">ROCHA EMPREENDIMENTOS <span>·</span> DESDE 2010</div>
@@ -766,25 +766,25 @@ export default function EasyRotaClient() {
                 <p className="erm50-slogan">Viva além do comum.</p>
                 <div className="erm50-valuesGrid" aria-label="Missão, visão e valores da Rocha">
                   <section className="erm50-valueCard">
-                    <span className="erm50-cardIcon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M16 3 28 10 16 17 4 10 16 3ZM4 16l12 7 12-7M4 22l12 7 12-7" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg></span>
+                    <span className="erm50-cardIcon erm54-cardIcon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M24 4 43 14 24 24 5 14 24 4Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/><path d="M5 23 24 33 43 23M5 32 24 42 43 32" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><path d="m24 9 10 5-10 5-10-5 10-5Z" fill="currentColor" fillOpacity=".12"/></svg></span>
                     <h2>MISSÃO</h2><p>Construir com qualidade e entregar experiências além do comum.</p>
                   </section>
                   <section className="erm50-valueCard">
-                    <span className="erm50-cardIcon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M6 28V16h5v12M14 28V10h5v18M22 28V4h5v24" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg></span>
+                    <span className="erm50-cardIcon erm54-cardIcon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M6 42V29h9v13M20 42V23h9v19M34 42V17h8v25" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/><path d="M6 21 17 13l10 3L41 4M33 4h8v8" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/><path d="M6 42h36" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg></span>
                     <h2>VISÃO</h2><p>Ser referência em Alagoas na construção de lares, com tecnologia e sustentabilidade.</p>
                   </section>
                   <section className="erm50-valueCard">
-                    <span className="erm50-cardIcon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="m16 3 11 4v8c0 7-4.7 11.7-11 14-6.3-2.3-11-7-11-14V7l11-4Z" stroke="currentColor" strokeWidth="1.8"/><path d="m10 16 4 4 8-8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
+                    <span className="erm50-cardIcon erm54-cardIcon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="m24 4 17 6v12c0 11-6.6 18.1-17 22C13.6 40.1 7 33 7 22V10L24 4Z" stroke="currentColor" strokeWidth="2.1" strokeLinejoin="round"/><path d="m15 23 6.5 6.5L34 17" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"/><path d="m24 9 12 4v9c0 8-4.3 13.1-12 16" stroke="currentColor" strokeWidth="1" strokeOpacity=".42"/></svg></span>
                     <h2>VALORES</h2><p>Segurança, qualidade, transparência, foco no cliente, satisfação do time e inovação.</p>
                   </section>
                 </div>
                 <div className="erm50-quality" aria-label="Fundação e certificações da construtora">
-                  <div><span className="erm50-qualityIcon" aria-hidden="true">▣</span><span><strong>2010</strong><small>Fundação</small></span></div>
-                  <div><span className="erm50-qualityIcon" aria-hidden="true">✧</span><span><strong>ISO 9001:2015</strong><small>Certificação</small></span></div>
-                  <div><span className="erm50-qualityIcon" aria-hidden="true">◈</span><span><strong>PBQP-H</strong><small>Nível A (SiAC)</small></span></div>
+                  <div><span className="erm50-qualityIcon erm54-qualityIcon" aria-hidden="true"><svg viewBox="0 0 36 36" fill="none"><rect x="5" y="8" width="26" height="23" rx="3.2" stroke="currentColor" strokeWidth="2"/><path d="M5 15h26M12 4v8M24 4v8" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"/><path d="M12 21h2M21 21h2M12 26h2M21 26h2" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/></svg></span><span><strong>2010</strong><small>Fundação</small></span></div>
+                  <div><span className="erm50-qualityIcon erm54-qualityIcon" aria-hidden="true"><svg viewBox="0 0 36 36" fill="none"><circle cx="18" cy="14.5" r="9.5" stroke="currentColor" strokeWidth="2"/><path d="m18 7 2.3 4.7 5.2.8-3.75 3.7.9 5.1L18 18.9l-4.65 2.4.9-5.1-3.75-3.7 5.2-.8L18 7Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/><path d="m11 23-3 10 7-4 3 3 3-8M25 23l3 10-7-4-2.5 2.5" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/></svg></span><span><strong>ISO 9001:2015</strong><small>Certificação</small></span></div>
+                  <div><span className="erm50-qualityIcon erm54-qualityIcon" aria-hidden="true"><svg viewBox="0 0 36 36" fill="none"><path d="M6 31V12l10-5v24M16 31V4l13 5v22M3 31h30" stroke="currentColor" strokeWidth="1.9" strokeLinejoin="round"/><path d="M11 14h2M11 19h2M11 24h2M21 12h3M21 17h3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><circle cx="28" cy="26" r="6" fill="#eafbff" stroke="currentColor" strokeWidth="1.6"/><path d="m25.5 26 1.8 1.8 3.2-3.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg></span><span><strong>PBQP-H</strong><small>Nível A (SiAC)</small></span></div>
                 </div>
                 <footer className="erm50-footer">
-                  <a href="https://meurocha.com.br/rocha" target="_blank" rel="noopener noreferrer">CONHEÇA A ROCHA <span aria-hidden="true">↗</span></a>
+                  <a href="https://meurocha.com.br/rocha" target="_blank" rel="noopener noreferrer"><span className="erm54-ctaLabel">CONHEÇA A ROCHA</span><span className="erm54-ctaArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round"/></svg></span></a>
                   <img className="erm50-brandLogo" src={`${BRAND_ASSETS}erm50-rocha-logo-original.png`} alt="Logomarca original da Rocha Empreendimentos" loading="lazy" decoding="async" />
                 </footer>
                 <div className="erm50-strapline">INCORPORAÇÃO <span>·</span> CONSTRUÇÃO <span>·</span> QUALIDADE <span>·</span> SUSTENTABILIDADE</div>

@@ -2236,3 +2236,84 @@
   .erm21 .erm50-photoFrame,
   .erm21 .erm50-visual:hover .erm50-photoFrame {animation:none!important;transition:none!important;transform:none!important}
 }
+
+/* ROCHA R54 R1 - ACABAMENTO PREMIUM DO INSTITUCIONAL APROVADO.
+   Icones SVG reais, CTA com presenca visual e recorte EXATO da ultima arte
+   aprovada sem legenda embutida. Masterplan, menu e outros modulos intactos. */
+.erm21 .erm50-photoFrame,
+.erm21 .erm50-visual:hover .erm50-photoFrame {
+  background-image:url('/experiencia/easy-rota-do-mar/erm54-fachada-conceito-sem-legenda.jpg')!important;
+  background-size:cover;
+  background-position:center center;
+}
+.erm21 .erm50-photoCaption {display:none!important}
+.erm21 .erm50-valueCard {
+  border-color:#22c9e7c9;
+  box-shadow:0 9px 19px #003b552d,0 0 9px #08d4f02b,inset 0 1px 0 #e5ffff24;
+}
+.erm21 .erm50-cardIcon.erm54-cardIcon {
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  width:clamp(33px,2.85vw,43px);
+  height:clamp(33px,2.85vw,43px);
+  color:#08e9f8;
+  filter:drop-shadow(0 0 5px #00daf299) drop-shadow(0 0 1px #c2ffffb8);
+}
+.erm21 .erm54-cardIcon svg {display:block;width:100%;height:100%;overflow:visible}
+.erm21 .erm50-qualityIcon.erm54-qualityIcon {
+  display:grid;
+  place-items:center;
+  flex:0 0 clamp(25px,2.15vw,34px);
+  width:clamp(25px,2.15vw,34px);
+  height:clamp(25px,2.15vw,34px);
+  font-size:inherit;
+  line-height:1;
+  color:#0686a7;
+  filter:drop-shadow(0 2px 2px #0b566b18);
+}
+.erm21 .erm54-qualityIcon svg {display:block;width:100%;height:100%}
+.erm21 .erm50-quality>div {gap:clamp(6px,.7vw,12px)}
+.erm21 .erm50-footer a {
+  min-width:clamp(190px,18vw,275px);
+  min-height:clamp(43px,3.4vw,53px);
+  box-sizing:border-box;
+  justify-content:center;
+  padding:11px clamp(15px,1.5vw,24px);
+  gap:clamp(9px,1.3vw,20px);
+  border:1.5px solid #092a47;
+  border-radius:10px;
+  color:#071f3c;
+  background:linear-gradient(125deg,#fafdff 0%,#edf7ff 100%);
+  box-shadow:0 2px 0 #00395f21,0 5px 13px #002a4330,inset 0 1px 0 #fff;
+  font-size:clamp(11px,1.03vw,16px);
+  font-weight:800;
+  letter-spacing:.035em;
+  white-space:nowrap;
+  transition:background .2s ease,box-shadow .2s ease,transform .2s ease;
+}
+.erm21 .erm50-footer a:hover,
+.erm21 .erm50-footer a:focus-visible {
+  background:linear-gradient(125deg,#f7ffff 0%,#d9f6ff 100%);
+  box-shadow:0 2px 0 #00395f21,0 8px 17px #002a4330,0 0 0 2px #00daf133;
+  transform:translateY(-1px);
+}
+.erm21 .erm54-ctaArrow {display:grid;place-items:center;flex:0 0 19px;width:19px;height:19px}
+.erm21 .erm54-ctaArrow svg {width:19px;height:19px;display:block}
+@media(min-width:681px) and (max-width:1330px) {
+  .erm21 .erm50-footer a {min-width:0;min-height:42px;font-size:clamp(10px,1vw,13px);padding:9px 13px;gap:9px}
+  .erm21 .erm50-cardIcon.erm54-cardIcon {width:33px;height:33px}
+}
+/* Em mobile, preservar a fachada oficial adaptativa ja existente na R53. */
+@media(max-width:680px) {
+  .erm21 .erm50-photoFrame,
+  .erm21 .erm50-visual:hover .erm50-photoFrame {background-image:none!important}
+  .erm21 .erm50-photoCaption {display:none!important}
+  .erm21 .erm50-footer a {min-width:0;min-height:43px;font-size:11px;padding:10px 12px;gap:6px;white-space:normal}
+  .erm21 .erm50-cardIcon.erm54-cardIcon {width:30px;height:30px}
+  .erm21 .erm50-qualityIcon.erm54-qualityIcon {width:27px;height:27px;flex-basis:27px}
+}
+@media(prefers-reduced-motion:reduce) {
+  .erm21 .erm50-footer a {transition:none!important}
+  .erm21 .erm50-footer a:hover {transform:none!important}
+}
