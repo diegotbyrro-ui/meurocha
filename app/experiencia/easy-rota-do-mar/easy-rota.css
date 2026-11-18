@@ -1503,3 +1503,161 @@
 @media(max-width:1100px){.erm21 .erm50-institutional{height:auto;min-height:100%;padding:9px}.erm21 .erm50-stage{height:auto;min-height:0;grid-template-columns:minmax(240px,36%) minmax(0,64%)}.erm21 .erm50-story{overflow:visible;padding:24px 19px 20px 31px}.erm21 .erm50-valuesGrid{grid-template-columns:1fr;gap:7px}.erm21 .erm50-valueCard{min-height:0;padding:12px;display:grid;grid-template-columns:25px 1fr;align-items:center;gap:2px 10px}.erm21 .erm50-valueCard h2{margin:0}.erm21 .erm50-valueCard p{grid-column:2}.erm21 .erm50-visual{min-height:670px}}
 @media(max-width:680px){.erm21 .erm50-stage{display:block;border-radius:12px}.erm21 .erm50-visual{height:320px;min-height:320px;overflow:hidden}.erm21 .erm50-photoFrame{width:100%;margin:0;transform:none;box-shadow:none;animation:none;border-radius:0}.erm21 .erm50-visual:hover .erm50-photoFrame{transform:none;box-shadow:none}.erm21 .erm50-photoCaption{bottom:10px;left:9px;font-size:8px}.erm21 .erm50-story{padding:23px 17px 21px}.erm21 .erm50-story h1{font-size:clamp(29px,8.2vw,41px);line-height:1.08}.erm21 .erm50-kicker{font-size:9px}.erm21 .erm50-quality{gap:2px}.erm21 .erm50-quality>div{flex-direction:column;text-align:center;gap:3px;padding:5px 2px}.erm21 .erm50-quality strong{font-size:10px}.erm21 .erm50-quality small{font-size:9px}.erm21 .erm50-footer{gap:12px}.erm21 .erm50-footer a{padding:9px 10px;font-size:10px}.erm21 .erm50-brandLogo{width:47%;max-width:220px}.erm21 .erm50-strapline{font-size:8px;letter-spacing:.07em}}
 @media(prefers-reduced-motion:reduce){.erm21 .erm50-photoFrame{animation:none!important;transition:none!important;transform:none!important}.erm21 .erm50-valueCard,.erm21 .erm50-footer a{transition:none!important}}
+
+/* ROCHA R50 R1 — MASTERPLAN: profundidade visual sem alterar implantacao, 16 pinos ou coordenadas.
+   O original do book continua como UNICA imagem-base: efeito 2.5D aplicado ao conjunto de mapa + pinos.
+   Nao e um modelo arquitetonico 3D: nenhuma torre, vaga ou area foi inventada. */
+.erm21 .erm20-leisure .erm39-mapFrame{
+  background:
+    radial-gradient(ellipse at 50% 55%,rgba(19,136,172,.25),transparent 64%),
+    linear-gradient(160deg,#002c4a 0%,#00192e 100%);
+}
+.erm21 .erm20-leisure .erm39-mapCanvas{
+  --erm50-map-tilt:9deg;
+  --erm50-map-roll:-.8deg;
+  transform-origin:50% 52%;
+  transform-style:preserve-3d;
+  filter:drop-shadow(19px 20px 20px rgba(0,9,24,.55));
+}
+.erm21 .erm20-leisure .erm39-mapCanvas>img{
+  filter:saturate(1.06) contrast(1.045);
+}
+.erm21 .erm20-leisure .erm39-mapFrame::before{
+  content:"";
+  position:absolute;
+  inset:12% 7%;
+  pointer-events:none;
+  background:radial-gradient(ellipse at center,rgba(4,159,185,.18),transparent 64%);
+  opacity:.75;
+}
+.erm21 .erm20-leisure .erm39-mapPin{
+  box-shadow:0 0 0 2px #002943b9,0 0 16px #09cffbb9,0 4px 12px #001726c9;
+}
+.erm21 .erm20-leisure .erm39-photoPanel{
+  border-color:#32b6cf9a;
+  box-shadow:0 8px 28px #001e3850,inset 0 1px 0 #9de9fa16;
+}
+@media(max-width:900px){
+  .erm21 .erm20-leisure .erm39-mapCanvas{--erm50-map-tilt:0deg;--erm50-map-roll:0deg;filter:drop-shadow(0 9px 12px rgba(0,9,24,.28))}
+}
+
+/* ROCHA R50 R1 — INSTITUCIONAL: maior presenca da fachada ORIGINAL, sem geracao de edificios.
+   Camada entra no painel de texto, acabamento de vitrine, cards e selos premium.
+   Logo original erm50-rocha-logo-original.png permanece intacta. */
+.erm21 .erm50-stage{
+  border-color:#2abde4;
+  box-shadow:0 20px 54px #0015288c,inset 0 1px 0 #d1fdff5e;
+}
+.erm21 .erm50-visual{
+  z-index:2;
+  overflow:visible;
+  filter:drop-shadow(10px 0 17px rgba(0,16,33,.28));
+}
+.erm21 .erm50-visual::after{
+  content:"";
+  position:absolute;
+  z-index:1;
+  top:8%;bottom:8%;right:-37px;width:70px;
+  pointer-events:none;
+  background:radial-gradient(ellipse at center,rgba(0,223,242,.30),transparent 70%);
+  filter:blur(11px);
+}
+.erm21 .erm50-photoFrame{
+  width:calc(100% + 55px);
+  margin-right:-55px;
+  border:1px solid #80e9f7ac;
+  border-radius:17px;
+  transform-origin:9% 50%;
+  transform:perspective(1550px) rotateY(-6.5deg) translateX(16px) scale(1.015);
+  box-shadow:24px 14px 35px rgba(0,22,42,.48),2px 0 0 #34e8fc88;
+  animation:erm50-vitrine-enter 1100ms cubic-bezier(.18,.82,.24,1) both;
+}
+.erm21 .erm50-visual:hover .erm50-photoFrame{
+  transform:perspective(1550px) rotateY(-3deg) translateX(20px) scale(1.018);
+  box-shadow:26px 16px 43px rgba(0,22,42,.49),2px 0 0 #57f4ffae;
+}
+.erm21 .erm50-photoFrame::after{
+  border:1px solid #85f4ffc5;
+  box-shadow:inset -16px 0 22px #052b3f50,inset 0 1px 0 #f6ffff64;
+}
+.erm21 .erm50-story{
+  position:relative;
+  isolation:isolate;
+  z-index:1;
+  justify-content:flex-start;
+  padding:clamp(25px,4.8vh,57px) clamp(23px,3.0vw,52px) 20px clamp(82px,6.3vw,118px);
+  background:
+    radial-gradient(ellipse at 98% 100%,#b1ecf59a,transparent 36%),
+    radial-gradient(ellipse at 100% 0%,#e5faff 0%,transparent 36%),
+    linear-gradient(135deg,#f6fcff 0%,#e6f5fa 100%);
+}
+.erm21 .erm50-story::after{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  pointer-events:none;
+  right:-125px;bottom:-120px;
+  width:470px;height:230px;
+  border:1px solid #3bbdd774;
+  border-radius:52% 48% 0 0;
+  transform:rotate(-10deg);
+  box-shadow:0 -20px 0 -19px #37c6de88,0 -52px 0 -51px #37c6de5b;
+}
+.erm21 .erm50-kicker{font-size:clamp(10px,.86vw,13px);letter-spacing:.17em;color:#143955}
+.erm21 .erm50-story h1{font-size:clamp(30px,3.04vw,53px);line-height:1.055;letter-spacing:-.025em;margin:clamp(15px,1.6vw,23px) 0 clamp(10px,1vw,15px)}
+.erm21 .erm50-intro{font-size:clamp(13px,1.2vw,18px)}
+.erm21 .erm50-slogan{font-size:clamp(25px,2.45vw,38px);margin:clamp(11px,1.25vw,18px) 0 clamp(15px,1.75vw,24px);color:#078db0}
+.erm21 .erm50-valuesGrid{gap:11px;margin-bottom:clamp(13px,1.4vw,21px)}
+.erm21 .erm50-valueCard{
+  min-height:160px;
+  background:linear-gradient(145deg,#00334e,#001d38 94%);
+  border:1px solid #46d3e0b8;
+  box-shadow:0 9px 22px rgba(0,32,56,.24),0 0 0 1px #03d0e61a,inset 0 1px 0 #bef9ff30;
+  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
+}
+.erm21 .erm50-valueCard:hover{
+  transform:translateY(-3px);
+  border-color:#6af4ff;
+  box-shadow:0 13px 24px rgba(0,35,55,.29),0 0 17px #08d7ef40;
+}
+.erm21 .erm50-cardIcon{width:30px;height:30px;color:#11e1ed;filter:drop-shadow(0 0 6px #00dbed46)}
+.erm21 .erm50-valueCard h2{font-size:clamp(12px,1.06vw,15px)}
+.erm21 .erm50-valueCard p{font-size:clamp(11px,.92vw,13px);line-height:1.38}
+.erm21 .erm50-quality{min-height:66px;background:linear-gradient(90deg,#ffffffa8,#e2f7ff83);border-color:#9bcde1;box-shadow:inset 0 1px 0 #fff8}
+.erm21 .erm50-quality>div{gap:11px}
+.erm21 .erm50-qualityIcon{font-size:24px}
+.erm21 .erm50-brandLogo{width:min(37%,255px);max-width:255px}
+.erm21 .erm50-footer{margin-top:clamp(16px,1.8vw,26px)}
+.erm21 .erm50-strapline{margin-top:clamp(13px,1.5vw,19px)}
+@keyframes erm50-vitrine-enter{
+  from{opacity:.6;transform:perspective(1550px) rotateY(-12deg) translateX(-28px) scale(.98)}
+  to{opacity:1;transform:perspective(1550px) rotateY(-6.5deg) translateX(16px) scale(1.015)}
+}
+@media(max-width:1400px){
+  .erm21 .erm50-photoFrame{width:calc(100% + 34px);margin-right:-34px;transform:perspective(1550px) rotateY(-5deg) translateX(11px) scale(1.01)}
+  .erm21 .erm50-visual:hover .erm50-photoFrame{transform:perspective(1550px) rotateY(-2deg) translateX(14px) scale(1.012)}
+  .erm21 .erm50-story{padding-left:clamp(58px,5vw,78px)}
+  .erm21 .erm50-story h1{font-size:clamp(27px,2.8vw,45px)}
+  .erm21 .erm50-valueCard{min-height:147px}
+}
+@media(max-width:1100px){
+  .erm21 .erm50-visual{filter:none}
+  .erm21 .erm50-visual::after{display:none}
+  .erm21 .erm50-photoFrame{width:100%;margin:0;transform:none;animation:none}
+  .erm21 .erm50-visual:hover .erm50-photoFrame{transform:none;box-shadow:0 7px 17px #00152755}
+  .erm21 .erm50-story{padding:24px 19px 20px 31px;overflow:visible}
+  .erm21 .erm50-valueCard{min-height:0}
+}
+@media(max-width:680px){
+  .erm21 .erm50-photoFrame{border:0;border-radius:0;box-shadow:none}
+  .erm21 .erm50-story{padding:23px 17px 21px}
+  .erm21 .erm50-story h1{font-size:clamp(29px,8.2vw,41px)}
+  .erm21 .erm50-valueCard:hover{transform:none}
+  .erm21 .erm50-brandLogo{width:47%}
+}
+@media(prefers-reduced-motion:reduce){
+  .erm21 .erm50-photoFrame{animation:none!important;transition:none!important;transform:none!important}
+  .erm21 .erm50-visual:hover .erm50-photoFrame{transform:none!important}
+  .erm21 .erm50-valueCard{transition:none!important}
+  .erm21 .erm50-valueCard:hover{transform:none!important}
+}

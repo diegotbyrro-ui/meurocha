@@ -542,7 +542,7 @@ export default function EasyRotaClient() {
                 onPointerMove={moveMaster}
                 onPointerUp={event => {masterPointer.current=null;if(event.currentTarget.hasPointerCapture(event.pointerId))event.currentTarget.releasePointerCapture(event.pointerId);}}
                 onPointerCancel={()=>{masterPointer.current=null;}}>
-                <div className="erm39-mapCanvas" style={{transform:`translate(${masterOffset.x}px,${masterOffset.y}px) scale(${masterZoom})`}}>
+                <div className="erm39-mapCanvas" style={{transform:`translate(${masterOffset.x}px,${masterOffset.y}px) scale(${masterZoom}) perspective(1400px) rotateX(var(--erm50-map-tilt, 9deg)) rotateZ(var(--erm50-map-roll, -0.8deg))`}}>
                   <img src={`${BRAND_ASSETS}erm41-implantacao-limpa.webp`} alt="Implantacao atualizada sem numeracao impressa, com pontos interativos sobrepostos" draggable={false} loading="lazy" decoding="async" />
                   {r39Places.map((point) => <button key={point.facilityId} type="button" className={`erm39-mapPin ${facility===point.facilityId?'active':''}`}
                     style={{left:`${point.x}%`,top:`${point.y}%`}} title={`Visualizar ${point.name}`} aria-label={`Selecionar ${point.name} na implantacao`}

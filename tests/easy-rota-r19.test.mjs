@@ -957,3 +957,31 @@ test('R49 R2: missao visao e valores oficiais e acessibilidade', () => {
   assert.match(fragment,/alt="Logomarca original da Rocha Empreendimentos"/);
   assert.match(css,/@media\(prefers-reduced-motion:reduce\)\{\.erm21 \.erm50-photoFrame/);
 });
+
+// ROCHA R50 R1: perspectiva calculada sobre o canvas inteiro, sem desacoplar os 16 pinos.
+test('R50: masterplan aplica profundidade sem substituir o original nem deslocar os pinos', () => {
+  const first = client.indexOf("{section === 'lazer' &&");
+  const last = client.indexOf("{section === 'plantas' &&", first);
+  const master = client.slice(first,last);
+  assert.ok(first >= 0 && last > first,'Masterplan nao localizado');
+  assert.ok(master.includes('erm41-implantacao-limpa.webp'), 'Implantacao original nao foi preservada');
+  assert.ok(master.includes('r39Places.map'), 'Pinos interativos foram removidos');
+  assert.ok(master.includes('perspective(1400px) rotateX(var(--erm50-map-tilt, 9deg)) rotateZ(var(--erm50-map-roll, -0.8deg))'), 'Transform de profundidade nao encontrado');
+  assert.ok(master.includes('left:`${point.x}%`,top:`${point.y}%`'), 'Coordenadas de pinos modificadas');
+  assert.ok(css.includes('ROCHA R50 R1 — MASTERPLAN'), 'CSS R50 ausente');
+  assert.ok(css.includes('--erm50-map-tilt:9deg'), 'Profundidade desktop ausente');
+  assert.ok(css.includes('--erm50-map-tilt:0deg'), 'Retorno plano no mobile ausente');
+});
+
+// ROCHA R50 R1: refinamento institucional sobre as duas artes ORIGINAIS sem regeneracao.
+test('R50: institucional reforca fachada oficial em perspectiva e preserva marca original', () => {
+  const first = client.indexOf("{section === 'institucional' &&");
+  const fragment = client.slice(first);
+  assert.ok(first >= 0,'Institucional nao localizado');
+  assert.ok(fragment.includes('erm50-fachada-oficial.jpg'),'Fachada original ausente');
+  assert.ok(fragment.includes('erm50-rocha-logo-original.png'),'Logo original ausente');
+  assert.ok(css.includes('ROCHA R50 R1 — INSTITUCIONAL'),'Refinamento institucional R50 ausente');
+  assert.ok(css.includes('width:calc(100% + 55px)'), 'Fachada nao avanca no layout');
+  assert.ok(css.includes('rotateY(-6.5deg)'), 'Perspectiva institucional nao encontrada');
+  assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'), 'Respeito a reducao de movimento ausente');
+});
