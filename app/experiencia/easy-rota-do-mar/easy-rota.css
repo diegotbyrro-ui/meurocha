@@ -2151,3 +2151,88 @@
   .erm21 .erm50-photoFrame {animation:none!important;transition:none!important;transform:none!important}
   .erm21 .erm50-facade {transform:none!important;transition:none!important}
 }
+
+/* ROCHA R53 R1 - INSTITUCIONAL FIEL A ARTE ESTATICA APROVADA.
+   Apenas a area fotografica foi extraida da arte aprovada. Todo o conteudo,
+   os botoes, a marca Rocha e a navegacao continuam HTML/React verdadeiros.
+   Nao modifica a fachada oficial, os 16 pinos, o masterplan ou a rosa. */
+.erm21 .erm50-stage {
+  background:radial-gradient(ellipse at 100% 100%,#c1ecf9 0%,transparent 40%),linear-gradient(115deg,#dff3fb 0%,#f3fbff 73%,#e0f5fd 100%);
+}
+.erm21 .erm50-visual {
+  isolation:isolate;
+  filter:none;
+  background-color:#042e4e;
+  -webkit-mask-image:linear-gradient(to right,#000 0%,#000 86%,rgba(0,0,0,.96) 90%,rgba(0,0,0,.55) 97%,transparent 100%);
+  mask-image:linear-gradient(to right,#000 0%,#000 86%,rgba(0,0,0,.96) 90%,rgba(0,0,0,.55) 97%,transparent 100%);
+}
+.erm21 .erm50-photoFrame,
+.erm21 .erm50-visual:hover .erm50-photoFrame {
+  box-sizing:border-box;
+  position:relative;
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:100%;
+  min-height:0;
+  margin:0;
+  border:0;
+  border-radius:15px 0 0 15px;
+  overflow:hidden;
+  background-image:url('/experiencia/easy-rota-do-mar/erm53-fachada-conceito-aprovado.jpg');
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
+  transform:none!important;
+  box-shadow:none;
+  filter:none;
+  animation:none!important;
+  transition:none;
+}
+/* A imagem oficial permanece no DOM e no repositorio como fallback historico;
+   na composicao R53, a arte aprovada compoe apenas o painel da fachada. */
+.erm21 .erm50-photoFrame > .erm50-facade {
+  opacity:0!important;
+  visibility:hidden;
+  pointer-events:none;
+}
+.erm21 .erm50-photoFrame::after {display:none}
+/* A legenda ja esta integrada ao recorte aprovado: nao sobrepor outra. */
+.erm21 .erm50-photoCaption {display:none!important}
+.erm21 .erm50-story {
+  position:relative;
+  z-index:2;
+  min-width:0;
+  overflow-x:hidden;
+  background:radial-gradient(ellipse at 100% 100%,#b5e9f76b 0%,transparent 44%),linear-gradient(115deg,#f3fbff 0%,#e8f7fd 100%);
+}
+.erm21 .erm50-valueCard {
+  background:linear-gradient(148deg,#004462 0%,#002541 86%);
+  border-color:#37c9e5a8;
+  box-shadow:0 9px 18px #00375030,0 0 8px #00cbe522,inset 0 1px 0 #c1ffff20;
+}
+.erm21 .erm50-quality {
+  background:linear-gradient(105deg,#ffffffbf 0%,#eaf9fed4 100%);
+}
+/* A arte aprovada e desktop; em telas pequenas mostramos a fotografia oficial,
+   a legenda HTML e o conteudo completo, em vez de recortar o edificio. */
+@media(max-width:680px) {
+  .erm21 .erm50-visual {
+    -webkit-mask-image:none;
+    mask-image:none;
+  }
+  .erm21 .erm50-photoFrame,
+  .erm21 .erm50-visual:hover .erm50-photoFrame {
+    background-image:none!important;
+    border-radius:0;
+  }
+  .erm21 .erm50-photoFrame > .erm50-facade {
+    opacity:1!important;
+    visibility:visible;
+  }
+  .erm21 .erm50-photoCaption {display:block!important}
+}
+@media(prefers-reduced-motion:reduce) {
+  .erm21 .erm50-photoFrame,
+  .erm21 .erm50-visual:hover .erm50-photoFrame {animation:none!important;transition:none!important;transform:none!important}
+}

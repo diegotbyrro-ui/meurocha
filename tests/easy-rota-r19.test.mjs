@@ -1043,3 +1043,24 @@ test('R52: institucional premium preserva marca e fachada e evita texto encobert
   assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
   assert.match(css,/\.erm21 \.erm20-leisure \.erm39-photoOpen img\s*\{[\s\S]*?max-height:none/);
 });
+
+// ROCHA R53 R1: a imagem aprovada entra somente na area visual, nunca como screenshot da pagina inteira.
+test('R53: aspecto aprovado e usado apenas na fachada com conteudo HTML preservado', () => {
+  const name = 'erm53-fachada-conceito-aprovado.jpg';
+  const asset = readFileSync(join(assetDir,name));
+  assert.equal(createHash('sha256').update(asset).digest('hex'),'4fa61e5fe57c470f17a265422efee900129c8023918f60ce238dba82974357ba');
+  assert.equal(asset.subarray(0,2).toString('hex'),'ffd8','Arquivo da perspectiva deve ser JPEG');
+  assert.ok(css.includes('ROCHA R53 R1 - INSTITUCIONAL FIEL A ARTE ESTATICA APROVADA'));
+  const r53 = css.slice(css.indexOf('/* ROCHA R53 R1'));
+  assert.ok(r53.includes("background-image:url('/experiencia/easy-rota-do-mar/"+name+"')"));
+  assert.match(r53,/\.erm21 \.erm50-photoFrame > \.erm50-facade \{[\s\S]*?opacity:0!important/);
+  assert.match(r53,/@media\(max-width:680px\)/);
+  assert.match(r53,/@media\(prefers-reduced-motion:reduce\)/);
+  const institutional = client.slice(client.indexOf("{section === 'institucional' &&"));
+  for(const text of ['Construímos histórias.','Entregamos novos começos.','MISSÃO','VISÃO','VALORES','2010','ISO 9001:2015','PBQP-H','CONHEÇA A ROCHA']) {
+    assert.ok(institutional.includes(text),'Conteudo editavel/informativo ausente: '+text);
+  }
+  assert.ok(institutional.includes('erm50-rocha-logo-original.png'));
+  assert.ok(institutional.includes('erm50-fachada-oficial.jpg'));
+  assert.ok(institutional.includes('erm50-footer'));
+});
