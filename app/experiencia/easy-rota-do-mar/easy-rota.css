@@ -1661,3 +1661,235 @@
   .erm21 .erm50-valueCard{transition:none!important}
   .erm21 .erm50-valueCard:hover{transform:none!important}
 }
+
+/* R51 R1 — ACABAMENTO FINAL FIEL AOS MOCKUPS APROVADOS.
+   Correcoes reais: impedir a fotografia de invadir o texto, remover rolagem horizontal,
+   recuperar proporcoes da composicao, aumentar a foto do ambiente no Masterplan.
+   Preservados: imagem original da implantacao, 16 pinos, coordenadas, rosa dos ventos,
+   fachada oficial e logo PNG original da Rocha. */
+
+/* 1. Institucional: conteudo sempre legivel; foto com profundidade CONTROLADA. */
+.erm21 .erm20-main:has(.erm50-institutional),
+.erm21 .erm20-panel:has(.erm50-institutional),
+.erm21 .erm50-institutional {
+  min-width:0;
+  max-width:100%;
+  overflow-x:clip;
+}
+.erm21 .erm50-institutional {
+  padding:9px;
+  background:linear-gradient(160deg,#002741 0%,#001a30 100%);
+}
+.erm21 .erm50-stage {
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(0,43%) minmax(0,57%);
+  width:100%;
+  max-width:1760px;
+  min-width:0;
+  min-height:0;
+  height:100%;
+  overflow:hidden;
+  border:1px solid #25bce3;
+  border-radius:18px;
+  background:#e7f6fb;
+  box-shadow:0 15px 40px #000e234c,inset 0 1px 0 #a3f6ff5e;
+}
+.erm21 .erm50-visual {
+  z-index:0;
+  min-width:0;
+  min-height:0;
+  overflow:hidden;
+  filter:none;
+  isolation:isolate;
+  background:linear-gradient(135deg,#00314f,#001c36);
+}
+.erm21 .erm50-visual::before {
+  z-index:0;
+  background:linear-gradient(145deg,#19b3d522,transparent 54%);
+}
+.erm21 .erm50-visual::after {
+  content:"";
+  position:absolute;
+  z-index:3;
+  top:0;
+  right:0;
+  bottom:0;
+  left:auto;
+  width:18px;
+  border:0;
+  background:linear-gradient(90deg,transparent,#8ce6f943);
+  filter:none;
+  pointer-events:none;
+}
+.erm21 .erm50-photoFrame {
+  position:relative;
+  z-index:1;
+  width:100%;
+  max-width:100%;
+  height:100%;
+  margin:0;
+  overflow:hidden;
+  border:0;
+  border-radius:16px 0 0 16px;
+  transform:none;
+  transform-origin:50% 50%;
+  box-shadow:inset -8px 0 26px #00182f4a;
+  animation:erm51-facade-arrive .9s ease-out both;
+  transition:filter .35s ease;
+}
+.erm21 .erm50-visual:hover .erm50-photoFrame {
+  transform:none;
+  box-shadow:inset -8px 0 26px #00182f4a;
+  filter:brightness(1.055);
+}
+.erm21 .erm50-photoFrame::after {
+  border:1px solid #94efff4f;
+  border-radius:16px 0 0 16px;
+  box-shadow:inset -13px 0 23px #00314d39,inset 0 0 1px #fff9;
+}
+.erm21 .erm50-facade {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:50% 45%;
+  transform:scale(1.012);
+  transition:transform .6s ease;
+}
+.erm21 .erm50-visual:hover .erm50-facade {transform:scale(1.024)}
+.erm21 .erm50-story {
+  position:relative;
+  z-index:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  box-sizing:border-box;
+  min-width:0;
+  max-width:100%;
+  min-height:0;
+  padding:clamp(20px,3.5vh,37px) clamp(19px,2.15vw,40px) clamp(18px,2.9vh,30px) clamp(32px,3vw,54px);
+  overflow-x:hidden;
+  overflow-y:auto;
+  background:radial-gradient(ellipse at 98% 100%,#d2f4fbd5,transparent 32%),linear-gradient(120deg,#f6fcff 0%,#e4f5fc 100%);
+}
+.erm21 .erm50-story::after {
+  right:0;
+  bottom:0;
+  width:260px;
+  height:145px;
+  transform:none;
+  box-shadow:none;
+  border-radius:95% 0 0 0;
+  opacity:.32;
+  z-index:-1;
+}
+.erm21 .erm50-kicker {font-size:clamp(10px,.78vw,12px);letter-spacing:.16em}
+.erm21 .erm50-story h1 {
+  max-width:100%;
+  margin:clamp(12px,1.45vw,23px) 0 clamp(8px,.8vw,13px);
+  font-size:clamp(30px,2.85vw,49px);
+  line-height:1.08;
+  letter-spacing:-.025em;
+  overflow-wrap:normal;
+}
+.erm21 .erm50-intro {font-size:clamp(12px,1.04vw,17px);line-height:1.5}
+.erm21 .erm50-slogan {
+  margin:clamp(9px,1vw,15px) 0 clamp(17px,1.75vw,26px);
+  font-size:clamp(23px,2.1vw,36px);
+  line-height:1.08;
+}
+.erm21 .erm50-valuesGrid {
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(8px,.72vw,13px);
+  margin-bottom:clamp(11px,1.25vw,18px);
+  min-width:0;
+}
+.erm21 .erm50-valueCard {
+  box-sizing:border-box;
+  min-width:0;
+  min-height:clamp(128px,15vh,161px);
+  gap:8px;
+  padding:clamp(11px,1.08vw,17px);
+  background:linear-gradient(150deg,#003b58,#001c35 95%);
+  border:1px solid #43cce4a6;
+  border-radius:12px;
+  box-shadow:0 8px 20px #001c3540,inset 0 1px 0 #c8faff25;
+}
+.erm21 .erm50-valueCard h2 {font-size:clamp(11px,.93vw,14px)}
+.erm21 .erm50-valueCard p {font-size:clamp(10px,.81vw,13px);line-height:1.4}
+.erm21 .erm50-valueCard:hover {transform:translateY(-2px);box-shadow:0 9px 23px #001b3655,0 0 14px #22c8e02d}
+.erm21 .erm50-quality {min-height:clamp(52px,7.2vh,68px);padding:6px 4px;background:linear-gradient(90deg,#f9fdffd4,#e4f8ff94)}
+.erm21 .erm50-quality>div {gap:7px;padding:5px 6px}
+.erm21 .erm50-quality strong {font-size:clamp(10px,.93vw,14px)}
+.erm21 .erm50-footer {margin-top:clamp(13px,1.4vw,21px);gap:14px}
+.erm21 .erm50-brandLogo {width:min(36%,250px);max-width:250px;height:auto;flex-shrink:1}
+.erm21 .erm50-strapline {margin-top:clamp(10px,1.05vw,16px);max-width:100%}
+@keyframes erm51-facade-arrive {
+  from {opacity:.64;transform:translateX(-18px);filter:brightness(.87)}
+  to {opacity:1;transform:translateX(0);filter:brightness(1)}
+}
+
+/* 2. Masterplan: pagina unica, lista inteira, foto do ambiente mais presente. */
+.erm21 .erm20-leisure .erm39-layout {min-width:0;max-width:100%}
+.erm21 .erm20-leisure .erm39-mapFrame {
+  box-shadow:0 13px 30px #00162773,inset 0 1px 0 #21bfdf36;
+  border-color:#26b4d792;
+}
+.erm21 .erm20-leisure .erm39-mapCanvas {
+  filter:drop-shadow(12px 15px 14px #00102187);
+}
+.erm21 .erm20-leisure .erm39-photoPanel {
+  border-color:#32bad6a3;
+  box-shadow:0 11px 29px #00192d68,inset 0 1px 0 #99eafb30;
+}
+.erm21 .erm20-leisure .erm39-photoOpen {padding:10px 10px 3px;gap:8px}
+.erm21 .erm20-leisure .erm39-photoOpen img {
+  height:clamp(250px,35vh,370px);
+  max-height:46%;
+  width:100%;
+  object-fit:cover;
+  object-position:50% 50%;
+  border-radius:9px;
+  background:#06334d;
+}
+.erm21 .erm20-leisure .erm39-photoDescription {padding:11px 15px 17px;overflow:auto}
+.erm21 .erm20-leisure .erm39-photoDescription h2 {font-size:clamp(25px,2.25vw,35px);margin:7px 0 12px}
+.erm21 .erm20-leisure .erm39-photoDescription p {font-size:clamp(11px,.95vw,13px);line-height:1.62}
+.erm21 .erm20-leisure .erm39-placeButtons button {min-height:32px}
+.erm21 .erm20-leisure .erm41-compass {z-index:4;filter:drop-shadow(0 5px 9px #0016298c)}
+
+/* Desktop medio: nao deixar hero ou cartoes cobrirem os textos. */
+@media(max-width:1390px) {
+  .erm21 .erm50-stage {grid-template-columns:minmax(0,40%) minmax(0,60%)}
+  .erm21 .erm50-story {padding:20px 20px 17px 31px}
+  .erm21 .erm50-story h1 {font-size:clamp(28px,2.62vw,41px)}
+  .erm21 .erm50-valueCard {padding:11px;min-height:130px}
+  .erm21 .erm50-valueCard p {font-size:10.6px}
+  .erm21 .erm20-leisure .erm39-photoOpen img {height:clamp(218px,29vh,315px)}
+}
+@media(max-width:1100px) {
+  .erm21 .erm50-stage {grid-template-columns:minmax(0,36%) minmax(0,64%);height:auto;min-height:100%}
+  .erm21 .erm50-visual {min-height:560px}
+  .erm21 .erm50-story {overflow-x:hidden;overflow-y:visible;padding:25px 20px 21px}
+  .erm21 .erm50-valuesGrid {grid-template-columns:1fr;gap:8px}
+  .erm21 .erm50-valueCard {min-height:0;display:grid;grid-template-columns:28px 1fr;gap:4px 10px;align-items:center}
+  .erm21 .erm50-valueCard p {grid-column:2}
+  .erm21 .erm20-leisure .erm39-photoOpen img {height:260px;max-height:none}
+}
+@media(max-width:680px) {
+  .erm21 .erm50-stage {display:block;height:auto;min-height:0}
+  .erm21 .erm50-visual {height:310px;min-height:310px}
+  .erm21 .erm50-photoFrame {border-radius:0;animation:none;transform:none}
+  .erm21 .erm50-facade {transform:none}
+  .erm21 .erm50-visual:hover .erm50-facade {transform:none}
+  .erm21 .erm50-story {padding:22px 17px;overflow:visible}
+  .erm21 .erm50-story h1 {font-size:clamp(28px,8.1vw,40px)}
+  .erm21 .erm50-valueCard:hover {transform:none}
+  .erm21 .erm50-brandLogo {width:46%}
+  .erm21 .erm20-leisure .erm39-photoOpen img {height:230px;max-height:none;object-fit:contain}
+}
+@media(prefers-reduced-motion:reduce) {
+  .erm21 .erm50-photoFrame {animation:none!important;transition:none!important;transform:none!important}
+  .erm21 .erm50-facade {transform:none!important;transition:none!important}
+  .erm21 .erm50-valueCard:hover {transform:none!important}
+}

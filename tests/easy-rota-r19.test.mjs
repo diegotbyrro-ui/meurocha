@@ -985,3 +985,26 @@ test('R50: institucional reforca fachada oficial em perspectiva e preserva marca
   assert.ok(css.includes('rotateY(-6.5deg)'), 'Perspectiva institucional nao encontrada');
   assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'), 'Respeito a reducao de movimento ausente');
 });
+
+// R51: correcoes do layout aprovado sem alterar implantacao, marca ou fachada.
+test('R51: institucional impede sobreposicao da fachada e elimina overflow horizontal', () => {
+  assert.ok(css.includes('/* R51 R1 — ACABAMENTO FINAL FIEL AOS MOCKUPS APROVADOS.'), 'Bloco de correcoes R51 nao encontrado');
+  assert.match(css, /\.erm21 \.erm50-stage \{[\s\S]*?grid-template-columns:minmax\(0,43%\) minmax\(0,57%\)/);
+  assert.match(css, /\.erm21 \.erm50-visual \{[\s\S]*?overflow:hidden/);
+  assert.match(css, /\.erm21 \.erm50-photoFrame \{[\s\S]*?width:100%;[\s\S]*?max-width:100%;[\s\S]*?transform:none/);
+  assert.match(css, /\.erm21 \.erm50-story \{[\s\S]*?min-width:0;[\s\S]*?overflow-x:hidden/);
+  assert.match(css, /\.erm21 \.erm50-visual:hover \.erm50-photoFrame \{[\s\S]*?transform:none/);
+  assert.match(css, /\.erm21 \.erm50-story::after \{[\s\S]*?right:0;[\s\S]*?bottom:0;/);
+});
+
+test('R51: masterplan e institucional preservam fontes oficiais e interacoes', () => {
+  const start = client.indexOf('<div className="erm39-mapCanvas"');
+  const end = client.indexOf('</div>', start);
+  const map = client.slice(start, end);
+  assert.ok(map.includes('erm41-implantacao-limpa.webp'), 'Imagem oficial da implantacao precisa permanecer');
+  assert.ok(map.includes('r39Places.map'), 'Pinos interativos precisam permanecer no mesmo mapa');
+  assert.match(css, /\.erm21 \.erm20-leisure \.erm39-photoOpen img \{[\s\S]*?height:clamp\(250px,35vh,370px\)/);
+  assert.ok(client.includes('erm50-rocha-logo-original.png'), 'Logo original Rocha ausente');
+  assert.ok(client.includes('erm50-fachada-oficial.jpg'), 'Fachada original ausente');
+  assert.ok(client.includes('erm41-compass'), 'Rosa dos ventos deve permanecer');
+});
