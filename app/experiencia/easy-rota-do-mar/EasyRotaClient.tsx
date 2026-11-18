@@ -361,7 +361,7 @@ export default function EasyRotaClient() {
   useEffect(() => { if (centralMenuOpen && !soundPrompt) { document.getElementById('erm25-menu-first')?.focus(); } }, [centralMenuOpen, soundPrompt]);
   const feature = facilities.find((p) => p.number === facility) || facilities[0];
   const facilityFile = facilityImages[feature.number];
-  const currentMasterSource = masterImage === 'implantacao' ? `${BRAND_ASSETS}erm41-implantacao-limpa.webp` : r32Asset('pavimento-interativo');
+  const currentMasterSource = masterImage === 'implantacao' ? `${BRAND_ASSETS}erm52-implantacao-pavimentos.png` : r32Asset('pavimento-interativo');
   const currentMasterAlt = masterImage === 'implantacao' ? 'Implantação original do Easy Rota do Mar, TIFF oficial recortado sem distorcer ou alterar sua geometria' : 'Planta completa do pavimento tipo Easy Rota do Mar, imagem enviada para a apresentação';
   const r39ChosenPlace = r39Places.find(p => p.facilityId === facility) || r39Places[0];
   const r42ChosenPhoto = r42PointPhotos[r39ChosenPlace.facilityId] || `${facilityImages[r39ChosenPlace.facilityId]}.webp`;
@@ -543,7 +543,7 @@ export default function EasyRotaClient() {
                 onPointerUp={event => {masterPointer.current=null;if(event.currentTarget.hasPointerCapture(event.pointerId))event.currentTarget.releasePointerCapture(event.pointerId);}}
                 onPointerCancel={()=>{masterPointer.current=null;}}>
                 <div className="erm39-mapCanvas" style={{transform:`translate(${masterOffset.x}px,${masterOffset.y}px) scale(${masterZoom}) perspective(1400px) rotateX(var(--erm50-map-tilt, 9deg)) rotateZ(var(--erm50-map-roll, -0.8deg))`}}>
-                  <img src={`${BRAND_ASSETS}erm41-implantacao-limpa.webp`} alt="Implantacao atualizada sem numeracao impressa, com pontos interativos sobrepostos" draggable={false} loading="lazy" decoding="async" />
+                  <img src={`${BRAND_ASSETS}erm52-implantacao-pavimentos.png`} alt="Implantacao atualizada sem numeracao impressa, com pontos interativos sobrepostos" draggable={false} loading="lazy" decoding="async" />
                   {r39Places.map((point) => <button key={point.facilityId} type="button" className={`erm39-mapPin ${facility===point.facilityId?'active':''}`}
                     style={{left:`${point.x}%`,top:`${point.y}%`}} title={`Visualizar ${point.name}`} aria-label={`Selecionar ${point.name} na implantacao`}
                     aria-pressed={facility===point.facilityId} onClick={()=>{setFacility(point.facilityId);tone();}}><span>{point.mapLabel}</span></button>)}

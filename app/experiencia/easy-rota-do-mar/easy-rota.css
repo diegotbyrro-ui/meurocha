@@ -1893,3 +1893,261 @@
   .erm21 .erm50-facade {transform:none!important;transition:none!important}
   .erm21 .erm50-valueCard:hover {transform:none!important}
 }
+
+/* R52 R1 — FIDELIDADE AO MATERIAL APROVADO (18/11/2026).
+   A implantacao enviada pelo cliente e exibida sem distorcao, com os mesmos 16 pinos.
+   O institucional usa a fachada e a marca ORIGINAIS e compoe um visual premium,
+   sem alterar a arquitetura, sem cobrir conteudo e sem overflow horizontal.
+   A foto do ambiente foi ampliada sem trocar imagens. */
+
+/* MASTERPLAN — a imagem nova preserva os 1350 x 1461 pixels uteis do arquivo enviado.
+   Desativamos apenas a inclinacao R50, que deformava visualmente a planta. */
+.erm21 .erm20-leisure .erm39-mapCanvas {
+  --erm50-map-tilt:0deg;
+  --erm50-map-roll:0deg;
+  filter:drop-shadow(0 14px 22px rgba(0,12,31,.47));
+  transform-style:flat;
+}
+.erm21 .erm20-leisure .erm39-mapCanvas>img {
+  filter:none;
+  object-fit:contain;
+  image-rendering:auto;
+}
+.erm21 .erm20-leisure .erm39-photoPanel {
+  border:1px solid #29bfde99;
+  background:linear-gradient(155deg,#002f4d,#001c33 94%);
+  box-shadow:0 14px 34px #00132591,inset 0 1px 0 #61e3f72f;
+}
+.erm21 .erm20-leisure .erm39-photoOpen {
+  flex:0 0 auto;
+  padding:10px 10px 6px;
+  gap:9px;
+}
+.erm21 .erm20-leisure .erm39-photoOpen img {
+  display:block;
+  width:100%;
+  height:clamp(224px,34svh,336px);
+  max-height:none;
+  object-fit:cover;
+  object-position:center;
+  border:1px solid #68dcf459;
+  border-radius:11px;
+  background:#00324d;
+  box-shadow:0 8px 25px #00142570;
+}
+.erm21 .erm20-leisure .erm39-photoDescription {
+  flex:1 1 auto;
+  min-height:0;
+  padding:18px 17px 18px;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+.erm21 .erm20-leisure .erm39-photoDescription h2 {
+  font-size:clamp(27px,2.3vw,38px);
+  line-height:1.12;
+  margin:6px 0 14px;
+}
+.erm21 .erm20-leisure .erm39-photoDescription p {
+  font-size:clamp(11px,.93vw,14px);
+  line-height:1.65;
+}
+
+/* INSTITUCIONAL — a fotografia se integra com a pagina por um degrade suave,
+   sem sair da coluna ou tampar o titulo. A apresentacao volta a ter hierarquia,
+   respiro e acabamentos proximo ao mockup aprovado. */
+.erm21 .erm20-panel:has(.erm50-institutional),
+.erm21 .erm50-institutional,
+.erm21 .erm50-stage {overflow-x:clip;max-width:100%;min-width:0}
+.erm21 .erm50-institutional {
+  padding:10px;
+  background:linear-gradient(155deg,#001c32 0%,#063b5d 100%);
+}
+.erm21 .erm50-stage {
+  position:relative;
+  isolation:isolate;
+  display:grid;
+  grid-template-columns:minmax(0,43%) minmax(0,57%);
+  width:100%;
+  max-width:1760px;
+  height:100%;
+  min-height:0;
+  overflow:hidden;
+  border:1px solid #36c4e2a8;
+  border-radius:18px;
+  background:linear-gradient(120deg,#e7f7fc 0%,#f7fcff 65%,#e3f5fa 100%);
+  box-shadow:0 18px 40px #001b3291,inset 0 1px 0 #ffffff9c;
+}
+.erm21 .erm50-visual {
+  position:relative;
+  z-index:1;
+  min-width:0;
+  overflow:hidden;
+  filter:none;
+  isolation:isolate;
+  background:transparent;
+  -webkit-mask-image:linear-gradient(to right,#000 0%,#000 79%,rgba(0,0,0,.96) 84%,rgba(0,0,0,.56) 92%,transparent 100%);
+  mask-image:linear-gradient(to right,#000 0%,#000 79%,rgba(0,0,0,.96) 84%,rgba(0,0,0,.56) 92%,transparent 100%);
+}
+.erm21 .erm50-visual::after {
+  display:none;
+}
+.erm21 .erm50-photoFrame,
+.erm21 .erm50-visual:hover .erm50-photoFrame {
+  width:100%;
+  max-width:100%;
+  height:100%;
+  margin:0;
+  border:0;
+  border-radius:15px 0 0 15px;
+  overflow:hidden;
+  transform:none;
+  filter:none;
+  box-shadow:none;
+}
+.erm21 .erm50-photoFrame {
+  animation:erm52-facade-reveal .95s cubic-bezier(.16,.83,.35,1) both;
+}
+.erm21 .erm50-facade,
+.erm21 .erm50-visual:hover .erm50-facade {
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:48% 45%;
+  transform:none;
+  filter:saturate(1.09) contrast(1.055) brightness(1.035);
+  transition:filter .3s ease;
+}
+.erm21 .erm50-photoFrame::after {
+  border:0;
+  border-radius:0;
+  box-shadow:inset 0 0 35px #002c5136;
+}
+.erm21 .erm50-story {
+  position:relative;
+  z-index:2;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  height:100%;
+  min-width:0;
+  min-height:0;
+  max-width:100%;
+  padding:clamp(40px,5.5vh,72px) clamp(22px,2.3vw,42px) clamp(20px,2.5vh,32px) clamp(36px,3.15vw,60px);
+  overflow-x:hidden;
+  overflow-y:auto;
+  background:radial-gradient(ellipse at 100% 100%,#adf2fd69,transparent 40%),linear-gradient(125deg,#f5fbfe 0%,#e5f6fc 100%);
+}
+.erm21 .erm50-story::after {
+  right:0;
+  bottom:0;
+  width:330px;
+  height:150px;
+  opacity:.45;
+  z-index:-1;
+  transform:none;
+  box-shadow:none;
+}
+.erm21 .erm50-kicker {
+  font-size:clamp(10px,.82vw,13px);
+  letter-spacing:.16em;
+  color:#173f5d;
+}
+.erm21 .erm50-story h1 {
+  max-width:100%;
+  font-size:clamp(32px,2.88vw,51px);
+  line-height:1.07;
+  margin:clamp(18px,1.65vw,28px) 0 clamp(11px,1.05vw,17px);
+  color:#00213f;
+}
+.erm21 .erm50-intro {font-size:clamp(13px,1.1vw,18px);line-height:1.5}
+.erm21 .erm50-slogan {
+  font-size:clamp(27px,2.25vw,39px);
+  line-height:1.12;
+  margin:clamp(11px,1.1vw,17px) 0 clamp(21px,2.05vw,34px);
+  color:#029dbd;
+}
+.erm21 .erm50-valuesGrid {
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(9px,.8vw,15px);
+  margin:0 0 clamp(15px,1.5vw,24px);
+}
+.erm21 .erm50-valueCard {
+  box-sizing:border-box;
+  min-width:0;
+  min-height:clamp(145px,17vh,166px);
+  padding:clamp(13px,1.2vw,19px);
+  gap:10px;
+  border:1px solid #3acde7a8;
+  border-radius:13px;
+  background:linear-gradient(135deg,#004361 0%,#002341 88%);
+  box-shadow:0 10px 23px #001b344f,inset 0 1px 0 #c3ffff26;
+}
+.erm21 .erm50-valueCard h2 {font-size:clamp(12px,1.02vw,15px);letter-spacing:.09em}
+.erm21 .erm50-valueCard p {font-size:clamp(10px,.85vw,13px);line-height:1.43}
+.erm21 .erm50-cardIcon {width:29px;height:29px;color:#0de3ee}
+.erm21 .erm50-quality {
+  min-height:65px;
+  padding:5px 6px;
+  background:linear-gradient(90deg,#ffffffba,#e3f8fd81);
+  border:1px solid #89cbe0;
+  box-shadow:inset 0 1px 0 #fff;
+}
+.erm21 .erm50-quality>div {padding:7px;gap:9px}
+.erm21 .erm50-quality strong {font-size:clamp(11px,.92vw,14px)}
+.erm21 .erm50-footer {margin-top:clamp(18px,1.8vw,29px);gap:18px}
+.erm21 .erm50-footer a {padding:11px 18px;border-radius:8px}
+.erm21 .erm50-brandLogo {display:block;width:min(37%,244px);height:auto;max-width:244px;object-fit:contain}
+.erm21 .erm50-strapline {margin-top:clamp(14px,1.3vw,21px);padding-top:12px}
+@keyframes erm52-facade-reveal {
+  from {opacity:.45;transform:translateX(-14px)}
+  to {opacity:1;transform:translateX(0)}
+}
+@media(max-height:830px) and (min-width:1101px) {
+  .erm21 .erm50-story {padding-top:clamp(26px,3.7vh,37px);padding-bottom:16px}
+  .erm21 .erm50-story h1 {font-size:clamp(28px,2.7vw,43px);margin:11px 0 9px}
+  .erm21 .erm50-slogan {margin:9px 0 15px;font-size:clamp(23px,2vw,32px)}
+  .erm21 .erm50-valueCard {min-height:129px;padding:12px;gap:7px}
+  .erm21 .erm50-valuesGrid {margin-bottom:12px}
+  .erm21 .erm50-quality {min-height:54px}
+  .erm21 .erm50-footer {margin-top:13px}
+  .erm21 .erm50-strapline {margin-top:10px;padding-top:8px}
+  .erm21 .erm20-leisure .erm39-photoOpen img {height:clamp(190px,32svh,285px)}
+}
+@media(max-width:1390px) and (min-width:1101px) {
+  .erm21 .erm50-stage {grid-template-columns:minmax(0,40%) minmax(0,60%)}
+  .erm21 .erm50-story {padding-left:30px;padding-right:20px}
+  .erm21 .erm50-story h1 {font-size:clamp(29px,2.75vw,43px)}
+  .erm21 .erm50-slogan {font-size:clamp(24px,2.15vw,34px)}
+  .erm21 .erm50-valueCard {min-height:131px;padding:12px;gap:8px}
+  .erm21 .erm50-valueCard p {font-size:10.8px}
+  .erm21 .erm50-quality {min-height:56px}
+}
+@media(max-width:1100px) {
+  .erm21 .erm50-stage {grid-template-columns:minmax(0,36%) minmax(0,64%);height:auto;min-height:100%}
+  .erm21 .erm50-story {height:auto;justify-content:flex-start;overflow:visible;padding:27px 22px}
+  .erm21 .erm50-valuesGrid {grid-template-columns:1fr;gap:8px}
+  .erm21 .erm50-valueCard {min-height:0;display:grid;grid-template-columns:30px 1fr;gap:4px 10px;align-items:center}
+  .erm21 .erm50-valueCard p {grid-column:2}
+  .erm21 .erm20-leisure .erm39-photoOpen img {height:260px;max-height:none}
+}
+@media(max-width:680px) {
+  .erm21 .erm50-stage {display:block;height:auto;min-height:0}
+  .erm21 .erm50-visual {
+    height:320px;
+    min-height:320px;
+    -webkit-mask-image:none;
+    mask-image:none;
+  }
+  .erm21 .erm50-photoFrame {animation:none;border-radius:0}
+  .erm21 .erm50-story {height:auto;padding:23px 17px}
+  .erm21 .erm50-story h1 {font-size:clamp(28px,8vw,41px)}
+  .erm21 .erm50-slogan {font-size:clamp(24px,6vw,35px)}
+  .erm21 .erm50-brandLogo {width:45%}
+  .erm21 .erm20-leisure .erm39-photoOpen img {height:235px;max-height:none;object-fit:contain}
+}
+@media(prefers-reduced-motion:reduce) {
+  .erm21 .erm50-photoFrame {animation:none!important;transition:none!important;transform:none!important}
+  .erm21 .erm50-facade {transform:none!important;transition:none!important}
+}

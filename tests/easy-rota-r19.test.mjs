@@ -688,7 +688,7 @@ test('R39/R42: 16 pontos no mapa sem distorcer a imagem',()=>{
   assert.equal(selected.length,16);
   assert.equal(new Set(selected.map(a=>a[1])).size,16);
   for(const v of selected){assert.ok(Number(v[4])>=2&&Number(v[4])<=98);assert.ok(Number(v[5])>=2&&Number(v[5])<=98)}
-  assert.match(client,/erm41-implantacao-limpa\.webp/);
+  assert.match(client,/erm52-implantacao-pavimentos\.png/);
   assert.match(client,/r39Places\.map/);
   assert.match(client,/aria-pressed=\{facility===point\.facilityId\}/);
   assert.match(client,/setFacility\(point\.facilityId\)/);
@@ -740,7 +740,7 @@ test('R41: mapa novo, pinos preservados e rosa dos ventos', () => {
   const image = readFileSync(filename);
   assert.equal(image.toString('ascii',0,4),'RIFF');
   assert.equal(image.toString('ascii',8,12),'WEBP');
-  assert.equal((client.match(/erm41-implantacao-limpa\.webp/g)||[]).length,2);
+  assert.equal((client.match(/erm52-implantacao-pavimentos\.png/g)||[]).length,2);
   const start = client.indexOf('const r39Places:');
   const end = client.indexOf('];', start);
   assert.ok(start>0 && end>start);
@@ -917,7 +917,7 @@ test('R49: remove barras redundantes apenas do masterplan e preserva navegacao p
 test('R49: imagem oficial inteira ampliada e 16 pinos sem mudar suas coordenadas', () => {
   assert.match(css, /\.erm21 \.erm20-leisure \.erm39-mapCanvas\{width:min\(100%,75svh,710px\)/);
   assert.match(css, /\.erm21 \.erm20-leisure\{height:100%;min-height:0;overflow:hidden/);
-  assert.match(client, /erm41-implantacao-limpa\.webp/);
+  assert.match(client, /erm52-implantacao-pavimentos\.png/);
   const start = client.indexOf('const r39Places:');
   const end = client.indexOf('];', start);
   const spots = [...client.slice(start, end).matchAll(/\{facilityId:\d+,mapLabel:'\d+',name:'[^']+',x:[\d.]+,y:[\d.]+\}/g)];
@@ -964,7 +964,7 @@ test('R50: masterplan aplica profundidade sem substituir o original nem deslocar
   const last = client.indexOf("{section === 'plantas' &&", first);
   const master = client.slice(first,last);
   assert.ok(first >= 0 && last > first,'Masterplan nao localizado');
-  assert.ok(master.includes('erm41-implantacao-limpa.webp'), 'Implantacao original nao foi preservada');
+  assert.ok(master.includes('erm52-implantacao-pavimentos.png'), 'Implantacao original nao foi preservada');
   assert.ok(master.includes('r39Places.map'), 'Pinos interativos foram removidos');
   assert.ok(master.includes('perspective(1400px) rotateX(var(--erm50-map-tilt, 9deg)) rotateZ(var(--erm50-map-roll, -0.8deg))'), 'Transform de profundidade nao encontrado');
   assert.ok(master.includes('left:`${point.x}%`,top:`${point.y}%`'), 'Coordenadas de pinos modificadas');
@@ -1001,10 +1001,45 @@ test('R51: masterplan e institucional preservam fontes oficiais e interacoes', (
   const start = client.indexOf('<div className="erm39-mapCanvas"');
   const end = client.indexOf('</div>', start);
   const map = client.slice(start, end);
-  assert.ok(map.includes('erm41-implantacao-limpa.webp'), 'Imagem oficial da implantacao precisa permanecer');
+  assert.ok(map.includes('erm52-implantacao-pavimentos.png'), 'Imagem oficial da implantacao precisa permanecer');
   assert.ok(map.includes('r39Places.map'), 'Pinos interativos precisam permanecer no mesmo mapa');
   assert.match(css, /\.erm21 \.erm20-leisure \.erm39-photoOpen img \{[\s\S]*?height:clamp\(250px,35vh,370px\)/);
   assert.ok(client.includes('erm50-rocha-logo-original.png'), 'Logo original Rocha ausente');
   assert.ok(client.includes('erm50-fachada-oficial.jpg'), 'Fachada original ausente');
   assert.ok(client.includes('erm41-compass'), 'Rosa dos ventos deve permanecer');
+});
+
+// R52: implantacao do arquivo ORIGINAL do cliente, com os mesmos 16 pinos.
+test('R52: implantacao original com interiores, imagem fiel e 16 pinos intactos', () => {
+  const assetName='erm52-implantacao-pavimentos.png';
+  const asset=readFileSync(join(assetDir,assetName));
+  assert.equal(asset.subarray(0,8).toString('hex'),'89504e470d0a1a0a','Assinatura PNG incorreta');
+  assert.equal(asset.readUInt32BE(16),1350,'Largura util nao corresponde ao arquivo original');
+  assert.equal(asset.readUInt32BE(20),1461,'Altura util nao corresponde ao arquivo original');
+  assert.equal(createHash('sha256').update(asset).digest('hex'),'e7a27ee6882fcc0f3cd6c918537b507eafc03a9b0be3a3e51192ef9d1d817b12');
+  const start=client.indexOf('<div className="erm39-mapCanvas"');
+  const end=client.indexOf('</div>',start);
+  const map=client.slice(start,end);
+  assert.ok(map.includes(assetName),'A imagem nova nao esta no mapa interativo');
+  assert.ok(map.includes('r39Places.map'),'Os pinos foram removidos do mapa');
+  const list=client.slice(client.indexOf('const r39Places:'),client.indexOf('// Os nomes R31'));
+  assert.equal((list.match(/\{facilityId:/g)||[]).length,16,'A quantidade de pinos mudou');
+  assert.equal((client.match(/erm52-implantacao-pavimentos\.png/g)||[]).length,2,'Preview e mapa devem mostrar a mesma implantacao');
+  assert.match(css,/\/\* R52 R1 — FIDELIDADE AO MATERIAL APROVADO/);
+  assert.match(css,/--erm50-map-tilt:0deg;/);
+  assert.match(css,/--erm50-map-roll:0deg;/);
+  assert.match(css,/\.erm21 \.erm20-leisure \.erm39-mapCanvas>img\s*\{\s*filter:none/);
+  assert.match(client,/erm41-compass/);
+});
+
+test('R52: institucional premium preserva marca e fachada e evita texto encoberto', () => {
+  assert.ok(client.includes('erm50-fachada-oficial.jpg'));
+  assert.ok(client.includes('erm50-rocha-logo-original.png'));
+  assert.match(css,/\.erm21 \.erm50-stage\s*\{[\s\S]*?grid-template-columns:minmax\(0,43%\) minmax\(0,57%\)/);
+  assert.match(css,/\.erm21 \.erm50-visual\s*\{[\s\S]*?mask-image:linear-gradient/);
+  assert.match(css,/\.erm21 \.erm50-story\s*\{[\s\S]*?justify-content:flex-start/);
+  assert.match(css,/\.erm21 \.erm50-photoFrame,[\s\S]*?\.erm21 \.erm50-visual:hover \.erm50-photoFrame \{[\s\S]*?width:100%;[\s\S]*?transform:none/);
+  assert.match(css,/\.erm21 \.erm50-story h1\s*\{/);
+  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
+  assert.match(css,/\.erm21 \.erm20-leisure \.erm39-photoOpen img\s*\{[\s\S]*?max-height:none/);
 });
