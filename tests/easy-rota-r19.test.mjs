@@ -883,7 +883,7 @@ test('R47: ficha tecnica alinha folhagens ao limite do painel e da secao', () =>
   const start = client.indexOf("{section === 'ficha' &&");
   const end = client.indexOf("{section === 'simulacao' &&", start);
   const spec = client.slice(start,end);
-  assert.ok(spec.includes('            </div>\n            <img className="erm44-foliageCorner"'), 'Folhagem inferior nao foi movida para fora do painel interno');
+  assert.ok(spec.replace(/\r\n/g, '\n').includes('            </div>\n            <img className="erm44-foliageCorner"'), 'Folhagem inferior nao foi movida para fora do painel interno');
   assert.ok(spec.includes("goto('plantas','plantas');setTypeAndShow(k);"), 'Navegacao das plantas deve permanecer');
   for (const marker of [
     '.erm21 .erm44-overview{overflow:hidden}',
@@ -892,5 +892,16 @@ test('R47: ficha tecnica alinha folhagens ao limite do painel e da secao', () =>
     '.erm21 .erm44-spec>.erm44-foliageCorner{position:absolute;right:0;bottom:0;width:clamp(250px,27vw,405px);height:auto;z-index:4;opacity:.86;filter:blur(1.15px);pointer-events:none;user-select:none;mask-image:linear-gradient(to bottom,transparent 0%,#000 48%);-webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 48%)}'
   ]) {
     assert.ok(css.includes(marker), `Marcador CSS R47 ausente: ${marker}`);
+  }
+});
+// R48: ajuste final para aproximar a folhagem superior da borda direita do painel, mantendo o restante da ficha.
+test('R48: ficha tecnica aproxima a folhagem superior da borda direita do painel', () => {
+  assert.ok(css.includes('/* R48 - ajuste final: aproximar a folhagem superior da borda direita do painel. */'), 'CSS R48 ausente');
+  for (const marker of [
+    '.erm21 .erm44-foliagePanel{right:-12px;bottom:0;width:clamp(170px,21vw,304px);opacity:.86;filter:blur(1.85px);transform:none}',
+    '@media(max-width:900px){.erm21 .erm44-foliagePanel{right:-8px;bottom:0;width:198px;opacity:.82}}',
+    '@media(max-width:560px){.erm21 .erm44-foliagePanel{right:-10px;bottom:-2px;width:156px;opacity:.72}}'
+  ]) {
+    assert.ok(css.includes(marker), `Marcador CSS R48 ausente: ${marker}`);
   }
 });
