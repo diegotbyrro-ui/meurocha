@@ -16,8 +16,8 @@ test('R62 R6: pinos 01 a 16 ficam ocultos, mas os dados continuam preservados', 
 });
 
 test('R62 R6: pino da marca usa novo offset padrao e nova chave local', () => {
-  assert.match(pin, /rocha-r62-pin-offset-v4/);
-  assert.match(pin, /const DEFAULT_OFFSET = \{ north: -235, east: -118 \};/);
-  assert.match(pin, /const MAX_OFFSET_METERS = 350;/);
+  assert.match(pin, /rocha-r62-pin-offset-v5/);
+  assert.match(pin, /const DEFAULT_OFFSET = \{ north: -264, east: -308 \};/);
+  assert.match(pin, /const MAX_OFFSET_METERS = 600;/);
   assert.match(pin, /window\.rochaR62InitPin/);
 });

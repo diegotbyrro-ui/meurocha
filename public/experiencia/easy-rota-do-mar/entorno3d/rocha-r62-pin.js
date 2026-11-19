@@ -1,13 +1,14 @@
-/* Rocha R62 R2: pin georreferenciado do empreendimento, usando a marca oficial.
+/* Rocha R62 R8: pin georreferenciado do empreendimento, usando a marca oficial.
    A maquete R61 permanece arquivada, mas nao e exibida nesta versao.
    O SITE e recebido do Next.js e nao e inferido dos pontos de captura do drone. */
 (function () {
   'use strict';
 
   const BRAND_URL = '/experiencia/easy-rota-do-mar/erm-logo-transparente.png';
-  const STORAGE_KEY = 'rocha-r62-pin-offset-v4';
-  const DEFAULT_OFFSET = { north: -235, east: -118 };
-  const MAX_OFFSET_METERS = 350;
+  const STORAGE_KEY = 'rocha-r62-pin-offset-v5';
+  // R62 R8: deslocado para a area indicada pelo usuario (mata entre as torres e o condominio).
+  const DEFAULT_OFFSET = { north: -264, east: -308 };
+  const MAX_OFFSET_METERS = 600;
   let marker = null;
 
   function clamp(value) {
@@ -43,70 +44,91 @@
     };
   }
 
-  function roundedRect(ctx, x, y, w, h, radius) {
-    ctx.beginPath();
-    ctx.moveTo(x + radius, y);
-    ctx.arcTo(x + w, y, x + w, y + h, radius);
-    ctx.arcTo(x + w, y + h, x, y + h, radius);
-    ctx.arcTo(x, y + h, x, y, radius);
-    ctx.closePath();
-  }
-
-    async function brandedPinImage() {
+  /* R62 R8: gota azul redesenhada (contorno simetrico, sem o recorte lateral da R7),
+     cabeca maior, logo oficial ampliada e renderizacao em 2x para ficar nitida. */
+  async function brandedPinImage() {
+    const W = 360;
+    const H = 480;
+    const SCALE = 2;
     const canvas = document.createElement('canvas');
-    canvas.width = 340;
-    canvas.height = 460;
+    canvas.width = W * SCALE;
+    canvas.height = H * SCALE;
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error('Canvas 2D indisponivel');
+    ctx.scale(SCALE, SCALE);
 
-    const centerX = 170;
-    const tipY = 410;
-    const radius = 94;
-    const centerY = 148;
+    const centerX = 180;
+    const centerY = 168;
+    const headRadius = 122;
+    const tipY = 438;
+    const discRadius = 98;
+    const tangent = Math.acos(headRadius / (tipY - centerY));
+    const leftAngle = Math.PI / 2 + tangent;
+    const rightAngle = Math.PI / 2 - tangent;
+    const point = (angle) => ({ x: centerX + headRadius * Math.cos(angle), y: centerY + headRadius * Math.sin(angle) });
 
     function drawPinBody() {
+      const right = point(rightAngle);
+      const left = point(leftAngle);
       ctx.beginPath();
       ctx.moveTo(centerX, tipY);
-      ctx.bezierCurveTo(235, 312, 282, 246, 282, 167);
-      ctx.arc(centerX, centerY, radius, 0.2, Math.PI - 0.2, true);
-      ctx.bezierCurveTo(58, 246, 105, 312, centerX, tipY);
+      ctx.quadraticCurveTo(centerX + 18, tipY - 40, right.x, right.y);
+      ctx.arc(centerX, centerY, headRadius, rightAngle, leftAngle, true);
+      ctx.quadraticCurveTo(centerX - 18, tipY - 40, centerX, tipY);
       ctx.closePath();
     }
 
+    const halo = ctx.createRadialGradient(centerX, 452, 4, centerX, 452, 120);
+    halo.addColorStop(0, 'rgba(49, 232, 255, 0.75)');
+    halo.addColorStop(0.45, 'rgba(0, 200, 240, 0.28)');
+    halo.addColorStop(1, 'rgba(0, 200, 240, 0)');
     ctx.save();
-    ctx.globalAlpha = 0.22;
-    ctx.fillStyle = '#00d7ff';
-    for (let i = 0; i < 3; i += 1) {
-      ctx.beginPath();
-      ctx.ellipse(centerX, 426, 92 + i * 18, 18 + i * 4, 0, 0, Math.PI * 2);
-      ctx.fill();
-    }
+    ctx.translate(centerX, 452);
+    ctx.scale(1, 0.2);
+    ctx.translate(-centerX, -452);
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(centerX, 452, 120, 0, Math.PI * 2);
+    ctx.fill();
     ctx.restore();
 
-    ctx.shadowColor = 'rgba(0, 24, 34, 0.45)';
-    ctx.shadowBlur = 26;
-    ctx.shadowOffsetY = 12;
+    ctx.save();
+    ctx.shadowColor = 'rgba(0, 18, 30, 0.55)';
+    ctx.shadowBlur = 22;
+    ctx.shadowOffsetY = 10;
     drawPinBody();
-    const grad = ctx.createLinearGradient(70, 56, 278, 320);
-    grad.addColorStop(0, '#083654');
-    grad.addColorStop(0.65, '#085b84');
-    grad.addColorStop(1, '#0aa6c0');
-    ctx.fillStyle = grad;
+    const body = ctx.createLinearGradient(60, 40, 300, 440);
+    body.addColorStop(0, '#0a4a72');
+    body.addColorStop(0.55, '#06385a');
+    body.addColorStop(1, '#0b8fb4');
+    ctx.fillStyle = body;
     ctx.fill();
-    ctx.shadowColor = 'transparent';
-    ctx.lineWidth = 10;
-    ctx.strokeStyle = '#31e8ff';
+    ctx.restore();
+
+    ctx.save();
+    ctx.shadowColor = 'rgba(49, 232, 255, 0.85)';
+    ctx.shadowBlur = 18;
+    drawPinBody();
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = 7;
+    ctx.strokeStyle = '#3ae9ff';
     ctx.stroke();
+    ctx.restore();
 
     ctx.beginPath();
-    ctx.arc(centerX, centerY, 66, 0, Math.PI * 2);
-    const innerGrad = ctx.createRadialGradient(centerX, centerY - 10, 12, centerX, centerY, 70);
-    innerGrad.addColorStop(0, '#0b6fa4');
-    innerGrad.addColorStop(1, '#072742');
-    ctx.fillStyle = innerGrad;
+    ctx.arc(centerX, centerY, discRadius, 0, Math.PI * 2);
+    const disc = ctx.createRadialGradient(centerX - 24, centerY - 34, 10, centerX, centerY, discRadius);
+    disc.addColorStop(0, '#0d5f8e');
+    disc.addColorStop(1, '#031a2e');
+    ctx.fillStyle = disc;
     ctx.fill();
-    ctx.lineWidth = 6;
-    ctx.strokeStyle = 'rgba(96, 244, 255, 0.9)';
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'rgba(160, 248, 255, 0.95)';
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, discRadius + 7, 0, Math.PI * 2);
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = 'rgba(58, 233, 255, 0.45)';
     ctx.stroke();
 
     let hasLogo = false;
@@ -120,13 +142,13 @@
         if (logo.complete && logo.naturalWidth) resolve();
       });
       if (logo.naturalWidth && logo.naturalHeight) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, 58, 0, Math.PI * 2);
-        ctx.clip();
-        const scale = Math.min(106 / logo.naturalWidth, 70 / logo.naturalHeight);
+        const scale = Math.min(176 / logo.naturalWidth, 60 / logo.naturalHeight);
         const width = logo.naturalWidth * scale;
         const height = logo.naturalHeight * scale;
+        ctx.save();
+        ctx.shadowColor = 'rgba(0, 10, 20, 0.6)';
+        ctx.shadowBlur = 6;
+        ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(logo, centerX - width / 2, centerY - height / 2, width, height);
         ctx.restore();
         hasLogo = true;
@@ -136,16 +158,28 @@
     if (!hasLogo) {
       ctx.fillStyle = '#eafcff';
       ctx.textAlign = 'center';
-      ctx.font = 'bold 17px Arial';
+      ctx.font = 'bold 20px Arial';
       ctx.fillText('EASY', centerX, centerY - 10);
-      ctx.font = 'bold 21px Arial';
-      ctx.fillText('ROTA DO MAR', centerX, centerY + 18);
+      ctx.font = 'bold 24px Arial';
+      ctx.fillText('ROTA DO MAR', centerX, centerY + 20);
     }
+
+    ctx.save();
+    drawPinBody();
+    ctx.clip();
+    const gloss = ctx.createLinearGradient(0, centerY - headRadius, 0, centerY);
+    gloss.addColorStop(0, 'rgba(255, 255, 255, 0.30)');
+    gloss.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = gloss;
+    ctx.beginPath();
+    ctx.ellipse(centerX - 30, centerY - 78, 82, 36, -0.35, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
 
     const image = document.createElement('img');
     image.src = canvas.toDataURL('image/png');
-    image.width = 126;
-    image.height = 170;
+    image.width = 150;
+    image.height = 200;
     image.alt = 'Easy Rota do Mar — empreendimento Rocha';
     image.className = 'rocha62-brand-pin';
     return image;
@@ -156,7 +190,7 @@
     const panel = document.createElement('section');
     panel.id = 'rocha62-adjust-panel';
     panel.innerHTML = '<strong>Posicionar pino</strong>' +
-      '<p>Calibracao local. As setas deslocam o marcador no terreno; nada muda no servidor.</p>' +
+      '<p>Calibracao local. Clique no mapa para colocar o pino ou use as setas (10 m). Nada muda no servidor.</p>' +
       '<div class="rocha62-offsets"></div>' +
       '<div class="rocha62-buttons">' +
         '<button type="button" data-dir="north">↑ Norte</button>' +
@@ -180,7 +214,7 @@
       const button = event.target.closest('button[data-dir]');
       if (!button) return;
       const action = button.getAttribute('data-dir');
-      const step = 1;
+      const step = 10;
       if (action === 'north') offset.north = clamp(offset.north + step);
       if (action === 'south') offset.north = clamp(offset.north - step);
       if (action === 'east') offset.east = clamp(offset.east + step);
@@ -188,7 +222,7 @@
       if (action === 'reset') { offset.north = 0; offset.east = 0; }
       const pos = refresh();
       if (action === 'copy') {
-        const data = JSON.stringify({ lat: Number(pos.lat.toFixed(7)), lng: Number(pos.lng.toFixed(7)) });
+        const data = JSON.stringify({ north: Number(offset.north.toFixed(1)), east: Number(offset.east.toFixed(1)), lat: Number(pos.lat.toFixed(7)), lng: Number(pos.lng.toFixed(7)) });
         try {
           await navigator.clipboard.writeText(data);
           status.textContent = 'Coordenadas copiadas: ' + data;
@@ -196,6 +230,14 @@
           status.textContent = 'Copie os dados: ' + data;
         }
       }
+    });
+    map.addEventListener('gmp-click', (event) => {
+      const position = event && event.position;
+      if (!position || !Number.isFinite(position.lat) || !Number.isFinite(position.lng)) return;
+      offset.north = clamp((position.lat - site.lat) * 111320);
+      offset.east = clamp((position.lng - site.lng) * 111320 * Math.cos(position.lat * Math.PI / 180));
+      refresh();
+      status.textContent = 'Pino movido pelo clique. Use Copiar coordenadas e envie o resultado.';
     });
     refresh();
   }
