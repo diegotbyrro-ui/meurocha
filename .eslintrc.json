@@ -8,6 +8,7 @@
     "node_modules",
     "next-env.d.ts",
     "apps/conviterocha/**",
-    "public/espelho/**"
+    "public/espelho/**",
+    "public/assets/js/**"
   ]
 }
