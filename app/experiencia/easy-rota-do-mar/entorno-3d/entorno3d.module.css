@@ -12,7 +12,7 @@
 .bridgeIssue button{margin-left:10px;padding:6px 9px;border:1px solid #ecc5a9;background:#fff1e7;color:#402015;border-radius:6px;font-weight:700;cursor:pointer}
 
 /* R59: quando aberto dentro de Localizacao, ocultar somente a barra duplicada. */
-.embedded{height:100%;min-height:0}
+.embedded{height:100dvh;min-height:0}
 .embedded .toolbar{display:none}
 .embedded .frame{min-height:0}
 .embedded .bridgeIssue{top:16px}
