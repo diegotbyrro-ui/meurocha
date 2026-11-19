@@ -5,9 +5,9 @@
   'use strict';
 
   const BRAND_URL = '/experiencia/easy-rota-do-mar/erm-logo-transparente.png';
-  const STORAGE_KEY = 'rocha-r62-pin-offset-v3';
-  const DEFAULT_OFFSET = { north: -122, east: -86 };
-  const MAX_OFFSET_METERS = 180;
+  const STORAGE_KEY = 'rocha-r62-pin-offset-v4';
+  const DEFAULT_OFFSET = { north: -235, east: -118 };
+  const MAX_OFFSET_METERS = 350;
   let marker = null;
 
   function clamp(value) {
@@ -52,25 +52,61 @@
     ctx.closePath();
   }
 
-  async function brandedPinImage() {
+    async function brandedPinImage() {
     const canvas = document.createElement('canvas');
-    canvas.width = 450;
-    canvas.height = 310;
+    canvas.width = 340;
+    canvas.height = 460;
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error('Canvas 2D indisponivel');
 
-    ctx.shadowColor = 'rgba(0, 15, 24, 0.45)';
-    ctx.shadowBlur = 20;
-    ctx.shadowOffsetY = 8;
-    roundedRect(ctx, 25, 12, 400, 188, 25);
-    const background = ctx.createLinearGradient(25, 12, 425, 200);
-    background.addColorStop(0, '#062b46');
-    background.addColorStop(1, '#004b70');
-    ctx.fillStyle = background;
+    const centerX = 170;
+    const tipY = 410;
+    const radius = 94;
+    const centerY = 148;
+
+    function drawPinBody() {
+      ctx.beginPath();
+      ctx.moveTo(centerX, tipY);
+      ctx.bezierCurveTo(235, 312, 282, 246, 282, 167);
+      ctx.arc(centerX, centerY, radius, 0.2, Math.PI - 0.2, true);
+      ctx.bezierCurveTo(58, 246, 105, 312, centerX, tipY);
+      ctx.closePath();
+    }
+
+    ctx.save();
+    ctx.globalAlpha = 0.22;
+    ctx.fillStyle = '#00d7ff';
+    for (let i = 0; i < 3; i += 1) {
+      ctx.beginPath();
+      ctx.ellipse(centerX, 426, 92 + i * 18, 18 + i * 4, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+
+    ctx.shadowColor = 'rgba(0, 24, 34, 0.45)';
+    ctx.shadowBlur = 26;
+    ctx.shadowOffsetY = 12;
+    drawPinBody();
+    const grad = ctx.createLinearGradient(70, 56, 278, 320);
+    grad.addColorStop(0, '#083654');
+    grad.addColorStop(0.65, '#085b84');
+    grad.addColorStop(1, '#0aa6c0');
+    ctx.fillStyle = grad;
     ctx.fill();
     ctx.shadowColor = 'transparent';
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = '#4ce7f6';
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = '#31e8ff';
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 66, 0, Math.PI * 2);
+    const innerGrad = ctx.createRadialGradient(centerX, centerY - 10, 12, centerX, centerY, 70);
+    innerGrad.addColorStop(0, '#0b6fa4');
+    innerGrad.addColorStop(1, '#072742');
+    ctx.fillStyle = innerGrad;
+    ctx.fill();
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = 'rgba(96, 244, 255, 0.9)';
     ctx.stroke();
 
     let hasLogo = false;
@@ -84,43 +120,34 @@
         if (logo.complete && logo.naturalWidth) resolve();
       });
       if (logo.naturalWidth && logo.naturalHeight) {
-        const scale = Math.min(345 / logo.naturalWidth, 148 / logo.naturalHeight);
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 58, 0, Math.PI * 2);
+        ctx.clip();
+        const scale = Math.min(106 / logo.naturalWidth, 70 / logo.naturalHeight);
         const width = logo.naturalWidth * scale;
         const height = logo.naturalHeight * scale;
-        ctx.drawImage(logo, (450 - width) / 2, 29 + (146 - height) / 2, width, height);
+        ctx.drawImage(logo, centerX - width / 2, centerY - height / 2, width, height);
+        ctx.restore();
         hasLogo = true;
       }
-    } catch (_) { /* texto de contingencia; nao buscar recursos externos */ }
+    } catch (_) { /* contingencia */ }
 
     if (!hasLogo) {
-      ctx.fillStyle = '#eafaff';
+      ctx.fillStyle = '#eafcff';
       ctx.textAlign = 'center';
-      ctx.font = 'bold 31px Arial';
-      ctx.fillText('EASY ROTA DO MAR', 225, 104);
-      ctx.font = 'bold 15px Arial';
-      ctx.fillStyle = '#79eaf9';
-      ctx.fillText('ROCHA EMPREENDIMENTOS', 225, 142);
+      ctx.font = 'bold 17px Arial';
+      ctx.fillText('EASY', centerX, centerY - 10);
+      ctx.font = 'bold 21px Arial';
+      ctx.fillText('ROTA DO MAR', centerX, centerY + 18);
     }
-
-    ctx.beginPath();
-    ctx.moveTo(225, 200);
-    ctx.lineTo(225, 266);
-    ctx.lineWidth = 9;
-    ctx.strokeStyle = '#0ae0fa';
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.arc(225, 277, 22, 0, Math.PI * 2);
-    ctx.fillStyle = '#00ceef';
-    ctx.fill();
-    ctx.lineWidth = 8;
-    ctx.strokeStyle = '#fff';
-    ctx.stroke();
 
     const image = document.createElement('img');
     image.src = canvas.toDataURL('image/png');
-    image.width = 170;
-    image.height = 117;
+    image.width = 126;
+    image.height = 170;
     image.alt = 'Easy Rota do Mar — empreendimento Rocha';
+    image.className = 'rocha62-brand-pin';
     return image;
   }
 
