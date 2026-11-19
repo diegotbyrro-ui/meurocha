@@ -15,7 +15,7 @@ test('R62: inicializa marcador da API 3D em vez do GLB anterior', () => {
   assert.match(html, /rocha-r62-cleanup\.css/);
   assert.match(html, /rochaR61InitModel\(map,result,SITE\)/); // compatibilidade R61 nos testes antigos
   assert.match(js, /new maps3d\.Marker3DElement/);
-  assert.match(js, /'CLAMP_TO_GROUND'/);
+  assert.match(js, /'RELATIVE_TO_GROUND'/); // R63: pino elevado (antes CLAMP_TO_GROUND)
   assert.match(js, /map\.append\(marker\)/);
   assert.match(js, /template\.content\.append\(image\)/);
   assert.match(js, /SITE|site/);

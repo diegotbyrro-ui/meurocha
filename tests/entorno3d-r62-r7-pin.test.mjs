@@ -7,8 +7,8 @@ const root = process.cwd();
 const pin = readFileSync(join(root, 'public/experiencia/easy-rota-do-mar/entorno3d/rocha-r62-pin.js'), 'utf8');
 
 test('R62 R7: pino principal usa nova chave local e novo offset padrao', () => {
-  assert.match(pin, /rocha-r62-pin-offset-v6/);
-  assert.match(pin, /const DEFAULT_OFFSET = \{ north: -270, east: -372 \};/);
+  assert.match(pin, /rocha-r62-pin-offset-v7/);
+  assert.match(pin, /const DEFAULT_OFFSET = \{ north: -259, east: -395 \};/);
   assert.match(pin, /const MAX_OFFSET_METERS = 600;/);
 });
 

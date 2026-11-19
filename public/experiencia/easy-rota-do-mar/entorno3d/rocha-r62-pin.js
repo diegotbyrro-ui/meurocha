@@ -1,14 +1,15 @@
-/* Rocha R62 R9: pin georreferenciado do empreendimento, usando a marca oficial.
+/* Rocha R63: pin georreferenciado do empreendimento, usando a marca oficial.
    A maquete R61 permanece arquivada, mas nao e exibida nesta versao.
    O SITE e recebido do Next.js e nao e inferido dos pontos de captura do drone. */
 (function () {
   'use strict';
 
   const BRAND_URL = '/experiencia/easy-rota-do-mar/erm-logo-transparente.png';
-  const STORAGE_KEY = 'rocha-r62-pin-offset-v6';
-  // R62 R9: area circulada pelo usuario (mata entre as duas torres e o condominio).
-  const DEFAULT_OFFSET = { north: -270, east: -372 };
+  const STORAGE_KEY = 'rocha-r62-pin-offset-v7';
+  // R63: centralizado no terreno (seta do usuario, ~25 m a oeste da R62 R9).
+  const DEFAULT_OFFSET = { north: -259, east: -395 };
   const MAX_OFFSET_METERS = 600;
+  const PIN_ALTITUDE = 18;
   let marker = null;
 
   function clamp(value) {
@@ -49,8 +50,8 @@
   async function brandedPinImage() {
     const W = 360;
     const H = 480;
-    // R62 R9: o Marker3D exibe a imagem no tamanho NATURAL; 0.6 deixa o pino com ~216x288 px.
-    const SCALE = 0.6;
+    // R63: o Marker3D exibe a imagem no tamanho NATURAL; 0.45 deixa o pino com ~162x216 px.
+    const SCALE = 0.45;
     const canvas = document.createElement('canvas');
     canvas.width = W * SCALE;
     canvas.height = H * SCALE;
@@ -205,7 +206,7 @@
     const status = panel.querySelector('output');
     function refresh() {
       const pos = coordinates(site, offset);
-      marker.position = { ...pos, altitude: 0 };
+      marker.position = { ...pos, altitude: PIN_ALTITUDE };
       label.textContent = 'Norte: ' + offset.north.toFixed(1) + ' m | Leste: ' + offset.east.toFixed(1) + ' m';
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(offset)); } catch (_) { /* opcional */ }
       return pos;
@@ -255,9 +256,11 @@
       const template = document.createElement('template');
       template.content.append(image);
       marker = new maps3d.Marker3DElement({
-        position: { ...coordinates(site, offset), altitude: 0 },
-        altitudeMode: 'CLAMP_TO_GROUND',
+        // R63: acima do solo e desenhado mesmo atras de arvores/predios, para nao sumir no zoom.
+        position: { ...coordinates(site, offset), altitude: PIN_ALTITUDE },
+        altitudeMode: 'RELATIVE_TO_GROUND',
         extruded: true,
+        drawsWhenOccluded: true,
         sizePreserved: true,
         collisionBehavior: 'REQUIRED'
       });
@@ -266,6 +269,9 @@
       marker.append(template);
       map.append(marker);
       showPanel(site, map, offset);
+      if (typeof window.rochaR63InitPois === 'function') {
+        window.rochaR63InitPois(map, maps3d, coordinates(site, offset)).catch((err) => console.warn('[Rocha R63] Entorno:', err));
+      }
       console.info('[Rocha R62] Pino com marca oficial ancorado ao mapa 3D.');
     } catch (error) {
       console.error('[Rocha R62] Falha ao adicionar pino, mapa e fotos permanecem operantes:', error);

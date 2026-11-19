@@ -8,15 +8,15 @@ const pin = readFileSync(join(root, 'public/experiencia/easy-rota-do-mar/entorno
 const data = JSON.parse(readFileSync(join(root, 'public/experiencia/easy-rota-do-mar/entorno3d/dados_pontos.json'), 'utf8'));
 
 test('R62 R9: pino reduzido, imagem natural pequena e atributos coerentes', () => {
-  assert.match(pin, /const SCALE = 0\.6;/);
+  assert.match(pin, /const SCALE = 0\.45;/);
   assert.match(pin, /canvas\.width = W \* SCALE;/);
   assert.match(pin, /image\.width = canvas\.width;/);
   assert.match(pin, /image\.height = canvas\.height;/);
 });
 
 test('R62 R9: nova posicao circulada pelo usuario e nova chave local', () => {
-  assert.match(pin, /rocha-r62-pin-offset-v6/);
-  assert.match(pin, /const DEFAULT_OFFSET = \{ north: -270, east: -372 \};/);
+  assert.match(pin, /rocha-r62-pin-offset-v7/);
+  assert.match(pin, /const DEFAULT_OFFSET = \{ north: -259, east: -395 \};/);
   assert.doesNotMatch(pin, /const left = point\(leftAngle\)/);
 });
 
