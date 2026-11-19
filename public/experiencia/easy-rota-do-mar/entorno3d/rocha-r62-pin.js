@@ -1,13 +1,13 @@
-/* Rocha R62 R8: pin georreferenciado do empreendimento, usando a marca oficial.
+/* Rocha R62 R9: pin georreferenciado do empreendimento, usando a marca oficial.
    A maquete R61 permanece arquivada, mas nao e exibida nesta versao.
    O SITE e recebido do Next.js e nao e inferido dos pontos de captura do drone. */
 (function () {
   'use strict';
 
   const BRAND_URL = '/experiencia/easy-rota-do-mar/erm-logo-transparente.png';
-  const STORAGE_KEY = 'rocha-r62-pin-offset-v5';
-  // R62 R8: deslocado para a area indicada pelo usuario (mata entre as torres e o condominio).
-  const DEFAULT_OFFSET = { north: -264, east: -308 };
+  const STORAGE_KEY = 'rocha-r62-pin-offset-v6';
+  // R62 R9: area circulada pelo usuario (mata entre as duas torres e o condominio).
+  const DEFAULT_OFFSET = { north: -270, east: -372 };
   const MAX_OFFSET_METERS = 600;
   let marker = null;
 
@@ -49,7 +49,8 @@
   async function brandedPinImage() {
     const W = 360;
     const H = 480;
-    const SCALE = 2;
+    // R62 R9: o Marker3D exibe a imagem no tamanho NATURAL; 0.6 deixa o pino com ~216x288 px.
+    const SCALE = 0.6;
     const canvas = document.createElement('canvas');
     canvas.width = W * SCALE;
     canvas.height = H * SCALE;
@@ -69,7 +70,6 @@
 
     function drawPinBody() {
       const right = point(rightAngle);
-      const left = point(leftAngle);
       ctx.beginPath();
       ctx.moveTo(centerX, tipY);
       ctx.quadraticCurveTo(centerX + 18, tipY - 40, right.x, right.y);
@@ -178,8 +178,8 @@
 
     const image = document.createElement('img');
     image.src = canvas.toDataURL('image/png');
-    image.width = 150;
-    image.height = 200;
+    image.width = canvas.width;
+    image.height = canvas.height;
     image.alt = 'Easy Rota do Mar — empreendimento Rocha';
     image.className = 'rocha62-brand-pin';
     return image;

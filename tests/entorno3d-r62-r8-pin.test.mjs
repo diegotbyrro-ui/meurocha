@@ -8,15 +8,15 @@ const pin = readFileSync(join(root, 'public/experiencia/easy-rota-do-mar/entorno
 const data = JSON.parse(readFileSync(join(root, 'public/experiencia/easy-rota-do-mar/entorno3d/dados_pontos.json'), 'utf8'));
 
 test('R62 R8: pino reposicionado para a area indicada, com nova chave local', () => {
-  assert.match(pin, /rocha-r62-pin-offset-v5/);
-  assert.match(pin, /const DEFAULT_OFFSET = \{ north: -264, east: -308 \};/);
+  assert.match(pin, /rocha-r62-pin-offset-v6/);
+  assert.match(pin, /const DEFAULT_OFFSET = \{ north: -270, east: -372 \};/);
   assert.match(pin, /const MAX_OFFSET_METERS = 600;/);
 });
 
-test('R62 R8: gota simetrica, sem o recorte lateral da R7, renderizada em 2x', () => {
+test('R62 R8: gota simetrica, sem o recorte lateral da R7, renderizada em escala propria', () => {
   assert.match(pin, /Math\.acos\(headRadius \/ \(tipY - centerY\)\)/);
   assert.doesNotMatch(pin, /bezierCurveTo\(235, 312, 282, 246, 282, 167\)/);
-  assert.match(pin, /const SCALE = 2;/);
+  assert.match(pin, /const SCALE = 0\.6;/);
   assert.match(pin, /ctx\.scale\(SCALE, SCALE\)/);
   assert.doesNotMatch(pin, /function roundedRect/);
 });
