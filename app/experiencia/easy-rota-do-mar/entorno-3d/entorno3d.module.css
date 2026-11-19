@@ -1,0 +1,12 @@
+.page{display:flex;flex-direction:column;width:100%;height:100dvh;min-height:0;background:#061c29;color:#e8f9fc;font-family:Arial,'Segoe UI',sans-serif;overflow:hidden}
+.toolbar{flex:0 0 52px;min-height:52px;display:flex;align-items:center;gap:18px;padding:0 18px;background:#001e34;border-bottom:1px solid #18708b;box-shadow:0 3px 15px rgba(0,0,0,.2);z-index:1}
+.back{display:inline-flex;align-items:center;justify-content:center;min-height:35px;padding:5px 13px;border:1px solid #25b2d1;border-radius:8px;color:#d5f8ff;background:#053b56;text-decoration:none;font-size:12px;font-weight:700}
+.back:hover,.back:focus-visible{background:#00c9e1;color:#001e34;outline:2px solid #70e7f2;outline-offset:2px}
+.title{font-size:11px;letter-spacing:.17em;font-weight:600;color:#97dceb;white-space:nowrap}
+.title b{color:#e4fbff}.note{margin-left:auto;color:#8ccad8;font-size:11px;white-space:nowrap}
+.frame{display:block;flex:1 1 auto;width:100%;min-height:0;border:0;background:#061c29}
+@media(max-width:750px){.toolbar{padding:0 9px;gap:8px;flex-basis:50px}.back{padding:5px 9px;font-size:11px}.title{font-size:9px;letter-spacing:.06em}.note{display:none}}
+
+/* R57 R2: aviso apenas se a ponte do iframe nao responder em 18 segundos. */
+.bridgeIssue{position:fixed;left:50%;top:82px;transform:translateX(-50%);z-index:50;max-width:min(580px,calc(100% - 24px));padding:13px 16px;border:1px solid #f4b07a;border-radius:10px;background:#42251d;color:#fff4eb;font:600 12px/1.45 Arial,'Segoe UI',sans-serif;box-shadow:0 8px 28px #0008}
+.bridgeIssue button{margin-left:10px;padding:6px 9px;border:1px solid #ecc5a9;background:#fff1e7;color:#402015;border-radius:6px;font-weight:700;cursor:pointer}

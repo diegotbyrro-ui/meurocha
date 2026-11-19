@@ -21,7 +21,15 @@ const config = {
       { key: 'X-Frame-Options', value: 'DENY' },
       { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
       { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
-    ] }];
+    ] }, {
+      // R57: SOMENTE este HTML do Entorno 3D pode entrar no iframe do MESMO dominio.
+      // A regra global X-Frame-Options DENY segue aplicada a todas as outras rotas.
+      source: '/experiencia/easy-rota-do-mar/entorno3d/index.html',
+      headers: [
+        { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+        { key: 'Content-Security-Policy', value: "frame-ancestors 'self'" },
+      ],
+    }];
   },
 };
 export default config;
