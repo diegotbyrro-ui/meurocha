@@ -5,8 +5,8 @@
   'use strict';
 
   const BRAND_URL = '/experiencia/easy-rota-do-mar/erm-logo-transparente.png';
-  const STORAGE_KEY = 'rocha-r62-pin-offset-v2';
-  const DEFAULT_OFFSET = { north: 0, east: 0 };
+  const STORAGE_KEY = 'rocha-r62-pin-offset-v3';
+  const DEFAULT_OFFSET = { north: -122, east: -86 };
   const MAX_OFFSET_METERS = 180;
   let marker = null;
 
