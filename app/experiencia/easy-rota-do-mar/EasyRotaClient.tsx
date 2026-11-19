@@ -509,7 +509,6 @@ export default function EasyRotaClient() {
             </div>}
             {tab === 'ultratour' && location3dEnabled && <div className="erm59-location3dStage" role="region" aria-label="Mapa tridimensional da localização do Easy Rota do Mar">
               <iframe className="erm59-location3dFrame" src="/experiencia/easy-rota-do-mar/entorno-3d" title="Entorno 3D interativo com 16 pontos GPS e 39 fotografias" loading="eager" referrerPolicy="strict-origin-when-cross-origin" allow="fullscreen" />
-              <button type="button" className="erm59-locationAerial" onClick={() => setLocation3dEnabled(false)}><UiIcon name="image" size={16}/> Ver foto aérea</button>
             </div>}
             {tab === 'ultratour' && !location3dEnabled && <button type="button" className="erm59-locationReturn" onClick={() => setLocation3dEnabled(true)}>Explorar entorno 3D</button>}
             {tab === 'entorno' && <div className="erm20-nearby"><SectionBanner title="ENTORNO" caption="Explore o que faz parte do dia a dia"/><div className="erm20-nearbyHero"><Photo id="hero" alt="Visão ilustrativa da região do empreendimento"/><Brand compact /></div><div className="erm20-nearbyLinks">{['Serviços', 'Comércio', 'Educação', 'Mobilidade', 'Bem-estar', 'Lazer', 'Conveniência', 'Gastronomia'].map((x) => <button key={x} onClick={() => { setMapChoice(x); chooseTab('mapa'); }} type="button">{x}</button>)}</div><p className="erm20-disclaimer">Mapa e pontos de interesse serão georreferenciados após conferência do endereço e das coordenadas oficiais.</p></div>}

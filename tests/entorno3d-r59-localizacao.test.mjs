@@ -20,7 +20,7 @@ test('R59: Entorno 3D ocupa area da Localizacao sem nova aba lateral', () => {
   assert.match(client,/erm59-location3dOn/);
   assert.match(client,/tab === 'ultratour' && location3dEnabled/);
   assert.match(client,/src="\/experiencia\/easy-rota-do-mar\/entorno-3d"/);
-  assert.match(client,/Ver foto aérea/);
+  assert.doesNotMatch(client,/className="erm59-locationAerial"/);
   assert.match(client,/Explorar entorno 3D/);
   assert.match(css,/erm59-location3dOn/);
   assert.match(css,/erm59-location3dStage/);
