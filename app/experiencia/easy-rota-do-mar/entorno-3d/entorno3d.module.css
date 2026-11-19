@@ -10,3 +10,11 @@
 /* R57 R2: aviso apenas se a ponte do iframe nao responder em 18 segundos. */
 .bridgeIssue{position:fixed;left:50%;top:82px;transform:translateX(-50%);z-index:50;max-width:min(580px,calc(100% - 24px));padding:13px 16px;border:1px solid #f4b07a;border-radius:10px;background:#42251d;color:#fff4eb;font:600 12px/1.45 Arial,'Segoe UI',sans-serif;box-shadow:0 8px 28px #0008}
 .bridgeIssue button{margin-left:10px;padding:6px 9px;border:1px solid #ecc5a9;background:#fff1e7;color:#402015;border-radius:6px;font-weight:700;cursor:pointer}
+
+/* R59: quando aberto dentro de Localizacao, ocultar somente a barra duplicada. */
+.embedded{height:100%;min-height:0}
+.embedded .toolbar{display:none}
+.embedded .frame{min-height:0}
+.embedded .bridgeIssue{top:16px}
+.environmentNotice{position:fixed;left:50%;top:80px;transform:translateX(-50%);z-index:49;max-width:min(620px,calc(100% - 24px));padding:13px 16px;border:1px solid #f3bd86;border-radius:10px;background:#43291e;color:#fff3eb;font:600 12px/1.45 'Segoe UI',sans-serif;box-shadow:0 8px 28px #0008}
+.embedded .environmentNotice{top:16px}

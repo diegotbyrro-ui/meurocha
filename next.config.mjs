@@ -29,6 +29,13 @@ const config = {
         { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
         { key: 'Content-Security-Policy', value: "frame-ancestors 'self'" },
       ],
+    }, {
+      // R59: o wrapper do Entorno 3D pode ser incorporado somente no MESMO dominio.
+      source: '/experiencia/easy-rota-do-mar/entorno-3d',
+      headers: [
+        { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+        { key: 'Content-Security-Policy', value: "frame-ancestors 'self'" },
+      ],
     }];
   },
 };

@@ -26,5 +26,6 @@ test('R57: protege outras rotas com DENY e permite SAMEORIGIN so para V3', async
   assert.ok(exception[0].headers.some(header => header.key === 'X-Frame-Options' && header.value === 'SAMEORIGIN'));
   assert.ok(exception[0].headers.some(header => header.key === 'Content-Security-Policy' && header.value === "frame-ancestors 'self'"));
   assert.ok(rules.indexOf(global) < rules.indexOf(exception[0]),'Regra especifica deve sobrescrever DENY');
-  assert.equal(rules.filter(rule => rule !== global && rule.headers.some(header => header.key === 'X-Frame-Options' && header.value === 'SAMEORIGIN')).length,1);
+  assert.equal(rules.filter(rule => rule !== global && rule.headers.some(header => header.key === 'X-Frame-Options' && header.value === 'SAMEORIGIN')).length,2);
+  assert.ok(rules.some(rule => rule.source === '/experiencia/easy-rota-do-mar/entorno-3d' && rule.headers.some(h => h.key === 'X-Frame-Options' && h.value === 'SAMEORIGIN')));
 });

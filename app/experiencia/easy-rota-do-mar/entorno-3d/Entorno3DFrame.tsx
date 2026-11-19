@@ -12,6 +12,8 @@ const iframeSource = base + '/entorno3d/index.html';
 export default function Entorno3DFrame({ apiKey, confirmed, site }: Props) {
   const frameRef = useRef<HTMLIFrameElement>(null);
   const [bridgeIssue, setBridgeIssue] = useState(false);
+  const [embedded, setEmbedded] = useState(false);
+  useEffect(() => { setEmbedded(window.parent !== window); }, []);
   const sendConfig = useCallback(() => {
     // Chave de navegador restrita por referer/API; nunca registrar o valor em logs.
     frameRef.current?.contentWindow?.postMessage({
@@ -50,12 +52,15 @@ export default function Entorno3DFrame({ apiKey, confirmed, site }: Props) {
     };
   }, [sendConfig]);
 
-  return <div className={styles.page}>
+  return <div className={`${styles.page} ${embedded ? styles.embedded : ''}`}>
     <header className={styles.toolbar}>
       <Link className={styles.back} href={base} aria-label="Voltar à plataforma Easy Rota do Mar">← Voltar à plataforma</Link>
       <span className={styles.title}>ROCHA EMPREENDIMENTOS <b>· ENTORNO 3D</b></span>
       <span className={styles.note}>16 pontos GPS · 39 fotos do drone</span>
     </header>
+    {(!apiKey || !confirmed) && <div className={styles.environmentNotice} role="alert">
+      {!apiKey ? 'Chave Google Maps não configurada no ambiente desta implantação. Configure ROCHA_GOOGLE_MAPS_BROWSER_KEY no servidor.' : 'Coordenadas do terreno ainda não confirmadas no ambiente da plataforma.'}
+    </div>}
     {bridgeIssue && <div className={styles.bridgeIssue} role="alert">
       O mapa foi aberto, mas o iframe não confirmou a configuração da plataforma.
       Reinicie o Next.js e atualize a página. Nenhuma chave deve ser compartilhada.

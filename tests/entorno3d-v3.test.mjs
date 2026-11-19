@@ -74,7 +74,8 @@ test('R56: link do entorno e independente, sete modulos originais preservados', 
   const originalIds = ['localizacao','lazer','plantas','imagens','videos','ficha','institucional'];
   for (const id of originalIds) assert.ok(nav.includes("id: '"+id+"'"),'Menu existente ausente: '+id);
   assert.ok(menu.includes('Explorar entorno 3D'));
-  assert.ok(menu.includes("window.location.assign('/experiencia/easy-rota-do-mar/entorno-3d')"));
+  assert.ok(menu.includes('erm59-location3dStage'));
+  assert.ok(!menu.includes("window.location.assign('/experiencia/easy-rota-do-mar/entorno-3d')"));
   assert.ok(nextFrame.includes("const iframeSource = base + '/entorno3d/index.html'"));
   assert.ok(nextFrame.includes("import styles from './entorno3d.module.css'"));
 });
