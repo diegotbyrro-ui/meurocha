@@ -118,7 +118,8 @@ test('R64.4: camera termina centralizada no pino calibrado do empreendimento', a
   assert.match(html, /function goHome\(\)\{if\(map\)\{map\.center=alvoEmpreendimento\(\);map\.tilt=65;map\.range=1250;map\.heading=25;\}\}/);
   assert.match(html, /center:\{lat:alvoEmpreendimento\(\)\.lat,lng:alvoEmpreendimento\(\)\.lng,altitude:0\},range:3500000/);
   assert.match(html, /if\(window\.rochaR64Intro\)\{const a=alvoEmpreendimento\(\);window\.rochaR64Intro\.alvo\(a\.lat,a\.lng\);\}/);
-  assert.match(html, /rocha-r62-pin\.js\?v=r64-4/);
+  // R69 trocou a versao do pino (altura acima da maquete).
+  assert.match(html, /rocha-r62-pin\.js\?v=(r64-4|r69)/);
   // A funcao do pino aplica o mesmo ajuste que o pino usa no mapa (DEFAULT_OFFSET).
   const vm = await import('node:vm');
   const win = {};

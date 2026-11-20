@@ -10,7 +10,11 @@
    cache so de IDs e coordenadas por 7 dias (o Google permite guardar IDs
    sempre e coordenadas por ate 30 dias). Visitas seguintes nao refazem as
    buscas; nome, fotos e nota vem do Google ao abrir cada ponto.
-   R67: legenda so com os botoes (sem o titulo "No entorno" e sem a frase). */
+   R67: legenda so com os botoes (sem o titulo "No entorno" e sem a frase).
+   R68: destaques escolhidos pela Rocha (Mix Mateus e Business Humberto Lobo),
+   sempre visiveis, com gota maior de aro ciano e o nome numa etiqueta. Ficam
+   guardados so pelo ID do Google; a posicao vem do Google pelo ID (nivel
+   Essentials) e entra no mesmo cache de 7 dias. */
 (function () {
   'use strict';
 
@@ -33,10 +37,13 @@
     igreja: 'M12 2.5v5M9.8 4.6h4.4M5 21v-8.5L12 7.5l7 5V21M10 21v-3.5a2 2 0 0 1 4 0V21M3.5 21h17',
     banco: 'M3.5 9.5L12 4.5l8.5 5zM6 12v5.5M10 12v5.5M14 12v5.5M18 12v5.5M3.5 20.5h17',
     sacola: 'M5.5 8h13l-1 12.2a1 1 0 0 1-1 .8h-9a1 1 0 0 1-1-.8zM9 10.5V7a3 3 0 0 1 6 0v3.5',
+    estrela: 'M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z',
+    predio: 'M5 21V5a1.5 1.5 0 0 1 1.5-1.5h7A1.5 1.5 0 0 1 15 5v16M15 9.5h3.5A1.5 1.5 0 0 1 20 11v10M3.5 21h17M8 7.5h1.5M11 7.5h1.5M8 11h1.5M11 11h1.5M8 14.5h1.5M11 14.5h1.5M17.5 13v.5M17.5 16.5v.5',
     pata: 'M8.5 15.5c0-2 1.6-3.5 3.5-3.5s3.5 1.5 3.5 3.5c0 1.6-1.2 2.8-2.6 2.8-.4 0-.6-.1-.9-.1s-.5.1-.9.1c-1.4 0-2.6-1.2-2.6-2.8zM7.8 11.2a1.6 1.6 0 1 1-3.2 0a1.6 1.6 0 1 1 3.2 0M11.3 7.6a1.7 1.7 0 1 1-3.4 0a1.7 1.7 0 1 1 3.4 0M16.1 7.6a1.7 1.7 0 1 1-3.4 0a1.7 1.7 0 1 1 3.4 0M19.4 11.2a1.6 1.6 0 1 1-3.2 0a1.6 1.6 0 1 1 3.2 0'
   };
   // Ordem = prioridade (um lugar achado em duas buscas fica na primeira categoria).
   const CATEGORIES = [
+    { key: 'destaques', label: 'Destaques', color: '#3ae9ff', icon: 'estrela', featured: true, max: 10 },
     { key: 'mercados', label: 'Mercados', color: '#facc15', icon: 'carrinho', types: ['supermarket', 'grocery_store'], max: 8 },
     { key: 'farmacias', label: 'Farm\u00e1cias', color: '#22c55e', icon: 'pilula', types: ['pharmacy', 'drugstore'], max: 8 },
     { key: 'padarias', label: 'Padarias', color: '#fdba74', icon: 'pao', types: ['bakery'], max: 8 },
@@ -54,6 +61,13 @@
   ];
   // Hospitais e shoppings: os mais relevantes num raio maior, numa busca so.
   const SHARED = { referencia: { radius: FAR_RADIUS, rank: 'POPULARITY', max: 20 } };
+  // R68: destaques pelo ID do Google (o Google permite guardar IDs sem prazo).
+  // Para incluir outro: ID do lugar, nome curto da etiqueta e um dos ICONS.
+  const FEATURED = [
+    { id: 'ChIJT3KG_5dHAQcRKOt_m_3zTTE', label: 'Mix Mateus', icon: 'carrinho' },
+    { id: 'ChIJzfs2QD5GAQcRg_JIrQhGTxk', label: 'Business Humberto L\u00f4bo', icon: 'predio' }
+  ];
+  const FEATURED_FIELDS = ['location'];
   // Somente campos do nivel "Nearby Search Pro"; a nota vem ao abrir o ponto.
   const FIELDS = ['id', 'displayName', 'location', 'formattedAddress', 'photos', 'googleMapsURI', 'primaryTypeDisplayName', 'primaryType', 'types'];
   const RATING_FIELDS = ['rating', 'userRatingCount'];
@@ -92,15 +106,9 @@
   // R66: gota no estilo do pino da marca (azul-marinho com brilho), aro e
   // brilho na cor da categoria, icone branco. O mapa 3D mostra a imagem no
   // tamanho natural, entao o desenho ja sai no tamanho final (40x50).
-  function drawPin(category) {
-    const S = 0.9;
-    const canvas = document.createElement('canvas');
-    canvas.width = Math.round(44 * S);
-    canvas.height = Math.round(56 * S);
-    const ctx = canvas.getContext('2d');
-    ctx.scale(S, S);
+  // Desenha a gota na grade 44x56 (quem chama posiciona e escala).
+  function paintPin(ctx, color, icon) {
     const cx = 22; const cy = 19; const r = 15.5; const tip = 50;
-    const color = category.color;
     const tangent = Math.acos(r / (tip - cy));
     const left = Math.PI / 2 + tangent;
     const right = Math.PI / 2 - tangent;
@@ -164,13 +172,13 @@
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
       ctx.strokeStyle = '#ffffff';
-      ctx.stroke(new Path2D(ICONS[category.icon]));
+      ctx.stroke(new Path2D(ICONS[icon]));
     } else {
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 13px Arial, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(category.label.charAt(0), cx, cy + 1);
+      ctx.fillText('\u2022', cx, cy + 1);
     }
     ctx.restore();
     ctx.save();
@@ -184,17 +192,88 @@
     ctx.ellipse(cx - 4, cy - 9, 10, 5, -0.35, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
+  }
+
+  function drawPin(category) {
+    const S = 0.9;
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(44 * S);
+    canvas.height = Math.round(56 * S);
+    const ctx = canvas.getContext('2d');
+    ctx.scale(S, S);
+    paintPin(ctx, category.color, category.icon);
     return { src: canvas.toDataURL('image/png'), width: canvas.width, height: canvas.height };
   }
 
-  function pinImage(category) {
-    if (!state.pins[category.key]) state.pins[category.key] = drawPin(category);
-    const pin = state.pins[category.key];
+  function pillPath(ctx, x, y, w, h) {
+    const r = h / 2;
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.arc(x + w - r, y + r, r, -Math.PI / 2, Math.PI / 2);
+    ctx.lineTo(x + r, y + h);
+    ctx.arc(x + r, y + r, r, Math.PI / 2, Math.PI * 1.5);
+    ctx.closePath();
+  }
+
+  // R68: destaque = gota um pouco maior, aro ciano da marca e o nome numa
+  // etiqueta acima. A ponta continua embaixo, no centro da imagem.
+  function drawFeaturedPin(item, category) {
+    const S = 1.05;
+    const font = '700 12px Arial, sans-serif';
+    const probe = document.createElement('canvas').getContext('2d');
+    probe.font = font;
+    const measured = probe.measureText(item.label);
+    const textW = Math.ceil((measured && measured.width) || item.label.length * 7);
+    const tagW = textW + 22;
+    const tagH = 22;
+    const pinW = Math.round(44 * S);
+    const pinH = Math.round(56 * S);
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(tagW + 6, pinW);
+    canvas.height = tagH + 8 + pinH;
+    const ctx = canvas.getContext('2d');
+    const x = (canvas.width - tagW) / 2;
+    ctx.save();
+    ctx.shadowColor = 'rgba(58, 233, 255, 0.55)';
+    ctx.shadowBlur = 6;
+    pillPath(ctx, x, 2, tagW, tagH - 2);
+    const tag = ctx.createLinearGradient(0, 2, 0, tagH);
+    tag.addColorStop(0, '#0c4a70');
+    tag.addColorStop(1, '#03192b');
+    ctx.fillStyle = tag;
+    ctx.fill();
+    ctx.restore();
+    pillPath(ctx, x, 2, tagW, tagH - 2);
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = category.color;
+    ctx.stroke();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = font;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(item.label, canvas.width / 2, 2 + (tagH - 2) / 2 + 0.5);
+    ctx.save();
+    ctx.translate((canvas.width - pinW) / 2, tagH + 8);
+    ctx.scale(S, S);
+    paintPin(ctx, category.color, item.icon);
+    ctx.restore();
+    return { src: canvas.toDataURL('image/png'), width: canvas.width, height: canvas.height };
+  }
+
+  function featuredItem(id) {
+    return FEATURED.find((f) => f.id === id) || null;
+  }
+
+  function pinImage(category, item) {
+    const key = item ? 'destaque:' + item.id : category.key;
+    if (!state.pins[key]) state.pins[key] = item ? drawFeaturedPin(item, category) : drawPin(category);
+    const pin = state.pins[key];
     const img = document.createElement('img');
     img.src = pin.src;
     img.width = pin.width;
     img.height = pin.height;
-    img.alt = category.label;
+    img.alt = item ? item.label : category.label;
     return img;
   }
 
@@ -321,7 +400,7 @@
     state.current = { id: place.id, cat: category.key };
     panel.innerHTML =
       '<button type="button" class="rocha63-close" data-close aria-label="Fechar">\u00d7</button>' +
-      '<span class="rocha63-chip" style="--c:' + category.color + '">' + svgIcon(category.icon) + esc(category.label) + '</span>' +
+      '<span class="rocha63-chip" style="--c:' + category.color + '">' + svgIcon(category.icon) + esc(category.featured ? 'Destaque' : category.label) + '</span>' +
       '<div data-head>' + headHtml(place, category, waiting) + '</div>' +
       (r ? r.html() : '<p class="rocha63-meta">' + esc(formatDistance(distanceMeters(origin, pos))) + '</p>') +
       '<div data-photos>' + photosHtml(place, waiting) + '</div>' +
@@ -349,18 +428,21 @@
     try {
       const lat = place.location.lat();
       const lng = place.location.lng();
+      const item = category.featured ? featuredItem(place.id) : null;
+      if (category.featured && !item) return false;
       const marker = new state.maps3d.Marker3DInteractiveElement({
-        position: { lat, lng, altitude: 12 },
+        position: { lat, lng, altitude: item ? 16 : 12 },
         altitudeMode: 'RELATIVE_TO_GROUND',
         extruded: true,
         drawsWhenOccluded: true,
         sizePreserved: true,
-        collisionBehavior: 'OPTIONAL_AND_HIDES_LOWER_PRIORITY'
+        // Destaques sempre aparecem e escondem os pinos comuns que encostarem neles.
+        collisionBehavior: item ? 'REQUIRED_AND_HIDES_OPTIONAL' : 'OPTIONAL_AND_HIDES_LOWER_PRIORITY'
       });
       const template = document.createElement('template');
-      template.content.append(pinImage(category));
+      template.content.append(pinImage(category, item));
       marker.append(template);
-      marker.setAttribute('aria-label', category.label + (place.displayName ? ': ' + place.displayName : ''));
+      marker.setAttribute('aria-label', item ? 'Destaque: ' + item.label : category.label + (place.displayName ? ': ' + place.displayName : ''));
       marker.addEventListener('gmp-click', (event) => {
         if (event && event.stopPropagation) event.stopPropagation();
         openPlace(place, category);
@@ -380,6 +462,7 @@
     const list = [];
     const shared = {};
     CATEGORIES.forEach((c) => {
+      if (c.featured) return;
       if (c.shared) {
         if (!shared[c.shared]) {
           shared[c.shared] = Object.assign({ cats: [], types: [] }, SHARED[c.shared]);
@@ -388,7 +471,9 @@
         shared[c.shared].cats.push(c);
         shared[c.shared].types.push(...c.types);
       } else {
-        list.push({ cats: [c], types: c.types.slice(), radius: NEAR_RADIUS, rank: 'DISTANCE', max: c.max });
+        // Pede 4 a mais (o Google cobra por busca, nao por resultado) para repor
+        // lugares que ja apareceram em outra categoria ou nos destaques.
+        list.push({ cats: [c], types: c.types.slice(), radius: NEAR_RADIUS, rank: 'DISTANCE', max: Math.min(20, c.max + 4) });
       }
     });
     return list;
@@ -420,6 +505,25 @@
     if (byPrimary) return byPrimary;
     const types = place.types || [];
     return cats.find((c) => c.types.some((t) => types.includes(t))) || null;
+  }
+
+  // R68: posicao dos destaques pelo ID (Place Details nivel Essentials).
+  async function loadFeatured() {
+    const results = await Promise.allSettled(FEATURED.map(async (item) => {
+      const place = new state.Place({ id: item.id, requestedLanguage: 'pt-BR', requestedRegion: 'br' });
+      const res = await place.fetchFields({ fields: FEATURED_FIELDS });
+      const loc = ((res && res.place) || place).location;
+      const lat = loc && (typeof loc.lat === 'function' ? loc.lat() : loc.lat);
+      const lng = loc && (typeof loc.lng === 'function' ? loc.lng() : loc.lng);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) throw new Error('Sem posicao');
+      return { id: item.id, cached: true, location: { lat: () => lat, lng: () => lng } };
+    }));
+    const places = [];
+    results.forEach((r, i) => {
+      if (r.status === 'fulfilled') places.push(r.value);
+      else console.warn('[Rocha R68] Destaque indisponivel:', FEATURED[i].label, r.reason);
+    });
+    return places;
   }
 
   function addCategory(category, places) {
@@ -465,7 +569,8 @@
   // Cache local: somente IDs e coordenadas, por 7 dias.
   function cacheSignature() {
     return [state.origin.lat.toFixed(5), state.origin.lng.toFixed(5), NEAR_RADIUS, FAR_RADIUS,
-      CATEGORIES.map((c) => c.key + ':' + c.types.join('|') + ':' + c.max).join(',')].join(';');
+      CATEGORIES.map((c) => c.key + ':' + (c.types || []).join('|') + ':' + c.max).join(','),
+      FEATURED.map((f) => f.id).join('|')].join(';');
   }
 
   function cacheRead() {
@@ -619,7 +724,9 @@
     if (cached) {
       loadFromCache(cached);
     } else {
-      const results = await Promise.allSettled(SEARCHES.map(runSearch));
+      const [featured, results] = await Promise.all([loadFeatured(), Promise.allSettled(SEARCHES.map(runSearch))]);
+      // Destaques primeiro: tem prioridade se tambem aparecerem numa busca.
+      addCategory(CATEGORIES.find((c) => c.featured), featured);
       const ok = [];
       results.forEach((res, i) => {
         if (res.status === 'fulfilled') { ok.push({ search: SEARCHES[i], places: res.value }); return; }

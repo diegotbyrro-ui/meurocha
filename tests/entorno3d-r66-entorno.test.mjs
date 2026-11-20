@@ -81,7 +81,8 @@ test('R66: pagina pede os arquivos novos dos pontos (sem cache antigo do navegad
 
 test('R66: 14 categorias do dia a dia, com clinicas veterinarias e sem tipo proibido', () => {
   const keys = [...poi.matchAll(/\{ key: '([a-z]+)'/g)].map((m) => m[1]);
-  assert.deepEqual(keys, ['mercados', 'farmacias', 'padarias', 'restaurantes', 'escolas', 'hospitais', 'saude', 'veterinarios', 'academias', 'postos', 'mecanicas', 'igrejas', 'bancos', 'shoppings']);
+  // R68 colocou os destaques na frente.
+  assert.deepEqual(keys, ['destaques', 'mercados', 'farmacias', 'padarias', 'restaurantes', 'escolas', 'hospitais', 'saude', 'veterinarios', 'academias', 'postos', 'mecanicas', 'igrejas', 'bancos', 'shoppings']);
   for (const t of ['supermarket', 'pharmacy', 'bakery', 'restaurant', 'school', 'hospital', 'doctor', 'veterinary_care', 'gym', 'gas_station', 'car_repair', 'church', 'bank', 'shopping_mall']) {
     assert.match(poi, new RegExp("'" + t + "'"), 'Tipo ausente: ' + t);
   }
@@ -89,7 +90,7 @@ test('R66: 14 categorias do dia a dia, com clinicas veterinarias e sem tipo proi
   assert.match(poi, /label: 'Veterin\\u00e1rios'/);
   assert.doesNotMatch(poi, /onDemand/, 'Tudo carrega ao pousar');
   const cores = [...poi.matchAll(/color: '(#[0-9a-f]{6})'/g)].map((m) => m[1]);
-  assert.equal(new Set(cores).size, 14, 'Uma cor por categoria');
+  assert.equal(new Set(cores).size, 15, 'Uma cor por categoria (com os destaques da R68)');
 });
 
 test('R66: raio maior; hospitais e shoppings pelos mais relevantes numa busca so', () => {
@@ -104,7 +105,8 @@ test('R66: pinos no estilo do pino da marca, com icone proprio em cada categoria
   const icons = poi.slice(poi.indexOf('const ICONS = {'), poi.indexOf('};', poi.indexOf('const ICONS = {')));
   for (const m of poi.matchAll(/icon: '([a-z]+)'/g)) assert.match(icons, new RegExp('\\b' + m[1] + ": '[MmLlHhVvCcSsAaZz0-9 .,-]+'"), 'Icone sem desenho: ' + m[1]);
   assert.match(poi, /function drawPin\(category\)/);
-  assert.match(poi, /ctx\.stroke\(new Path2D\(ICONS\[category\.icon\]\)\)/);
+  assert.match(poi, /ctx\.stroke\(new Path2D\(ICONS\[icon\]\)\)/);
+  assert.match(poi, /paintPin\(ctx, category\.color, category\.icon\);/);
   assert.match(poi, /canvas\.width = Math\.round\(44 \* S\);/);
   assert.match(css, /\.rocha63-ico \{/);
   assert.match(css, /#rocha63-poi-legend button\.rocha63-all/);
@@ -128,9 +130,9 @@ test('R66: primeira visita faz 13 buscas e separa hospitais de shoppings', async
   assert.equal(por('Hospitais'), 6, 'Limite de 6 hospitais');
   assert.equal(por('Shoppings'), 4);
   assert.equal(por('Mercados'), 8, 'Limite de 8 por categoria');
-  assert.equal(por('Padarias'), 7, 'Supermercado repetido fica so em Mercados');
+  assert.equal(por('Padarias'), 8, 'Supermercado repetido fica so em Mercados; a sobra da busca repoe a vaga');
   assert.equal(por('Bancos'), 0);
-  assert.equal(mapa.children.length, 8 + 8 + 7 + 8 + 8 + 6 + 8 + 4 + 6 + 3 + 6 + 6 + 0 + 4);
+  assert.equal(mapa.children.length, 8 + 8 + 8 + 8 + 8 + 6 + 8 + 4 + 6 + 3 + 6 + 6 + 0 + 4);
   // Cache: somente ID, latitude e longitude, por ate 7 dias.
   const cache = JSON.parse(armazem.get('rocha66-entorno-v1'));
   const itens = Object.values(cache.items).flat();

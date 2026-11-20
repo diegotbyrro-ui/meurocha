@@ -10,6 +10,8 @@
   const DEFAULT_OFFSET = { north: -259, east: -395 };
   const MAX_OFFSET_METERS = 600;
   const PIN_ALTITUDE = 18;
+  // R69: com a maquete no mapa, o pino sobe acima dos predios (rochaR62PinAltitude).
+  let pinAltitude = PIN_ALTITUDE;
   let marker = null;
 
   function clamp(value) {
@@ -206,7 +208,7 @@
     const status = panel.querySelector('output');
     function refresh() {
       const pos = coordinates(site, offset);
-      marker.position = { ...pos, altitude: PIN_ALTITUDE };
+      marker.position = { ...pos, altitude: pinAltitude };
       label.textContent = 'Norte: ' + offset.north.toFixed(1) + ' m | Leste: ' + offset.east.toFixed(1) + ' m';
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(offset)); } catch (_) { /* opcional */ }
       return pos;
@@ -243,6 +245,15 @@
     refresh();
   }
 
+  window.rochaR62PinAltitude = function (altitude) {
+    if (!Number.isFinite(altitude)) return;
+    pinAltitude = altitude;
+    if (marker) {
+      const p = marker.position;
+      if (p && Number.isFinite(p.lat) && Number.isFinite(p.lng)) marker.position = { lat: p.lat, lng: p.lng, altitude };
+    }
+  };
+
   // R64.4: posicao do pino (terreno do empreendimento), para a camera centralizar nele.
   window.rochaR62PinCoordinates = function (site) {
     if (!site || !Number.isFinite(site.lat) || !Number.isFinite(site.lng)) return null;
@@ -263,7 +274,7 @@
       template.content.append(image);
       marker = new maps3d.Marker3DElement({
         // R63: acima do solo e desenhado mesmo atras de arvores/predios, para nao sumir no zoom.
-        position: { ...coordinates(site, offset), altitude: PIN_ALTITUDE },
+        position: { ...coordinates(site, offset), altitude: pinAltitude },
         altitudeMode: 'RELATIVE_TO_GROUND',
         extruded: true,
         drawsWhenOccluded: true,

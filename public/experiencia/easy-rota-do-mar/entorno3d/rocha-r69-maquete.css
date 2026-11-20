@@ -1,0 +1,22 @@
+/* Rocha R69: painel de ajuste da maquete (so aparece com ?ajustepredio=1).
+   Fica acima do logotipo do Google, sem cobri-lo. */
+#rocha69-painel {
+  position: absolute; left: 14px; bottom: 56px; z-index: 18;
+  width: min(290px, calc(100% - 100px)); max-height: calc(100% - 200px); overflow: auto;
+  padding: 13px 15px; border-radius: 14px;
+  background: rgba(4, 33, 52, .95); border: 1px solid rgba(66, 220, 244, .7);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, .35); color: #f3fbff; font: 12px/1.35 Arial, sans-serif;
+}
+#rocha69-painel strong { font-size: 14px; }
+#rocha69-painel p { margin: 8px 0; color: #c1e5ed; }
+#rocha69-painel label { display: grid; grid-template-columns: 1fr auto; gap: 3px 8px; margin: 9px 0; }
+#rocha69-painel input[type=range] { grid-column: span 2; width: 100%; accent-color: #3ae9ff; }
+#rocha69-painel output { color: #aee1eb; font-variant-numeric: tabular-nums; }
+#rocha69-painel select { grid-column: span 2; padding: 5px; border-radius: 7px; background: #0b2a3d; color: #fff; border: 1px solid #3c7f96; }
+.rocha69-setas, .rocha69-acoes { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.rocha69-setas button, .rocha69-acoes button {
+  padding: 7px 9px; border-radius: 8px; border: 1px solid #3c7f96; background: #0b3a52; color: #e8fbff; cursor: pointer; font: inherit;
+}
+.rocha69-acoes button:first-child { background: #3ae9ff; color: #04263d; border-color: #3ae9ff; font-weight: 700; }
+.rocha69-status { display: block; margin-top: 6px; word-break: break-all; }
+@media (max-width: 820px) { #rocha69-painel { left: 8px; bottom: 50px; width: calc(100% - 76px); max-height: 45%; } }
