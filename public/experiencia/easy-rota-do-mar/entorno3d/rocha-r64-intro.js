@@ -8,7 +8,8 @@
    - Nao usa chave e nao acessa servicos externos: so os arquivos de terra/.
    - Respeita prefers-reduced-motion. Sem WebGL ou sem as imagens, sai de cena e o
      carregamento original continua exatamente como antes.
-   - "Pular abertura" sempre disponivel. ?abertura=0 desliga; ?abertura=1 forca.
+   - "Pular abertura" sempre disponivel. ?abertura=0 desliga; ?abertura=1 forca;
+     ?abertura=diag mostra na tela a placa de video e o estado das fotos.
    - Parametros de inspecao (desenvolvimento): ie_t=segundos, ie_fixo, ie_m=0..1. */
 (function () {
   'use strict';
@@ -228,7 +229,7 @@
       titulo: 'Easy Rota do Mar', local: 'Serraria · Maceió/AL',
       duracaoMinima: 14000,   // viagem minima (ms), mesmo que o Google fique pronto antes
       tempoLimite: 28000,     // se o Google nao responder, a abertura sai e o aviso original aparece
-      esperaTexturas: 9000    // tempo maximo esperando as fotos da Terra
+      esperaTexturas: 12000   // tempo maximo esperando as fotos da Terra
     }, opcoes || {});
     const raiz = cfg.raiz || document.getElementById('main');
     if (!raiz) return null;
@@ -237,7 +238,7 @@
     const mTeste = parametro('ie_m') !== null ? clamp(parseFloat(parametro('ie_m')) || 0, 0, 1) : null;
     const modo = parametro('abertura');
     if (modo === '0') return null;
-    if (modo !== '1' && tTeste === null) {
+    if (modo !== '1' && modo !== 'diag' && tTeste === null) {
       try { if (matchMedia('(prefers-reduced-motion: reduce)').matches) return null; } catch (_) { /* sem matchMedia */ }
     }
 
@@ -280,8 +281,9 @@
       if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p) || 'link');
       const u = {}; nomes.forEach((n) => { u[n] = gl.getUniformLocation(p, n); }); return { p, u };
     };
-    let pCena, pClaro, pBlur, pFinal;
+    let pCena, pClaro, pBlur, pFinal, pTeste;
     try {
+      pTeste = programa('precision mediump float; varying vec2 vUv; uniform sampler2D uT; void main(){ gl_FragColor = vec4(texture2D(uT, vec2(.25 + vUv.x*.5, .3 + vUv.y*.4)).rgb, 1.); }', ['uT']);
       pCena = programa(FRAG_CENA, ['uRes', 'uTexel', 'uTempo', 'uFocal', 'uPix', 'uRotTerra', 'uAlt', 'uFade', 'uExpo', 'uLimpo', 'uLuz',
         'uRelevoForca', 'uCam', 'uSol', 'uAlvo', 'uCamRot', 'uDia', 'uNoite', 'uNuvem', 'uAgua', 'uRelevo']);
       pClaro = programa(FRAG_CLARO, ['uImg', 'uTexel']);
@@ -358,43 +360,112 @@
     if (typeof ResizeObserver === 'function') { observador = new ResizeObserver(() => redimensionar()); observador.observe(el); }
     else window.addEventListener('resize', redimensionar);
 
-    /* ---------- fotos da Terra (NASA) ---------- */
-    const r = (!fraco && gl.getParameter(gl.MAX_TEXTURE_SIZE) >= 4096) ? '4k' : '2k';
+    /* ---------- fotos da Terra (NASA) ----------
+       R64.1: envio a prova de falhas. Em alguns Chrome/placas de video, entregar o <img>
+       direto ao WebGL (RGB/LUMINANCE, decodificacao assincrona) gerava textura PRETA sem
+       nenhum erro: a Terra virava uma bola azul so com atmosfera. Agora a imagem e
+       decodificada por completo, redesenhada num canvas no tamanho exato (potencia de 2),
+       enviada como pixels RGBA e CONFERIDA por leitura de volta antes de aparecer. */
+    const info = { placa: '', maxTex: gl.getParameter(gl.MAX_TEXTURE_SIZE), imagens: {}, media: null, mipmaps: true, erros: [] };
+    try {
+      const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+      info.placa = String(dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER));
+    } catch (_) { /* opcional */ }
+    const alta = !fraco && info.maxTex >= 4096;
+    const LARG = { dia: alta ? 4096 : 2048, nuvens: alta ? 4096 : 2048, noite: 2048, agua: 2048, relevo: 2048 };
     const arquivos = {
-      dia: cfg.pasta + 'terra-dia-' + r + '.jpg', noite: cfg.pasta + 'terra-noite-' + r + '.jpg',
-      nuvens: cfg.pasta + 'terra-nuvens-' + r + '.jpg', agua: cfg.pasta + 'terra-agua-2k.jpg', relevo: cfg.pasta + 'terra-relevo-2k.jpg'
+      dia: cfg.pasta + 'terra-dia-' + (alta ? '4k' : '2k') + '.jpg', nuvens: cfg.pasta + 'terra-nuvens-' + (alta ? '4k' : '2k') + '.jpg',
+      noite: cfg.pasta + 'terra-noite-2k.jpg', agua: cfg.pasta + 'terra-agua-2k.jpg', relevo: cfg.pasta + 'terra-relevo-2k.jpg'
     };
     const ordem = ['dia', 'noite', 'nuvens', 'agua', 'relevo'];
     const tex = {};
     const aniso = gl.getExtension('EXT_texture_filter_anisotropic') || gl.getExtension('WEBKIT_EXT_texture_filter_anisotropic');
+    const configura = (t, mip) => {
+      gl.bindTexture(gl.TEXTURE_2D, t);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, mip ? gl.LINEAR_MIPMAP_LINEAR : gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, mip ? gl.REPEAT : gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      if (aniso) gl.texParameterf(gl.TEXTURE_2D, aniso.TEXTURE_MAX_ANISOTROPY_EXT, mip ? Math.min(8, gl.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT)) : 1);
+    };
     ordem.forEach((k) => {
       const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 0, 255]));
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      configura(t, false);
       tex[k] = t;
     });
     let texPronta = false, texel = [1 / 2048, 1 / 1024];
-    const carrega = (url) => new Promise((ok, falha) => { const i = new Image(); i.decoding = 'async'; i.onload = () => ok(i); i.onerror = () => falha(new Error(url)); i.src = url; });
-    Promise.all(ordem.map((k) => carrega(arquivos[k]))).then((imgs) => {
-      if (inst.saindo) return;
-      imgs.forEach((img, i) => {
-        const k = ordem[i];
-        gl.bindTexture(gl.TEXTURE_2D, tex[k]);
-        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-        const formato = k === 'dia' ? gl.RGB : gl.LUMINANCE;
-        gl.texImage2D(gl.TEXTURE_2D, 0, formato, formato, gl.UNSIGNED_BYTE, img);
-        gl.generateMipmap(gl.TEXTURE_2D);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-        if (aniso) gl.texParameterf(gl.TEXTURE_2D, aniso.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(8, gl.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));
-        if (k === 'relevo') texel = [1 / img.width, 1 / img.height];
-      });
-      texPronta = true;
-    }).catch((erro) => {
-      console.warn('[Rocha R64] Fotos da Terra indisponiveis; carregamento original mantido.', erro);
-      inst.cancelar();
+    const carrega = (url) => new Promise((ok, falha) => {
+      const i = new Image();
+      i.onload = () => { (i.decode ? i.decode().catch(() => {}) : Promise.resolve()).then(() => ok(i)); };
+      i.onerror = () => falha(new Error('Falha ao baixar ' + url));
+      i.src = url;
     });
-    esperaTex = setTimeout(() => { if (!texPronta) inst.cancelar(); }, cfg.esperaTexturas);
+    const sobe = (k, img) => {
+      const w = LARG[k], h = w / 2;
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      const ctx = c.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(img, 0, 0, w, h);
+      const px = ctx.getImageData(0, 0, w, h).data;
+      gl.bindTexture(gl.TEXTURE_2D, tex[k]);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(px.buffer, px.byteOffset, px.byteLength));
+      gl.generateMipmap(gl.TEXTURE_2D);
+      configura(tex[k], true);
+      if (k === 'relevo') texel = [1 / w, 1 / h];
+      info.imagens[k] = img.naturalWidth + 'x' + img.naturalHeight + ' -> ' + w + 'x' + h;
+      const e = gl.getError(); if (e) info.erros.push(k + ':' + e);
+    };
+    // Desenha a textura num alvo 8x8 e le de volta: preto = a placa nao recebeu a foto.
+    const media = (t) => {
+      const f = fbo(8, 8);
+      let s = -1;
+      if (f.ok) {
+        gl.useProgram(pTeste.p); gl.bindFramebuffer(gl.FRAMEBUFFER, f.f); gl.viewport(0, 0, 8, 8);
+        gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, t); gl.uniform1i(pTeste.u.uT, 2);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        const px = new Uint8Array(256); gl.readPixels(0, 0, 8, 8, gl.RGBA, gl.UNSIGNED_BYTE, px);
+        s = 0; for (let i = 0; i < 256; i += 4) s += px[i] + px[i + 1] + px[i + 2];
+        s /= 192;
+      }
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.deleteTexture(f.t); gl.deleteFramebuffer(f.f);
+      return s;
+    };
+    const diag = parametro('abertura') === 'diag';
+    const mostraDiag = (extra) => {
+      if (!diag) return;
+      let box = el.querySelector('.r64-diag');
+      if (!box) { box = document.createElement('pre'); box.className = 'r64-diag'; el.appendChild(box); }
+      box.textContent = 'R64 diagnóstico\nplaca: ' + info.placa + '\nmax textura: ' + info.maxTex +
+        '\nimagens: ' + JSON.stringify(info.imagens) + '\nmédia dia: ' + info.media + ' | mipmaps: ' + info.mipmaps +
+        '\nerros GL: ' + (info.erros.join(', ') || 'nenhum') + (extra ? '\n' + extra : '');
+    };
+    (async () => {
+      try {
+        const imgs = await Promise.all(ordem.map((k) => carrega(arquivos[k])));
+        for (let i = 0; i < ordem.length; i++) {
+          if (inst.saindo) return;
+          sobe(ordem[i], imgs[i]);
+          await new Promise((ok) => setTimeout(ok, 0));         // uma foto por vez, sem travar a pagina
+        }
+        info.media = media(tex.dia);
+        if (!(info.media > 6)) {                                // tenta de novo sem mipmaps
+          info.mipmaps = false;
+          ordem.forEach((k) => configura(tex[k], false));
+          info.media = media(tex.dia);
+        }
+        if (!(info.media > 6)) throw new Error('A placa de video nao exibiu as fotos da Terra');
+        texPronta = true;
+        console.info('[Rocha R64] Terra pronta:', JSON.stringify(info));
+        mostraDiag();
+      } catch (erro) {
+        console.warn('[Rocha R64] Abertura desativada; carregamento original mantido.', erro, JSON.stringify(info));
+        mostraDiag('FALHA: ' + (erro && erro.message));
+        if (!diag) inst.cancelar();
+      }
+    })();
+    esperaTex = setTimeout(() => { if (!texPronta && !diag) inst.cancelar(); }, cfg.esperaTexturas);
+    inst.diagnostico = () => JSON.parse(JSON.stringify(info));
 
     /* ---------- roteiro da camera ---------- */
     let L = latLng(cfg.lat, cfg.lng);
@@ -571,6 +642,7 @@
     pronto: (cb) => { if (atual) atual.pronto(cb); else if (typeof cb === 'function') cb(); },
     alvo: (lat, lng) => { if (atual && atual.alvo) atual.alvo(lat, lng); },
     cancelar: () => { if (atual) atual.cancelar(); },
-    pular: () => { if (atual) atual.pular(); }
+    pular: () => { if (atual) atual.pular(); },
+    diagnostico: () => (atual && atual.diagnostico ? atual.diagnostico() : null)
   };
 })();

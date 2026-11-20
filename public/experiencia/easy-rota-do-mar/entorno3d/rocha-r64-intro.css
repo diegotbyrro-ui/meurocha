@@ -40,6 +40,10 @@
   opacity: .75; backdrop-filter: blur(4px); }
 .r64-pular:hover, .r64-pular:focus-visible { opacity: 1; outline: 2px solid var(--r64-ciano); outline-offset: 2px; }
 .r64-credito { position: absolute; right: 16px; bottom: 12px; font-size: 10px; color: rgba(255, 255, 255, .35); pointer-events: none; }
+/* R64.1: so aparece com ?abertura=diag */
+.r64-diag { position: absolute; left: 16px; top: 16px; z-index: 3; max-width: min(560px, calc(100% - 140px)); margin: 0; padding: 10px 12px;
+  border-radius: 10px; background: rgba(0, 0, 0, .78); border: 1px solid rgba(58, 233, 255, .5); color: #bff6ff;
+  font: 11px/1.45 ui-monospace, Consolas, monospace; white-space: pre-wrap; overflow-wrap: anywhere; pointer-events: none; }
 
 @keyframes r64-onda { 0% { transform: scale(.3); opacity: 1; } 100% { transform: scale(1.9); opacity: 0; } }
 @keyframes r64-pulso { 50% { opacity: .35; } }

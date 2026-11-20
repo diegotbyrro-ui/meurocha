@@ -63,7 +63,7 @@ test('R64: motor sem chave, sem servicos externos e com saidas seguras', () => {
 });
 
 test('R64: fotos da NASA presentes, 2:1 e em potencia de 2 (mipmaps)', () => {
-  const files = ['terra-dia-4k.jpg', 'terra-noite-4k.jpg', 'terra-nuvens-4k.jpg', 'terra-dia-2k.jpg',
+  const files = ['terra-dia-4k.jpg', 'terra-nuvens-4k.jpg', 'terra-dia-2k.jpg',
     'terra-noite-2k.jpg', 'terra-nuvens-2k.jpg', 'terra-agua-2k.jpg', 'terra-relevo-2k.jpg'];
   for (const name of files) {
     const file = join(base, 'terra', name);
@@ -75,4 +75,17 @@ test('R64: fotos da NASA presentes, 2:1 e em potencia de 2 (mipmaps)', () => {
     assert.ok(intro.includes("'terra-" + name.split('-')[1]), 'Motor nao referencia ' + name);
   }
   assert.ok(existsSync(join(base, 'terra', 'CREDITOS.txt')));
+});
+
+test('R64.1: fotos enviadas a placa de video de forma robusta e conferidas', () => {
+  assert.doesNotMatch(intro, /decoding = 'async'/, 'Decodificacao assincrona gerava textura preta');
+  assert.doesNotMatch(intro, /texImage2D\([^)]*(gl\.LUMINANCE|gl\.RGB)\b/, 'Somente RGBA');
+  assert.match(intro, /i\.decode\(\)/);
+  assert.match(intro, /getImageData\(0, 0, w, h\)/);
+  assert.match(intro, /gl\.texImage2D\(gl\.TEXTURE_2D, 0, gl\.RGBA, w, h, 0, gl\.RGBA, gl\.UNSIGNED_BYTE, new Uint8Array\(/);
+  assert.match(intro, /gl\.readPixels\(0, 0, 8, 8/);
+  assert.match(intro, /info\.mipmaps = false;/);
+  assert.match(intro, /if \(!diag\) inst\.cancelar\(\);/);
+  assert.match(intro, /parametro\('abertura'\) === 'diag'/);
+  assert.match(css, /\.r64-diag/);
 });
