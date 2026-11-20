@@ -243,6 +243,12 @@
     refresh();
   }
 
+  // R64.4: posicao do pino (terreno do empreendimento), para a camera centralizar nele.
+  window.rochaR62PinCoordinates = function (site) {
+    if (!site || !Number.isFinite(site.lat) || !Number.isFinite(site.lng)) return null;
+    return coordinates(site, readOffset());
+  };
+
   window.rochaR62InitPin = async function (map, maps3d, site) {
     if (!map || !maps3d || !site || !Number.isFinite(site.lat) || !Number.isFinite(site.lng)) return;
     if (marker) return;

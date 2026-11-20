@@ -25,7 +25,7 @@ function jpegSize(file) {
 test('R64: abertura carregada no Entorno 3D sem remover o carregamento original', () => {
   assert.match(html, /rocha-r64-intro\.css/);
   assert.match(html, /rocha-r64-intro\.js/);
-  assert.match(html, /window\.rochaR64Intro\.iniciar\(\{raiz:document\.getElementById\('main'\),lat:SITE\.lat,lng:SITE\.lng\}\)/);
+  assert.match(html, /window\.rochaR64Intro\.iniciar\(\{raiz:document\.getElementById\('main'\),lat:alvoEmpreendimento\(\)\.lat,lng:alvoEmpreendimento\(\)\.lng\}\)/);
   assert.ok(html.includes('Preparando o mapa 3D'), 'Cartao original deve continuar como contingencia');
   assert.ok(html.indexOf('rocha-r64-intro.js') < html.indexOf('const rochaIntro='), 'Motor precisa carregar antes do uso');
 });
@@ -33,8 +33,8 @@ test('R64: abertura carregada no Entorno 3D sem remover o carregamento original'
 test('R64: mapa nasce no espaco somente com a abertura ativa e voa ate a vista de sempre', () => {
   assert.match(html, /cameraNoEspaco=introAtiva\(\);/);
   assert.match(html, /range:3500000,tilt:0,heading:0,mode:MapMode\.SATELLITE/);
-  assert.match(html, /\{center:\{\.\.\.SITE\},range:1250,tilt:65,heading:25,mode:MapMode\.SATELLITE\}/);
-  assert.match(html, /const cam=\{center:\{\.\.\.SITE\},range:1250,tilt:65,heading:25\}/);
+  assert.match(html, /\{center:alvoEmpreendimento\(\),range:1250,tilt:65,heading:25,mode:MapMode\.SATELLITE\}/);
+  assert.match(html, /const cam=\{center:alvoEmpreendimento\(\),range:1250,tilt:65,heading:25\}/);
   assert.match(html, /map\.flyCameraTo\(\{endCamera:cam,durationMillis:ms\}\)/);
   assert.match(html, /gmp-animationend/);
   assert.match(html, /window\.rochaR64Intro\.pronto\(\(\)=>entrarNoEmpreendimento\(6500\)\)/);
@@ -44,7 +44,7 @@ test('R64: pino e entorno aparecem ao pousar; erro devolve a tela original', () 
   assert.match(html, /if\(cameraNoEspaco\)aoChegar\.push\(iniciarPino\);else iniciarPino\(\);/);
   assert.match(html, /rochaR62InitPin\(map,result,SITE\)/);
   assert.match(html, /function showError\(m\)\{if\(window\.rochaR64Intro\)window\.rochaR64Intro\.cancelar\(\);/);
-  assert.match(html, /if\(window\.rochaR64Intro\)window\.rochaR64Intro\.alvo\(SITE\.lat,SITE\.lng\)/);
+  assert.match(html, /if\(window\.rochaR64Intro\)\{const a=alvoEmpreendimento\(\);window\.rochaR64Intro\.alvo\(a\.lat,a\.lng\);\}/);
 });
 
 test('R64: motor sem chave, sem servicos externos e com saidas seguras', () => {
@@ -108,4 +108,25 @@ test('R64.3: marcador usa a logo oficial, com texto de reserva', () => {
   assert.ok(existsSync(join(base, '..', 'erm-logo-transparente.png')), 'Logo oficial ausente');
   assert.match(intro, /logo\.onerror = \(\) => \{ marca\.classList\.remove\('r64-com-logo'\); marca\.textContent = cfg\.titulo; \};/);
   assert.match(css, /\.r64-alvo \.r64-logo \{ display: block; height: 36px;/);
+});
+
+test('R64.4: camera termina centralizada no pino calibrado do empreendimento', async () => {
+  const pin = readFileSync(join(base, 'rocha-r62-pin.js'), 'utf8');
+  assert.match(pin, /window\.rochaR62PinCoordinates = function \(site\) \{/);
+  assert.match(pin, /return coordinates\(site, readOffset\(\)\);/);
+  assert.match(html, /function alvoEmpreendimento\(\)\{/);
+  assert.match(html, /function goHome\(\)\{if\(map\)\{map\.center=alvoEmpreendimento\(\);map\.tilt=65;map\.range=1250;map\.heading=25;\}\}/);
+  assert.match(html, /center:\{lat:alvoEmpreendimento\(\)\.lat,lng:alvoEmpreendimento\(\)\.lng,altitude:0\},range:3500000/);
+  assert.match(html, /if\(window\.rochaR64Intro\)\{const a=alvoEmpreendimento\(\);window\.rochaR64Intro\.alvo\(a\.lat,a\.lng\);\}/);
+  assert.match(html, /rocha-r62-pin\.js\?v=r64-4/);
+  // A funcao do pino aplica o mesmo ajuste que o pino usa no mapa (DEFAULT_OFFSET).
+  const vm = await import('node:vm');
+  const win = {};
+  vm.runInNewContext(pin, { window: win, localStorage: { getItem: () => null }, location: { search: '' }, URLSearchParams, console });
+  const site = { lat: -9.5992951, lng: -35.7137302, altitude: 60 };
+  const p = win.rochaR62PinCoordinates(site);
+  assert.ok(Math.abs((p.lat - site.lat) * 111320 + 259) < 0.5, 'Norte -259 m');
+  const east = (p.lng - site.lng) * 111320 * Math.cos(p.lat * Math.PI / 180);
+  assert.ok(Math.abs(east + 395) < 0.5, 'Leste -395 m');
+  assert.equal(win.rochaR62PinCoordinates(null), null);
 });
