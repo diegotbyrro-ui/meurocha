@@ -9,7 +9,7 @@ const html = readFileSync(join(base, 'index.html'), 'utf8');
 const js = readFileSync(join(base, 'rocha-r69-maquete.js'), 'utf8');
 const css = readFileSync(join(base, 'rocha-r69-maquete.css'), 'utf8');
 const pino = readFileSync(join(base, 'rocha-r62-pin.js'), 'utf8');
-const GLB = join(base, 'easy-rota-maquete-r71.glb');
+const GLB = join(base, 'easy-rota-maquete-r72.glb');
 
 function lerGlb() {
   const b = readFileSync(GLB);
@@ -67,18 +67,21 @@ test('R69: maquete em glTF 2.0 puro (sem extensoes), so PBR basico e leve', () =
   assert.ok(json.images.every((i) => i.mimeType === 'image/jpeg'));
   assert.ok(json.materials.some((m) => m.name === 'longa' && m.pbrMetallicRoughness.baseColorTexture), 'Fachada oficial como textura');
   assert.ok(statSync(GLB).size < 1.5 * 1024 * 1024, 'GLB abaixo de 1,5 MB');
-  // Caixa de todos os vertices: 2 blocos de 19,5 x 43,5 m, 42 m de altura + torre do R.
-  const pos = json.meshes[0].primitives.map((p) => json.accessors[p.attributes.POSITION]);
-  const min = [0, 1, 2].map((i) => Math.min(...pos.map((a) => a.min[i])));
-  const max = [0, 1, 2].map((i) => Math.max(...pos.map((a) => a.max[i])));
-  assert.ok(Math.abs(max[1] - 46.2) < 0.01 && min[1] === 0, 'Altura: terreo + 13 andares + torre do R');
-  assert.ok(Math.abs(max[0] - min[0] - 43.75) < 0.3, 'Dois blocos lado a lado');
-  assert.ok(Math.abs(max[2] - min[2] - 43.5) < 0.01, 'Comprimento do bloco');
+  // Blocos (R72, pela implantacao): 14,5 x 45 m, centros a 12,4 m do meio (jardim de ~10 m), 42 m + torre do R.
+  const caixa = (nome) => {
+    const i = json.materials.findIndex((m) => m.name === nome);
+    return json.accessors[json.meshes[0].primitives.find((p) => p.material === i).attributes.POSITION];
+  };
+  const fachada = caixa('longa');
+  assert.ok(fachada.min[1] === 0 && Math.abs(fachada.max[1] - 42) < 0.01, 'Terreo + 13 andares');
+  assert.ok(Math.abs(fachada.max[0] - fachada.min[0] - 39.3) < 0.01, 'Dois blocos de 14,5 m com o jardim no meio');
+  assert.ok(Math.abs(fachada.max[2] - fachada.min[2] - 45) < 0.01, 'Comprimento do bloco');
+  assert.ok(Math.abs(caixa('torre').max[1] - 46.2) < 0.01, 'Torre do R acima da cobertura');
 });
 
 test('R69: pagina carrega a maquete antes do pino e o pino sobe acima dos predios', () => {
   assert.match(html, /<link rel="stylesheet" href="rocha-r69-maquete\.css\?v=r69">/);
-  assert.match(html, /<script src="rocha-r69-maquete\.js\?v=r71"><\/script>/);
+  assert.match(html, /<script src="rocha-r69-maquete\.js\?v=r72"><\/script>/);
   assert.match(html, /<script src="rocha-r62-pin\.js\?v=r71"><\/script>/);
   const gancho = html.indexOf('window.rochaR69Maquete.iniciar(map,result,alvoEmpreendimento());');
   assert.ok(gancho > 0 && gancho < html.indexOf('if(cameraNoEspaco)aoChegar.push(iniciarPino);'));
@@ -100,9 +103,9 @@ test('R69: modo de ajuste mostra a maquete em pe, na posicao calibrada, com pain
   const r = carregar('?ajustepredio=1');
   const m = r.api.iniciar(r.mapa, r.maps3d, CENTRO);
   assert.ok(m && r.criados.length === 1);
-  assert.match(m.src, /\/entorno3d\/easy-rota-maquete-r71\.glb$/);
+  assert.match(m.src, /\/entorno3d\/easy-rota-maquete-r72\.glb$/);
   assert.equal(m.altitudeMode, 'RELATIVE_TO_GROUND');
-  assert.deepEqual({ ...m.orientation }, { heading: 38, tilt: 270, roll: 0 }, 'glTF Y-up em pe, como no exemplo do Google');
+  assert.deepEqual({ ...m.orientation }, { heading: 44, tilt: 270, roll: 0 }, 'glTF Y-up em pe, como no exemplo do Google');
   assert.ok(Math.abs(m.position.lat - LAT_FIXO) < 1e-9 && Math.abs(m.position.lng - LNG_FIXO) < 1e-9 && m.position.altitude === 0);
   assert.equal(m.scale, 1);
   assert.equal(r.mapa.filhos[0], m);
@@ -111,7 +114,7 @@ test('R69: modo de ajuste mostra a maquete em pe, na posicao calibrada, com pain
   // Clique no mapa leva o centro da maquete ate o ponto clicado (aprox. 100 m ao norte e 50 m a leste).
   r.mapa.listeners['gmp-click']({ position: { lat: CENTRO.lat + 100 / 111320, lng: CENTRO.lng + 50 / (111320 * Math.cos(CENTRO.lat * Math.PI / 180)) } });
   assert.ok(Math.abs(m.position.lat - (CENTRO.lat + 100 / 111320)) < 1e-6);
-  const salvo = JSON.parse(r.armazem.get('rocha69-maquete-ajuste-v1'));
+  const salvo = JSON.parse(r.armazem.get('rocha69-maquete-ajuste-v2'));
   assert.ok(Math.abs(salvo.norte - 100) < 0.5 && Math.abs(salvo.leste - 50) < 0.5, 'Ajuste guardado so neste navegador');
   assert.equal(salvo.norte, Math.round(salvo.norte * 10) / 10, 'Numeros curtos (10 cm)');
   // Clique em um pino do entorno (o evento vem do pino) nao move a maquete.

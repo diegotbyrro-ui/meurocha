@@ -3,6 +3,9 @@
    R70: o R do logotipo da Rocha na torre azul do topo (frente e tras).
    R71: calibrada pela fotomontagem oficial (blocos paralelos a rua da frente,
    lado do R virado para ela) e visivel para todos; o pino fica sobre os predios.
+   R72: terreno pronto. A maquete traz a implantacao oficial (estacionamento,
+   piscinas, jardins, pista e predio-garagem) e o "achatamento" do proprio Google
+   (gmp-flattener) tira as arvores e construcoes do mapa 3D so dentro do lote.
    Usa o Model3DElement do Google (glTF puro, sem extensoes, como o Google exige).
    Enquanto a posicao nao for calibrada, a maquete so aparece no modo de ajuste:
    ?ajustepredio=1 mostra a maquete e um painel para alinhar no terreno (setas,
@@ -11,10 +14,11 @@
 (function () {
   'use strict';
 
-  const ARQUIVO = 'easy-rota-maquete-r71.glb';
-  const CHAVE = 'rocha69-maquete-ajuste-v1';
-  // Ajuste fixo para todos os visitantes (R71). publica: false = so no modo de ajuste.
-  const FIXO = { norte: 39.2, leste: 20.8, giro: 38, altura: 0, escala: 1, eixo: 270, publica: true };
+  const ARQUIVO = 'easy-rota-maquete-r72.glb';
+  const CHAVE = 'rocha69-maquete-ajuste-v2';
+  // Ajuste fixo para todos os visitantes (R72: blocos 5,2 graus girados em relacao a frente do lote,
+  // como na implantacao). publica: false = so no modo de ajuste.
+  const FIXO = { norte: 39.2, leste: 20.8, giro: 44, altura: 0, escala: 1, eixo: 270, publica: true };
   // Com a maquete, o pino da marca sobe acima dos predios (42 m + torre do R).
   const ALTURA_PINO = 58;
   const LIMITES = { norte: [-200, 200], leste: [-200, 200], giro: [0, 359], altura: [-20, 20], escala: [0.8, 1.2] };
@@ -22,8 +26,12 @@
   const CASAS = { norte: 1, leste: 1, giro: 0, altura: 1, escala: 2 };
   const EIXOS = [[270, 'Em p\u00e9 (padr\u00e3o)'], [90, 'Alternativo 1'], [0, 'Alternativo 2'], [180, 'Alternativo 3']];
   const M_GRAU = 111320;
+  // R72: contorno do lote em metros, nos eixos da maquete (X para o lado do jardim, Z para o fundo),
+  // com 1,5 m de folga. Dentro dele o Google achata arvores e construcoes do mapa 3D.
+  const LOTE_ACHATAR = [[-45.08, -27.98], [30.38, -33.65], [25.09, 73.4], [-22.01, 77.69], [-23.23, 64.35], [-36.57, 65.56]];
+  const ALTURA_ACHATAR = 500;
 
-  const estado = { mapa: null, modelo: null, centro: null, ajuste: null };
+  const estado = { mapa: null, modelo: null, centro: null, ajuste: null, achatador: null };
 
   function parametro(nome) {
     try {
@@ -66,6 +74,36 @@
     return { lat, lng, altitude: a.altura };
   }
 
+  // Lote em lat/lng: gira com a maquete (heading positivo = sentido horario) e acompanha posicao e tamanho.
+  function contornoLote() {
+    const a = estado.ajuste;
+    const centro = posicao();
+    const g = a.giro * Math.PI / 180;
+    const cos = Math.cos(g);
+    const sin = Math.sin(g);
+    return LOTE_ACHATAR.map(([x, z]) => {
+      const leste = (x * cos - z * sin) * a.escala;
+      const norte = (-x * sin - z * cos) * a.escala;
+      const lat = centro.lat + norte / M_GRAU;
+      const lng = centro.lng + leste / (M_GRAU * Math.cos(lat * Math.PI / 180));
+      return { lat, lng };
+    });
+  }
+
+  function achatar() {
+    if (!estado.mapa || !window.customElements || !window.customElements.get('gmp-flattener')) return;
+    const caminho = contornoLote().map((p) => p.lat.toFixed(7) + ',' + p.lng.toFixed(7) + ',' + ALTURA_ACHATAR).join(' ');
+    if (estado.achatador) {
+      estado.achatador.setAttribute('path', caminho);
+      return;
+    }
+    const f = document.createElement('gmp-flattener');
+    f.id = 'rocha72-achatador';
+    f.setAttribute('path', caminho);
+    estado.mapa.append(f);
+    estado.achatador = f;
+  }
+
   function moverPino() {
     if (typeof window.rochaR62PinPosicao === 'function') window.rochaR62PinPosicao(posicao());
   }
@@ -78,6 +116,7 @@
     m.orientation = { heading: a.giro, tilt: a.eixo, roll: 0 };
     m.scale = a.escala;
     moverPino();
+    achatar();
   }
 
   function texto(a) {
@@ -189,6 +228,7 @@
     estado.modelo = modelo;
     if (typeof window.rochaR62PinAltitude === 'function') window.rochaR62PinAltitude(ALTURA_PINO);
     moverPino();
+    achatar();
     if (ajustando) painel();
     console.info('[Rocha R69] Maquete do Easy Rota do Mar no mapa' + (ajustando ? ' (modo de ajuste).' : '.'));
     return modelo;

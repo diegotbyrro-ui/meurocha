@@ -7,7 +7,7 @@ import vm from 'node:vm';
 const base = join(process.cwd(), 'public/experiencia/easy-rota-do-mar/entorno3d');
 const js = readFileSync(join(base, 'rocha-r69-maquete.js'), 'utf8');
 const pino = readFileSync(join(base, 'rocha-r62-pin.js'), 'utf8');
-const glb = readFileSync(join(base, 'easy-rota-maquete-r71.glb'));
+const glb = readFileSync(join(base, 'easy-rota-maquete-r72.glb'));
 
 const CENTRO = { lat: -9.6016217, lng: -35.7173289 };
 
@@ -41,11 +41,11 @@ function visitante() {
 }
 
 test('R71: maquete calibrada pela fotomontagem e ligada para todos', () => {
-  assert.match(js, /const FIXO = \{ norte: 39\.2, leste: 20\.8, giro: 38, altura: 0, escala: 1, eixo: 270, publica: true \};/);
+  assert.match(js, /const FIXO = \{ norte: 39\.2, leste: 20\.8, giro: 44, altura: 0, escala: 1, eixo: 270, publica: true \};/);
   const r = visitante();
   assert.ok(r.modelo, 'Visitante comum ve a maquete');
   assert.equal(r.criados.length, 1);
-  assert.deepEqual({ ...r.modelo.orientation }, { heading: 38, tilt: 270, roll: 0 }, 'Blocos paralelos a rua da frente, R virado para ela');
+  assert.deepEqual({ ...r.modelo.orientation }, { heading: 44, tilt: 270, roll: 0 }, 'R virado para a rua da frente (blocos 5,2 graus girados, como na implantacao)');
   const lat = CENTRO.lat + 39.2 / 111320;
   const lng = CENTRO.lng + 20.8 / (111320 * Math.cos(lat * Math.PI / 180));
   assert.ok(Math.abs(r.modelo.position.lat - lat) < 1e-9 && Math.abs(r.modelo.position.lng - lng) < 1e-9);
