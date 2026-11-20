@@ -9,7 +9,7 @@ const html = readFileSync(join(base, 'index.html'), 'utf8');
 const js = readFileSync(join(base, 'rocha-r69-maquete.js'), 'utf8');
 const css = readFileSync(join(base, 'rocha-r69-maquete.css'), 'utf8');
 const pino = readFileSync(join(base, 'rocha-r62-pin.js'), 'utf8');
-const GLB = join(base, 'easy-rota-maquete-r70.glb');
+const GLB = join(base, 'easy-rota-maquete-r71.glb');
 
 function lerGlb() {
   const b = readFileSync(GLB);
@@ -35,23 +35,27 @@ function elemento() {
   return el;
 }
 
-function carregar(search, armazem = new Map()) {
+function carregar(search, armazem = new Map(), codigo = js) {
   const criados = [];
   const alturas = [];
+  const pinos = [];
   class Modelo {
     constructor(o) { Object.assign(this, elemento()); Object.assign(this, o); criados.push(this); }
   }
   const main = elemento();
-  const window = { rochaR62PinAltitude: (a) => alturas.push(a) };
+  const window = { rochaR62PinAltitude: (a) => alturas.push(a), rochaR62PinPosicao: (p) => pinos.push({ ...p }) };
   window.top = window;
   const document = { getElementById: (id) => (id === 'main' ? main : null), createElement: elemento, body: main, baseURI: 'https://conviterocha.com.br/experiencia/easy-rota-do-mar/entorno3d/index.html' };
   const localStorage = { getItem: (k) => (armazem.has(k) ? armazem.get(k) : null), setItem: (k, v) => armazem.set(k, v) };
-  vm.runInNewContext(js, { window, document, localStorage, location: { search }, URLSearchParams, URL, console: { warn() {}, info() {} } });
+  vm.runInNewContext(codigo, { window, document, localStorage, location: { search }, URLSearchParams, URL, console: { warn() {}, info() {} } });
   const mapa = elemento();
-  return { api: window.rochaR69Maquete, mapa, maps3d: { Model3DElement: Modelo }, criados, alturas, main, armazem };
+  return { api: window.rochaR69Maquete, mapa, maps3d: { Model3DElement: Modelo }, criados, alturas, pinos, main, armazem };
 }
 
 const CENTRO = { lat: -9.6016, lng: -35.7173 };
+// R71: ajuste fixo calibrado pela fotomontagem oficial.
+const LAT_FIXO = CENTRO.lat + 39.2 / 111320;
+const LNG_FIXO = CENTRO.lng + 20.8 / (111320 * Math.cos(LAT_FIXO * Math.PI / 180));
 
 test('R69: maquete em glTF 2.0 puro (sem extensoes), so PBR basico e leve', () => {
   const { json, binLength } = lerGlb();
@@ -59,7 +63,7 @@ test('R69: maquete em glTF 2.0 puro (sem extensoes), so PBR basico e leve', () =
   assert.equal(json.extensionsUsed, undefined, 'O Google nao aceita extensoes');
   assert.equal(json.extensionsRequired, undefined);
   assert.equal(json.buffers[0].byteLength, binLength);
-  assert.ok(json.materials.every((m) => Object.keys(m).every((k) => ['name', 'pbrMetallicRoughness'].includes(k))));
+  assert.ok(json.materials.every((m) => Object.keys(m).every((k) => ['name', 'pbrMetallicRoughness', 'emissiveTexture', 'emissiveFactor'].includes(k))), 'So propriedades do nucleo do glTF');
   assert.ok(json.images.every((i) => i.mimeType === 'image/jpeg'));
   assert.ok(json.materials.some((m) => m.name === 'longa' && m.pbrMetallicRoughness.baseColorTexture), 'Fachada oficial como textura');
   assert.ok(statSync(GLB).size < 1.5 * 1024 * 1024, 'GLB abaixo de 1,5 MB');
@@ -74,31 +78,32 @@ test('R69: maquete em glTF 2.0 puro (sem extensoes), so PBR basico e leve', () =
 
 test('R69: pagina carrega a maquete antes do pino e o pino sobe acima dos predios', () => {
   assert.match(html, /<link rel="stylesheet" href="rocha-r69-maquete\.css\?v=r69">/);
-  assert.match(html, /<script src="rocha-r69-maquete\.js\?v=r70"><\/script>/);
-  assert.match(html, /<script src="rocha-r62-pin\.js\?v=r69"><\/script>/);
+  assert.match(html, /<script src="rocha-r69-maquete\.js\?v=r71"><\/script>/);
+  assert.match(html, /<script src="rocha-r62-pin\.js\?v=r71"><\/script>/);
   const gancho = html.indexOf('window.rochaR69Maquete.iniciar(map,result,alvoEmpreendimento());');
   assert.ok(gancho > 0 && gancho < html.indexOf('if(cameraNoEspaco)aoChegar.push(iniciarPino);'));
   assert.match(pino, /window\.rochaR62PinAltitude = function \(altitude\) \{/);
-  assert.match(pino, /position: \{ \.\.\.coordinates\(site, offset\), altitude: pinAltitude \}/);
+  assert.match(pino, /position: \{ \.\.\.\(pinPosicao \|\| coordinates\(site, offset\)\), altitude: pinAltitude \}/);
   assert.match(js, /const ALTURA_PINO = 58;/);
 });
 
-test('R69: escondida para os visitantes ate ser calibrada', () => {
-  assert.match(js, /const FIXO = \{ norte: 0, leste: 0, giro: 0, altura: 0, escala: 1, eixo: 270, publica: false \};/);
-  const r = carregar('');
+test('R69: com publica false, escondida para os visitantes (so no modo de ajuste)', () => {
+  const escondida = js.replace('publica: true };', 'publica: false };');
+  assert.notEqual(escondida, js);
+  const r = carregar('', new Map(), escondida);
   assert.equal(r.api.iniciar(r.mapa, r.maps3d, CENTRO), null);
   assert.equal(r.criados.length, 0);
   assert.equal(r.alturas.length, 0, 'Sem maquete, o pino continua na altura de sempre');
 });
 
-test('R69: modo de ajuste mostra a maquete em pe, no centro do terreno, com painel', () => {
+test('R69: modo de ajuste mostra a maquete em pe, na posicao calibrada, com painel', () => {
   const r = carregar('?ajustepredio=1');
   const m = r.api.iniciar(r.mapa, r.maps3d, CENTRO);
   assert.ok(m && r.criados.length === 1);
-  assert.match(m.src, /\/entorno3d\/easy-rota-maquete-r70\.glb$/);
+  assert.match(m.src, /\/entorno3d\/easy-rota-maquete-r71\.glb$/);
   assert.equal(m.altitudeMode, 'RELATIVE_TO_GROUND');
-  assert.deepEqual({ ...m.orientation }, { heading: 0, tilt: 270, roll: 0 }, 'glTF Y-up em pe, como no exemplo do Google');
-  assert.deepEqual({ ...m.position }, { lat: CENTRO.lat, lng: CENTRO.lng, altitude: 0 });
+  assert.deepEqual({ ...m.orientation }, { heading: 38, tilt: 270, roll: 0 }, 'glTF Y-up em pe, como no exemplo do Google');
+  assert.ok(Math.abs(m.position.lat - LAT_FIXO) < 1e-9 && Math.abs(m.position.lng - LNG_FIXO) < 1e-9 && m.position.altitude === 0);
   assert.equal(m.scale, 1);
   assert.equal(r.mapa.filhos[0], m);
   assert.deepEqual(r.alturas, [58]);

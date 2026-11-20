@@ -1,6 +1,8 @@
 /* Rocha R69: maquete 3D do Easy Rota do Mar no mapa (2 blocos de 13 andares
    mais o terreo), montada a partir da fachada oficial e da implantacao.
    R70: o R do logotipo da Rocha na torre azul do topo (frente e tras).
+   R71: calibrada pela fotomontagem oficial (blocos paralelos a rua da frente,
+   lado do R virado para ela) e visivel para todos; o pino fica sobre os predios.
    Usa o Model3DElement do Google (glTF puro, sem extensoes, como o Google exige).
    Enquanto a posicao nao for calibrada, a maquete so aparece no modo de ajuste:
    ?ajustepredio=1 mostra a maquete e um painel para alinhar no terreno (setas,
@@ -9,10 +11,10 @@
 (function () {
   'use strict';
 
-  const ARQUIVO = 'easy-rota-maquete-r70.glb';
+  const ARQUIVO = 'easy-rota-maquete-r71.glb';
   const CHAVE = 'rocha69-maquete-ajuste-v1';
-  // Ajuste fixo para todos os visitantes. publica: false = so no modo de ajuste.
-  const FIXO = { norte: 0, leste: 0, giro: 0, altura: 0, escala: 1, eixo: 270, publica: false };
+  // Ajuste fixo para todos os visitantes (R71). publica: false = so no modo de ajuste.
+  const FIXO = { norte: 39.2, leste: 20.8, giro: 38, altura: 0, escala: 1, eixo: 270, publica: true };
   // Com a maquete, o pino da marca sobe acima dos predios (42 m + torre do R).
   const ALTURA_PINO = 58;
   const LIMITES = { norte: [-200, 200], leste: [-200, 200], giro: [0, 359], altura: [-20, 20], escala: [0.8, 1.2] };
@@ -64,6 +66,10 @@
     return { lat, lng, altitude: a.altura };
   }
 
+  function moverPino() {
+    if (typeof window.rochaR62PinPosicao === 'function') window.rochaR62PinPosicao(posicao());
+  }
+
   function aplicar() {
     const m = estado.modelo;
     if (!m) return;
@@ -71,6 +77,7 @@
     m.position = posicao();
     m.orientation = { heading: a.giro, tilt: a.eixo, roll: 0 };
     m.scale = a.escala;
+    moverPino();
   }
 
   function texto(a) {
@@ -181,6 +188,7 @@
     mapa.append(modelo);
     estado.modelo = modelo;
     if (typeof window.rochaR62PinAltitude === 'function') window.rochaR62PinAltitude(ALTURA_PINO);
+    moverPino();
     if (ajustando) painel();
     console.info('[Rocha R69] Maquete do Easy Rota do Mar no mapa' + (ajustando ? ' (modo de ajuste).' : '.'));
     return modelo;
