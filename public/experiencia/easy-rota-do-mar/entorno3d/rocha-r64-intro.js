@@ -227,6 +227,7 @@
     const cfg = Object.assign({
       raiz: null, lat: -9.6002, lng: -35.7173, pasta: 'terra/',
       titulo: 'Easy Rota do Mar', local: 'Serraria · Maceió/AL',
+      logo: '../erm-logo-transparente.png',   // R64.3: marca oficial no marcador (mesma do pino do mapa)
       duracaoMinima: 14000,   // viagem minima (ms), mesmo que o Google fique pronto antes
       tempoLimite: 28000,     // se o Google nao responder, a abertura sai e o aviso original aparece
       esperaTexturas: 12000   // tempo maximo esperando as fotos da Terra
@@ -259,7 +260,14 @@
     const elAlvo = el.querySelector('.r64-alvo'), elStatus = el.querySelector('.r64-status'), elCoord = el.querySelector('.r64-coord');
     el.querySelector('.r64-titulo').textContent = cfg.titulo;
     el.querySelector('.r64-local').textContent = cfg.local;
-    el.querySelector('.r64-alvo span').textContent = cfg.titulo;
+    // R64.3: logo oficial do Easy Rota do Mar no marcador; se a imagem faltar, volta o texto.
+    const marca = el.querySelector('.r64-alvo span');
+    const logo = new Image();
+    logo.className = 'r64-logo'; logo.alt = cfg.titulo;
+    logo.onerror = () => { marca.classList.remove('r64-com-logo'); marca.textContent = cfg.titulo; };
+    logo.src = cfg.logo;
+    marca.classList.add('r64-com-logo');
+    marca.appendChild(logo);
     elStatus.textContent = MENSAGENS[0][1];
     const escreveCoord = (lat, lng) => {
       elCoord.textContent = Math.abs(lat).toFixed(4) + '° ' + (lat < 0 ? 'S' : 'N') + ' · ' + Math.abs(lng).toFixed(4) + '° ' + (lng < 0 ? 'O' : 'L');
@@ -309,6 +317,7 @@
     function encerrar(chamar, ms) {
       if (inst.saindo) return;
       inst.saindo = true;
+      document.documentElement.classList.remove('r64-espera');   // R64.2: libera a tela original por baixo
       clearTimeout(limite); clearTimeout(esperaTex);
       if (chamar) inst.callbacks.splice(0).forEach((cb) => { try { cb(); } catch (e) { console.warn('[Rocha R64]', e); } });
       inst.callbacks.length = 0;

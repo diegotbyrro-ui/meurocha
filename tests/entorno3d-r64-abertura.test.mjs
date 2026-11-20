@@ -89,3 +89,23 @@ test('R64.1: fotos enviadas a placa de video de forma robusta e conferidas', () 
   assert.match(intro, /parametro\('abertura'\) === 'diag'/);
   assert.match(css, /\.r64-diag/);
 });
+
+test('R64.2: tela antiga nao pisca antes da abertura e volta se ela nao rodar', () => {
+  const head = html.slice(0, html.indexOf('</head>'));
+  assert.match(head, /classList\.add\('r64-espera'\)/, 'Classe precisa entrar antes do primeiro desenho');
+  assert.ok(head.indexOf('rocha-r64-intro.css') < head.indexOf("classList.add('r64-espera')"));
+  assert.match(head, /m==='0'\|\|\(calmo&&m!=='1'&&m!=='diag'\)/, 'Respeita ?abertura=0 e reduzir movimento');
+  assert.match(head, /if\(!r\|\|!r\.ativo\(\)\)h\.classList\.remove\('r64-espera'\)/, 'Rede de seguranca');
+  assert.match(html, /if\(!rochaIntro\)document\.documentElement\.classList\.remove\('r64-espera'\)/);
+  assert.match(html, /window\.rochaR64Intro\.cancelar\(\);document\.documentElement\.classList\.remove\('r64-espera'\);/);
+  assert.match(intro, /inst\.saindo = true;\s*document\.documentElement\.classList\.remove\('r64-espera'\);/);
+  assert.match(css, /html\.r64-espera \.hero, html\.r64-espera #setup, html\.r64-espera \.tools \{ visibility: hidden; \}/);
+  assert.doesNotMatch(css, /r64-espera[^{]*\{[^}]*display:\s*none/, 'Nao brigar com o display que o mapa controla');
+});
+
+test('R64.3: marcador usa a logo oficial, com texto de reserva', () => {
+  assert.match(intro, /logo: '\.\.\/erm-logo-transparente\.png'/);
+  assert.ok(existsSync(join(base, '..', 'erm-logo-transparente.png')), 'Logo oficial ausente');
+  assert.match(intro, /logo\.onerror = \(\) => \{ marca\.classList\.remove\('r64-com-logo'\); marca\.textContent = cfg\.titulo; \};/);
+  assert.match(css, /\.r64-alvo \.r64-logo \{ display: block; height: 36px;/);
+});

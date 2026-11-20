@@ -8,6 +8,10 @@
   --r64-ciano: #3ae9ff;
 }
 #rocha64-intro.r64-saindo { opacity: 0; pointer-events: none; }
+/* R64.2: enquanto a abertura entra, a tela antiga (foto + cartao + botoes) nao pisca.
+   A classe sai assim que a abertura termina, e cancelada ou nao consegue rodar. */
+html.r64-espera body, html.r64-espera .main { background: #000105; }
+html.r64-espera .hero, html.r64-espera #setup, html.r64-espera .tools { visibility: hidden; }
 #rocha64-intro canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .r64-vinheta { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 62%, rgba(0, 0, 0, .45) 100%); }
 
@@ -21,6 +25,9 @@
 .r64-alvo span { position: absolute; left: 18px; top: -30px; white-space: nowrap; color: #e9f7ff; font-size: 12px; font-weight: 700;
   letter-spacing: .14em; text-transform: uppercase; padding: 5px 10px; border-left: 2px solid var(--r64-ciano);
   background: rgba(2, 16, 30, .55); backdrop-filter: blur(4px); text-shadow: 0 1px 6px #000; }
+/* R64.3: logo oficial no lugar do texto */
+.r64-alvo span.r64-com-logo { top: -42px; padding: 7px 13px 6px; letter-spacing: 0; background: rgba(2, 16, 30, .62); }
+.r64-alvo .r64-logo { display: block; height: 36px; width: auto; filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .6)); }
 
 /* textos */
 .r64-hud { position: absolute; left: 28px; bottom: 26px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px;
@@ -55,6 +62,8 @@
   .r64-pular { top: 10px; right: 10px; }
   .r64-credito { display: none; }
   .r64-alvo span { font-size: 10px; }
+  .r64-alvo span.r64-com-logo { top: -34px; padding: 5px 10px 4px; }
+  .r64-alvo .r64-logo { height: 26px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .r64-alvo b, .r64-barra span, .r64-tag::before { animation: none; }
