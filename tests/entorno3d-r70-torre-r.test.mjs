@@ -5,7 +5,7 @@ import { join } from 'node:path';
 
 const base = join(process.cwd(), 'public/experiencia/easy-rota-do-mar/entorno3d');
 const js = readFileSync(join(base, 'rocha-r69-maquete.js'), 'utf8');
-const glb = readFileSync(join(base, 'easy-rota-maquete-r72.glb'));
+const glb = readFileSync(join(base, 'easy-rota-maquete-r73.glb'));
 
 function partes() {
   const jl = glb.readUInt32LE(12);
@@ -48,6 +48,7 @@ test('R70: arquivo novo da maquete (o antigo sai) e dica do R no painel', () => 
   assert.ok(!existsSync(join(base, 'easy-rota-maquete-r69.glb')));
   assert.ok(!existsSync(join(base, 'easy-rota-maquete-r70.glb')));
   assert.ok(!existsSync(join(base, 'easy-rota-maquete-r71.glb')));
-  assert.match(js, /const ARQUIVO = 'easy-rota-maquete-r72\.glb';/);
+  assert.ok(!existsSync(join(base, 'easy-rota-maquete-r72.glb')));
+  assert.match(js, /const ARQUIVO = 'easy-rota-maquete-r73\.glb';/);
   assert.match(js, /com o R virado para a avenida/);
 });

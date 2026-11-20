@@ -7,7 +7,7 @@ import vm from 'node:vm';
 const base = join(process.cwd(), 'public/experiencia/easy-rota-do-mar/entorno3d');
 const js = readFileSync(join(base, 'rocha-r69-maquete.js'), 'utf8');
 const html = readFileSync(join(base, 'index.html'), 'utf8');
-const glb = readFileSync(join(base, 'easy-rota-maquete-r72.glb'));
+const glb = readFileSync(join(base, 'easy-rota-maquete-r73.glb'));
 
 const CENTRO = { lat: -9.6016217, lng: -35.7173289 };
 
@@ -65,7 +65,7 @@ test('R72: maquete traz o terreno da implantacao e o predio-garagem, sem extenso
   const garagem = json.accessors[primitiva(json, 'garagem').attributes.POSITION];
   assert.ok(garagem.min[1] === 0 && Math.abs(garagem.max[1] - 6.5) < 0.001, 'Predio-garagem com 2 pavimentos');
   const saia = json.accessors[primitiva(json, 'saia').attributes.POSITION];
-  assert.ok(Math.abs(saia.min[1] + 4) < 0.001, 'Saia para terreno inclinado');
+  assert.ok(Math.abs(saia.min[1] + 8) < 0.001, 'Saia de 8 m para terreno inclinado (R73)');
   const tex = json.materials.find((m) => m.name === 'terreno').pbrMetallicRoughness.baseColorTexture;
   assert.ok(tex && json.images[json.textures[tex.index].source].mimeType === 'image/jpeg', 'Implantacao como textura');
   assert.ok(glb.length < 1.5 * 1024 * 1024);
@@ -73,8 +73,8 @@ test('R72: maquete traz o terreno da implantacao e o predio-garagem, sem extenso
 
 test('R72: o Google achata so o lote (arvores e construcoes), acompanhando a maquete', () => {
   assert.match(js, /const LOTE_ACHATAR = \[\[-45\.08, -27\.98\], \[30\.38, -33\.65\], \[25\.09, 73\.4\], \[-22\.01, 77\.69\], \[-23\.23, 64\.35\], \[-36\.57, 65\.56\]\];/);
-  assert.match(js, /const CHAVE = 'rocha69-maquete-ajuste-v2';/, 'Ajustes antigos (giro 38) nao valem mais');
-  assert.match(html, /<script src="rocha-r69-maquete\.js\?v=r72"><\/script>/);
+  assert.match(js, /const CHAVE = 'rocha69-maquete-ajuste-v3';/, 'Ajustes antigos (giro 38, altura 0) nao valem mais');
+  assert.match(html, /<script src="rocha-r69-maquete\.js\?v=r73"><\/script>/);
   const r = carregar();
   const f = r.mapa.filhos.find((x) => x.tagName === 'gmp-flattener');
   assert.ok(f, 'Achatador no mapa');

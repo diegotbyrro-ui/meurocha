@@ -7,7 +7,7 @@ import vm from 'node:vm';
 const base = join(process.cwd(), 'public/experiencia/easy-rota-do-mar/entorno3d');
 const js = readFileSync(join(base, 'rocha-r69-maquete.js'), 'utf8');
 const pino = readFileSync(join(base, 'rocha-r62-pin.js'), 'utf8');
-const glb = readFileSync(join(base, 'easy-rota-maquete-r72.glb'));
+const glb = readFileSync(join(base, 'easy-rota-maquete-r73.glb'));
 
 const CENTRO = { lat: -9.6016217, lng: -35.7173289 };
 
@@ -41,7 +41,7 @@ function visitante() {
 }
 
 test('R71: maquete calibrada pela fotomontagem e ligada para todos', () => {
-  assert.match(js, /const FIXO = \{ norte: 39\.2, leste: 20\.8, giro: 44, altura: 0, escala: 1, eixo: 270, publica: true \};/);
+  assert.match(js, /const FIXO = \{ norte: 39\.2, leste: 20\.8, giro: 44, altura: 3, escala: 1, eixo: 270, publica: true \};/);
   const r = visitante();
   assert.ok(r.modelo, 'Visitante comum ve a maquete');
   assert.equal(r.criados.length, 1);
@@ -49,7 +49,7 @@ test('R71: maquete calibrada pela fotomontagem e ligada para todos', () => {
   const lat = CENTRO.lat + 39.2 / 111320;
   const lng = CENTRO.lng + 20.8 / (111320 * Math.cos(lat * Math.PI / 180));
   assert.ok(Math.abs(r.modelo.position.lat - lat) < 1e-9 && Math.abs(r.modelo.position.lng - lng) < 1e-9);
-  assert.equal(r.modelo.position.altitude, 0);
+  assert.equal(r.modelo.position.altitude, 3, 'R73: 3 m acima do chao, por cima do mato do lote');
   assert.equal(r.modelo.altitudeMode, 'RELATIVE_TO_GROUND');
   assert.ok(!r.main.filhos.some((x) => x.id === 'rocha69-painel'), 'Sem painel de ajuste para o visitante');
 });

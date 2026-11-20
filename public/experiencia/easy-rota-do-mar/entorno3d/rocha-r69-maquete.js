@@ -6,6 +6,9 @@
    R72: terreno pronto. A maquete traz a implantacao oficial (estacionamento,
    piscinas, jardins, pista e predio-garagem) e o "achatamento" do proprio Google
    (gmp-flattener) tira as arvores e construcoes do mapa 3D so dentro do lote.
+   R73: o achatamento segue o desnivel do terreno e deixava manchas de mato
+   aparecendo pela placa; a maquete inteira sobe 3 m (com uma saia de 8 m para
+   baixo, como um muro de arrimo) e o mato do lote fica escondido.
    Usa o Model3DElement do Google (glTF puro, sem extensoes, como o Google exige).
    Enquanto a posicao nao for calibrada, a maquete so aparece no modo de ajuste:
    ?ajustepredio=1 mostra a maquete e um painel para alinhar no terreno (setas,
@@ -14,11 +17,12 @@
 (function () {
   'use strict';
 
-  const ARQUIVO = 'easy-rota-maquete-r72.glb';
-  const CHAVE = 'rocha69-maquete-ajuste-v2';
+  const ARQUIVO = 'easy-rota-maquete-r73.glb';
+  const CHAVE = 'rocha69-maquete-ajuste-v3';
   // Ajuste fixo para todos os visitantes (R72: blocos 5,2 graus girados em relacao a frente do lote,
-  // como na implantacao). publica: false = so no modo de ajuste.
-  const FIXO = { norte: 39.2, leste: 20.8, giro: 44, altura: 0, escala: 1, eixo: 270, publica: true };
+  // como na implantacao; R73: 3 m acima do chao para o mato do lote nao aparecer).
+  // publica: false = so no modo de ajuste.
+  const FIXO = { norte: 39.2, leste: 20.8, giro: 44, altura: 3, escala: 1, eixo: 270, publica: true };
   // Com a maquete, o pino da marca sobe acima dos predios (42 m + torre do R).
   const ALTURA_PINO = 58;
   const LIMITES = { norte: [-200, 200], leste: [-200, 200], giro: [0, 359], altura: [-20, 20], escala: [0.8, 1.2] };

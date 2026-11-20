@@ -9,7 +9,7 @@ const html = readFileSync(join(base, 'index.html'), 'utf8');
 const js = readFileSync(join(base, 'rocha-r69-maquete.js'), 'utf8');
 const css = readFileSync(join(base, 'rocha-r69-maquete.css'), 'utf8');
 const pino = readFileSync(join(base, 'rocha-r62-pin.js'), 'utf8');
-const GLB = join(base, 'easy-rota-maquete-r72.glb');
+const GLB = join(base, 'easy-rota-maquete-r73.glb');
 
 function lerGlb() {
   const b = readFileSync(GLB);
@@ -81,7 +81,7 @@ test('R69: maquete em glTF 2.0 puro (sem extensoes), so PBR basico e leve', () =
 
 test('R69: pagina carrega a maquete antes do pino e o pino sobe acima dos predios', () => {
   assert.match(html, /<link rel="stylesheet" href="rocha-r69-maquete\.css\?v=r69">/);
-  assert.match(html, /<script src="rocha-r69-maquete\.js\?v=r72"><\/script>/);
+  assert.match(html, /<script src="rocha-r69-maquete\.js\?v=r73"><\/script>/);
   assert.match(html, /<script src="rocha-r62-pin\.js\?v=r71"><\/script>/);
   const gancho = html.indexOf('window.rochaR69Maquete.iniciar(map,result,alvoEmpreendimento());');
   assert.ok(gancho > 0 && gancho < html.indexOf('if(cameraNoEspaco)aoChegar.push(iniciarPino);'));
@@ -103,10 +103,10 @@ test('R69: modo de ajuste mostra a maquete em pe, na posicao calibrada, com pain
   const r = carregar('?ajustepredio=1');
   const m = r.api.iniciar(r.mapa, r.maps3d, CENTRO);
   assert.ok(m && r.criados.length === 1);
-  assert.match(m.src, /\/entorno3d\/easy-rota-maquete-r72\.glb$/);
+  assert.match(m.src, /\/entorno3d\/easy-rota-maquete-r73\.glb$/);
   assert.equal(m.altitudeMode, 'RELATIVE_TO_GROUND');
   assert.deepEqual({ ...m.orientation }, { heading: 44, tilt: 270, roll: 0 }, 'glTF Y-up em pe, como no exemplo do Google');
-  assert.ok(Math.abs(m.position.lat - LAT_FIXO) < 1e-9 && Math.abs(m.position.lng - LNG_FIXO) < 1e-9 && m.position.altitude === 0);
+  assert.ok(Math.abs(m.position.lat - LAT_FIXO) < 1e-9 && Math.abs(m.position.lng - LNG_FIXO) < 1e-9 && m.position.altitude === 3);
   assert.equal(m.scale, 1);
   assert.equal(r.mapa.filhos[0], m);
   assert.deepEqual(r.alturas, [58]);
@@ -114,7 +114,7 @@ test('R69: modo de ajuste mostra a maquete em pe, na posicao calibrada, com pain
   // Clique no mapa leva o centro da maquete ate o ponto clicado (aprox. 100 m ao norte e 50 m a leste).
   r.mapa.listeners['gmp-click']({ position: { lat: CENTRO.lat + 100 / 111320, lng: CENTRO.lng + 50 / (111320 * Math.cos(CENTRO.lat * Math.PI / 180)) } });
   assert.ok(Math.abs(m.position.lat - (CENTRO.lat + 100 / 111320)) < 1e-6);
-  const salvo = JSON.parse(r.armazem.get('rocha69-maquete-ajuste-v2'));
+  const salvo = JSON.parse(r.armazem.get('rocha69-maquete-ajuste-v3'));
   assert.ok(Math.abs(salvo.norte - 100) < 0.5 && Math.abs(salvo.leste - 50) < 0.5, 'Ajuste guardado so neste navegador');
   assert.equal(salvo.norte, Math.round(salvo.norte * 10) / 10, 'Numeros curtos (10 cm)');
   // Clique em um pino do entorno (o evento vem do pino) nao move a maquete.
