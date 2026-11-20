@@ -450,7 +450,7 @@ test('R32: associação Slim Premium Master Spazzio é a do livro nas páginas 1
 test('R38: Spazzio mostra planta baixa do pavimento original e nao screenshot do book',()=>{
   assert.doesNotMatch(client,/planta-spazzio-book-3d|Perspectiva do book|Perspectiva 3D oficial do book/);
   assert.match(client,/erm38-spazzio-\$\{selectedEnding === 5 \? '05' : '04'\}-planta-baixa\.webp/);
-  assert.match(client,/selectedType === 'spazzio' \? <p className="erm38-sourceNote"/);
+  assert.match(client,/selectedType === 'spazzio' && !plant3D && <p className="erm38-sourceNote"/);
   assert.match(client,/sem uma prancha individual com cotas/);
 });
 test('R32: todas as plantas WebP oficiais e pavimento completo estão no pacote',()=>{
@@ -482,9 +482,9 @@ test('R32: responsividade, acessibilidade e sem inventar estoque ou preços',()=
 
 
 // R33 — cartoes 3D ilustrativos, quatro cores, pavimento inteiro e planta oficial no detalhe.
-test('R33 R2: imagens dos 3 tipos derivadas da planta original em TIFF, sem geometria inventada',()=>{
+test('R33 R2 / R74: imagens 3D dos 3 tipos derivadas da planta oficial, sem geometria inventada',()=>{
   for (const type of ['slim','premium','master']) {
-    const f=`erm33r2-${type}-oficial-perspectiva.webp`;
+    const f=`erm75-${type}-planta-3d.webp`;
     const buf=readFileSync(join(assetDir,f));
     assert.ok(buf.length > 30000,f);
     assert.equal(buf.subarray(0,4).toString('ascii'),'RIFF');
@@ -493,7 +493,7 @@ test('R33 R2: imagens dos 3 tipos derivadas da planta original em TIFF, sem geom
   }
   assert.match(client,/sem modificar a distribuição dos ambientes/);
   assert.match(client,/não são maquetes executivas 3D/);
-  assert.ok(client.includes('erm38-spazzio-04-planta-baixa.webp'));
+  assert.match(client,/erm38-spazzio-\$\{selectedEnding === 5 \? '05' : '04'\}-planta-baixa\.webp/);
 });
 test('R33: imagens técnicas 2D ainda são mostradas ao abrir tipologia',()=>{
   assert.ok(client.includes('r32Asset(r32PlanFile[selectedType])'));
@@ -543,7 +543,7 @@ test('R33 R2: detalhe alterna Planta técnica ou Perspectiva sem perder a imagem
   assert.match(client,/erm33-viewSwitch/);
   assert.match(client,/setPlant3D\(false\)/);
   assert.match(client,/setPlant3D\(true\)/);
-  assert.match(client,/plant3D && selectedType !== 'spazzio' \? r33CardAsset\[selectedType\] : selectedPlanSource/);
+  assert.match(client,/plant3D \? selected3DSource : selectedPlanSource/);
   assert.match(client,/aria-pressed=\{plant3D\}/);
   assert.match(css,/\.erm21 \.erm33-viewSwitch button\.active/);
 });
@@ -551,9 +551,9 @@ test('R33 R2: todas as associações de tipologia e fonte oficial preservadas',(
   const names=['PlantaTipo1_EasyRMTEXTOS','PlantaTipo2_EasyRMTEXTOS','PlantaTipo3_EasyRM'];
   for (const n of ['Slim','Premium','Master','Spazzio']) assert.ok(client.includes(n));
   for (const k of ['slim','premium','master']) {
-    assert.match(client,new RegExp(`erm33r2-${k}-oficial-perspectiva\\.webp`));
+    assert.match(client,new RegExp(`erm75-${k}-planta-3d\\.webp`));
   }
-  assert.ok(client.includes('erm38-spazzio-04-planta-baixa.webp'));
+  assert.match(client,/erm38-spazzio-\$\{selectedEnding === 5 \? '05' : '04'\}-planta-baixa\.webp/);
   assert.ok(client.includes('Planta técnica'));
 });
 
@@ -676,7 +676,7 @@ test('R38: planta Spazzio tem imagem de cima distinta nas terminacoes 04 e 05',(
 test('R38: nao altera sete menus, oito marcadores, nem a descricao comercial',()=>{
   const block=client.slice(client.indexOf('const platformMenu:'),client.indexOf('function UiIcon'));
   assert.equal([...block.matchAll(/label: '/g)].length,7);
-  const dots=client.slice(client.indexOf('const r32UnitPoints'),client.indexOf('const r33CardAsset'));
+  const dots=client.slice(client.indexOf('const r32UnitPoints'),client.indexOf('const r74Plan3D'));
   assert.equal([...dots.matchAll(/ending:\d+,x:/g)].length,8);
   for(const s of ['39,19 m²','45,21 m²','47,91 m²','58,60 m²']) assert.ok(client.includes(s));
 });

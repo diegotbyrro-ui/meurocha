@@ -1026,6 +1026,8 @@
 .erm21 .erm38-typeButton.isChosen{box-shadow:0 0 0 1px var(--erm33-accent)}
 .erm21 .erm38-typeButton:focus-visible{outline:2px solid var(--erm33-accent);outline-offset:3px}
 .erm21 .erm38-sourceNote{margin:10px auto;text-align:center;color:#386c86;font:600 11px var(--erm24-type-ui,'Segoe UI',sans-serif);letter-spacing:.08em}
+/* R74: no Spazzio a nota da planta baixa fica logo abaixo do seletor Planta tecnica / Planta 3D. */
+.erm21 .erm33-viewSwitch+.erm38-sourceNote{margin:-4px auto 8px}
 @media(prefers-reduced-motion:reduce){.erm21 .erm38-typeButton,.erm21 .erm34-zone{transition:none}}
 
 /* R39 - Implantacao original em composicao horizontal, com selecao de ambiente e foto lateral.

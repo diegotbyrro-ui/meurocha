@@ -91,13 +91,18 @@ const r32UnitPoints: { ending: number; x: number; y: number }[] = [
   {ending:1,x:15.1,y:59.0},{ending:2,x:31.0,y:59.0},
   {ending:3,x:66.9,y:59.0},{ending:4,x:82.0,y:59.0},
 ];
-// R33 R2: perspectivas projetadas sem inventar plantas, baseadas nos arquivos TIFF oficiais.
+// R74: plantas 3D sem modificar a estrutura das plantas baixas. Slim, Premium e Master foram
+// montadas sobre a propria planta tecnica oficial: o piso e a planta, e paredes, portas, janelas
+// e moveis sobem exatamente onde a planta desenha. Spazzio usa a isometrica oficial da Rocha;
+// na terminacao 05 (planta espelhada da 04) a mesma isometrica aparece espelhada.
+// R75: Slim, Premium e Master sem as pessoas (fotos vistas de cima, que ficavam achatadas no 3D),
+// com luz, sombras de canto, madeira nas portas e armarios e bordas lisas. Os ambientes nao mudam.
 // Nao sao maquetes 3D de projeto executivo. As plantas originais permanecem acessiveis.
-const r33CardAsset: Record<TypeKey,string> = {
-  slim: `${BRAND_ASSETS}erm33r2-slim-oficial-perspectiva.webp`,
-  premium: `${BRAND_ASSETS}erm33r2-premium-oficial-perspectiva.webp`,
-  master: `${BRAND_ASSETS}erm33r2-master-oficial-perspectiva.webp`,
-  spazzio: `${BRAND_ASSETS}erm38-spazzio-04-planta-baixa.webp`,
+const r74Plan3D: Record<TypeKey,string> = {
+  slim: `${BRAND_ASSETS}erm75-slim-planta-3d.webp`,
+  premium: `${BRAND_ASSETS}erm75-premium-planta-3d.webp`,
+  master: `${BRAND_ASSETS}erm75-master-planta-3d.webp`,
+  spazzio: `${BRAND_ASSETS}erm74-spazzio-04-planta-3d-oficial.webp`,
 };
 // R35: mascaras precisas por unidade, traçadas sobre o pavimento TIFF sem textos.
 // As salas de circulacao, escada e elevadores NAO recebem cor. Em cada extremidade
@@ -392,6 +397,9 @@ export default function EasyRotaClient() {
   const selectedPlanSource = selectedType === 'spazzio'
     ? `${BRAND_ASSETS}erm38-spazzio-${selectedEnding === 5 ? '05' : '04'}-planta-baixa.webp`
     : r32Asset(r32PlanFile[selectedType]);
+  const selected3DSource = selectedType === 'spazzio'
+    ? `${BRAND_ASSETS}erm74-spazzio-${selectedEnding === 5 ? '05' : '04'}-planta-3d-oficial.webp`
+    : r74Plan3D[selectedType];
   const setType = (type: TypeKey) => { tone(); setSelectedType(type); setSelectedEnding(types[type].endings[0]); setPlant3D(false); };
   const setTypeAndShow = (type: TypeKey) => { setType(type); setTab('plantas'); };
   const stepType = (dir: number) => setType(typeKeys[(typeKeys.indexOf(selectedType) + dir + typeKeys.length) % typeKeys.length]);
@@ -683,26 +691,26 @@ export default function EasyRotaClient() {
                 <button type="button" className="erm32-back" onClick={() => chooseTab('tipologias')}>‹ VOLTAR AO PAVIMENTO TIPO</button>
                 <div><small>PLANTA SELECIONADA · TERMINAÇÃO {String(selectedEnding).padStart(2,'0')}</small><h1>{selected.name.toUpperCase()}</h1><strong>{selected.area}</strong></div>
               </div>
-              {selectedType === 'spazzio' ? <p className="erm38-sourceNote">PLANTA BAIXA · VISTA SUPERIOR DO PAVIMENTO TIPO ORIGINAL</p> :
-                <div className="erm33-viewSwitch" role="group" aria-label="Modo de visualização da planta">
-                  <button type="button" className={!plant3D ? 'active' : ''} aria-pressed={!plant3D} onClick={() => setPlant3D(false)}>Planta técnica</button>
-                  <button type="button" className={plant3D ? 'active' : ''} aria-pressed={plant3D} onClick={() => setPlant3D(true)}>Perspectiva da planta</button>
-                </div>}
+              <div className="erm33-viewSwitch" role="group" aria-label="Modo de visualização da planta">
+                <button type="button" className={!plant3D ? 'active' : ''} aria-pressed={!plant3D} onClick={() => setPlant3D(false)}>Planta técnica</button>
+                <button type="button" className={plant3D ? 'active' : ''} aria-pressed={plant3D} onClick={() => setPlant3D(true)}>Planta 3D</button>
+              </div>
+              {selectedType === 'spazzio' && !plant3D && <p className="erm38-sourceNote">PLANTA BAIXA · VISTA SUPERIOR DO PAVIMENTO TIPO ORIGINAL</p>}
               <div className="erm32-planFocus">
                 <button type="button" aria-label="Ver tipologia anterior" className="erm32-navArrow" onClick={() => stepType(-1)}>‹</button>
                 <button type="button" className="erm32-planPhoto" onClick={() => setR32Expanded(true)} aria-label={`Ampliar a planta ${selected.name}`}>
-                  <img src={plant3D && selectedType !== 'spazzio' ? r33CardAsset[selectedType] : selectedPlanSource} alt={selectedType === 'spazzio' ? `Planta baixa Spazzio ${String(selectedEnding).padStart(2,'0')} extraída do pavimento tipo original` : plant3D ? `Perspectiva da planta ${selected.name}, imagem inteira sem cortes` : `Planta original ${selected.name} do Easy Rota do Mar, sem cortes`} draggable={false}/>
+                  <img src={plant3D ? selected3DSource : selectedPlanSource} alt={plant3D ? `Planta 3D ${selected.name}${selectedType === 'spazzio' ? ', isométrica oficial da Rocha' : ', montada sobre a planta oficial sem mudar os ambientes'}` : selectedType === 'spazzio' ? `Planta baixa Spazzio ${String(selectedEnding).padStart(2,'0')} extraída do pavimento tipo original` : `Planta original ${selected.name} do Easy Rota do Mar, sem cortes`} draggable={false}/>
                   <span>⛶ AMPLIAR PLANTA</span>
                 </button>
                 <button type="button" aria-label="Ver próxima tipologia" className="erm32-navArrow" onClick={() => stepType(1)}>›</button>
               </div>
               <div className="erm32-planInfo">
-                <div><h2>{selected.name}</h2><p>{r32PlanDetails[selectedType]}</p><p>{selected.description}</p><small>{selectedType==='spazzio'?'Planta baixa extraída do pavimento tipo original da Rocha, sem uma prancha individual com cotas. A geometria foi preservada.':'A planta técnica original é a referência de geometria. As perspectivas são projeções visuais, sem modificar a distribuição dos ambientes; não são maquetes executivas 3D.'}</small></div>
+                <div><h2>{selected.name}</h2><p>{r32PlanDetails[selectedType]}</p><p>{selected.description}</p><small>{selectedType==='spazzio'?'Planta baixa extraída do pavimento tipo original da Rocha, sem uma prancha individual com cotas. A geometria foi preservada. A planta 3D é a isométrica oficial da Rocha; na terminação 05 ela aparece espelhada, como a planta.':'A planta técnica original é a referência de geometria. As plantas 3D são montadas sobre a própria planta oficial, sem modificar a distribuição dos ambientes; não são maquetes executivas 3D.'}</small></div>
                 <div className="erm32-endingPicker"><strong>ESCOLHA A TERMINAÇÃO</strong><div>{Array.from({length:8},(_,i)=>i+1).map(n=><button key={n} type="button" className={selectedEnding===n?'active':''} aria-pressed={selectedEnding===n} onClick={() => {setSelectedEnding(n);setSelectedType(endingToType[n]);setPlant3D(false);}} title={`Terminação ${n}: ${types[endingToType[n]].name}`}>{String(n).padStart(2,'0')}</button>)}</div><small>Representação das tipologias, sem informação de estoque.</small></div>
               </div>
               {r32Expanded && <div className="erm32-lightbox" role="dialog" aria-modal="true" aria-label={`Planta ampliada ${selected.name}`}>
                 <div><strong>{selected.name} · {selected.area}</strong><button type="button" onClick={() => setR32Expanded(false)} aria-label="Fechar planta ampliada">✕ FECHAR</button></div>
-                <img src={plant3D && selectedType !== 'spazzio' ? r33CardAsset[selectedType] : selectedPlanSource} alt={selectedType === 'spazzio' ? `Planta baixa Spazzio ${String(selectedEnding).padStart(2,'0')} ampliada` : plant3D ? `Perspectiva ampliada ${selected.name}` : `Planta original ampliada ${selected.name}`} />
+                <img src={plant3D ? selected3DSource : selectedPlanSource} alt={plant3D ? `Planta 3D ampliada ${selected.name}` : selectedType === 'spazzio' ? `Planta baixa Spazzio ${String(selectedEnding).padStart(2,'0')} ampliada` : `Planta original ampliada ${selected.name}`} />
               </div>}
             </>}
           </div>}
