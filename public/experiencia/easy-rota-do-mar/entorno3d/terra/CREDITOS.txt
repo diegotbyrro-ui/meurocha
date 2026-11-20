@@ -1,0 +1,18 @@
+Rocha R64 - imagens da Terra usadas na abertura do Entorno 3D
+==============================================================
+
+Todas derivadas de dados da NASA (Visible Earth / Earth Observatory),
+de dominio publico. Creditar como: "Imagens da Terra: NASA".
+
+terra-dia-*.jpg     NASA Blue Marble (superficie sem nuvens).
+                    Copia em 4096x2048 obtida do exemplo do projeto three-globe
+                    (github.com/vasturiano/three-globe, example/img/earth-blue-marble.jpg).
+terra-noite-*.jpg   NASA Black Marble / Earth at Night: apenas as luzes das cidades,
+                    extraidas de three-globe example/img/earth-night.jpg.
+terra-nuvens-*.jpg  Nuvens (canal de transparencia de fair_clouds_4k.png), do projeto
+                    github.com/turban/webgl-earth, baseado nas nuvens do Blue Marble da NASA.
+terra-agua-2k.jpg   Mascara dos oceanos (water_4k.png do turban/webgl-earth).
+terra-relevo-2k.jpg Relevo (elev_bump_4k.jpg do turban/webgl-earth), dados de elevacao da NASA.
+
+Versoes 4k: computador. Versoes 2k: celulares e aparelhos com pouca memoria.
+Todas em proporcao 2:1 e potencia de 2 (exigido para mipmaps no WebGL).
