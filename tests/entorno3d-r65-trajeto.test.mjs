@@ -62,8 +62,9 @@ function carregar({ falhar = false, semBiblioteca = false, vazio = false } = {})
 }
 
 test('R65: pagina carrega o trajeto depois dos pontos, com versao nova (sem cache antigo)', () => {
-  assert.match(html, /<script src="rocha-r63-poi\.js\?v=r65"><\/script><script src="rocha-r65-trajeto\.js\?v=r65"><\/script>/);
-  assert.match(html, /<link rel="stylesheet" href="rocha-r63-poi\.css\?v=r65">/);
+  // R66 trocou a versao dos arquivos dos pontos; o trajeto continua logo depois deles.
+  assert.match(html, /<script src="rocha-r63-poi\.js\?v=r6\d"><\/script><script src="rocha-r65-trajeto\.js\?v=r65"><\/script>/);
+  assert.match(html, /<link rel="stylesheet" href="rocha-r63-poi\.css\?v=r6\d">/);
   assert.ok(html.indexOf('rocha-r65-trajeto.js') < html.indexOf('const rochaIntro='));
 });
 
@@ -183,17 +184,9 @@ test('R65: link "Rota no Google Maps" sai do empreendimento ate o local', () => 
   assert.equal(url, 'https://www.google.com/maps/dir/?api=1&origin=-9.601600,-35.717300&destination=-9.595100,-35.710200&destination_place_id=ChIJabc&travelmode=driving');
 });
 
-test('R65: pontos pedidos com rotulos novos e as 3 categorias extras sob demanda', () => {
+test('R65: rotulos Colegios e Clinicas (categorias da R66 em entorno3d-r66-entorno.test.mjs)', () => {
   assert.match(poi, /label: 'Col\\u00e9gios'/);
   assert.match(poi, /label: 'Cl\\u00ednicas'/);
-  for (const key of ['escolas', 'restaurantes', 'saude', 'mecanicas', 'igrejas']) {
-    assert.match(poi, new RegExp("key: '" + key + "', [^\\n]*types: \\[[^\\]]*\\] \\}"), 'Principal: ' + key);
-  }
-  for (const key of ['mercados', 'farmacias', 'postos']) {
-    assert.match(poi, new RegExp("key: '" + key + "', [^\\n]*onDemand: true \\}"), 'Sob demanda: ' + key);
-  }
-  assert.ok(poi.indexOf("key: 'escolas'") < poi.indexOf("key: 'restaurantes'"));
-  assert.ok(poi.indexOf("key: 'igrejas'") < poi.indexOf("key: 'mercados'"));
 });
 
 test('R65: busca so com campos Pro; nota buscada ao abrir o ponto', () => {
