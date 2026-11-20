@@ -203,7 +203,6 @@ test('R65: filtro tira e recoloca os marcadores no mapa; painel mostra o trajeto
   assert.match(poi, /r\.mostrar\(panel, origin, pos, place\.id\)/);
   assert.match(poi, /r\.configurar\(map, maps3d\)/);
   assert.match(poi, /if \(r\) r\.limpar\(\);/);
-  assert.match(poi, /Toque em um ponto para ver fotos, dist\\u00e2ncia e tempo de trajeto\./);
   assert.match(poi, /main\.classList\.toggle\('rocha63-aberto', open\)/);
   assert.match(css, /#main\.rocha63-aberto #rocha63-poi-legend \{ display: none; \}/, 'No celular a legenda some com o painel aberto');
   assert.match(css, /\.rocha63-chips \{\s*flex-wrap: nowrap; overflow-x: auto;/, 'No celular a legenda vira uma linha que desliza');

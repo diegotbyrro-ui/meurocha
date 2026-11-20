@@ -74,8 +74,9 @@ function carregar(armazem, { invalido = null } = {}) {
 }
 
 test('R66: pagina pede os arquivos novos dos pontos (sem cache antigo do navegador)', () => {
-  assert.match(html, /<script src="rocha-r63-poi\.js\?v=r66"><\/script>/);
-  assert.match(html, /<link rel="stylesheet" href="rocha-r63-poi\.css\?v=r66">/);
+  // Versoes seguintes (R67+) trocam o numero de novo.
+  assert.match(html, /<script src="rocha-r63-poi\.js\?v=r6[6-9]"><\/script>/);
+  assert.match(html, /<link rel="stylesheet" href="rocha-r63-poi\.css\?v=r6[6-9]">/);
 });
 
 test('R66: 14 categorias do dia a dia, com clinicas veterinarias e sem tipo proibido', () => {

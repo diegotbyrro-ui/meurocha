@@ -9,7 +9,8 @@
    no estilo do pino da marca com icones proprios, legenda com "Todos" e
    cache so de IDs e coordenadas por 7 dias (o Google permite guardar IDs
    sempre e coordenadas por ate 30 dias). Visitas seguintes nao refazem as
-   buscas; nome, fotos e nota vem do Google ao abrir cada ponto. */
+   buscas; nome, fotos e nota vem do Google ao abrir cada ponto.
+   R67: legenda so com os botoes (sem o titulo "No entorno" e sem a frase). */
 (function () {
   'use strict';
 
@@ -578,10 +579,9 @@
     const legend = document.createElement('nav');
     legend.id = 'rocha63-poi-legend';
     legend.setAttribute('aria-label', 'Filtrar pontos de interesse');
-    legend.innerHTML = '<div class="rocha63-chips"><strong>No entorno</strong>' +
+    legend.innerHTML = '<div class="rocha63-chips">' +
       '<button type="button" class="rocha63-all on" data-all aria-pressed="true">Todos</button>' +
-      CATEGORIES.filter((c) => !state.loaded.has(c.key) || state.counts[c.key]).map(chip).join('') + '</div>' +
-      '<span class="rocha63-hint">Toque em um ponto para ver fotos, dist\u00e2ncia e tempo de trajeto.</span>';
+      CATEGORIES.filter((c) => !state.loaded.has(c.key) || state.counts[c.key]).map(chip).join('') + '</div>';
     legend.addEventListener('click', onLegendClick);
     document.getElementById('main').appendChild(legend);
     state.legend = legend;
