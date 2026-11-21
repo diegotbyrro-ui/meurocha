@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 export default async function PortalLayout({children}:{children:React.ReactNode}) {
   const cookie=(await headers()).get('cookie');
   if(!portalCookieValid(cookie)) return <main className="rocha-portal-login">
-    <img src="/rocha-logo.png" width={180} alt="Rocha Empreendimentos" />
+    <div className="r79-login-logo"><img src="/rocha-logo.png" width={200} alt="Rocha Empreendimentos" /></div>
     <span>ACESSO RESERVADO · EQUIPE ROCHA</span>
     <h1>Portal comercial</h1>
     <p>Materiais, empreendimentos e simulador comercial em um só lugar. Nesta primeira etapa, somente usuários autorizados pela Rocha podem entrar.</p>
@@ -21,12 +21,39 @@ export default async function PortalLayout({children}:{children:React.ReactNode}
     </form>:<div className="rocha-portal-indisponivel">Acesso aguardando configuração das credenciais no servidor. Nenhum cadastro ou arquivo está exposto.</div>}
     <small>Acesso de corretores com credenciais individuais será liberado após integração segura. <Link href="/home">Voltar</Link></small>
   </main>;
-  return <div className="rocha-portal">
-    <header className="rocha-portal-top"><Link className="rocha-portal-brand" href="/portal"><img src="/rocha-logo.png" width={145} alt="Rocha Empreendimentos" /><span>PORTAL COMERCIAL</span></Link>
-      <nav aria-label="Navegação"><Link href="/portal">Início</Link><Link href="/portal/gestao">Empreendimentos</Link><Link href="/portal/biblioteca">Biblioteca</Link><Link href="/portal/simulador">Simulador</Link></nav>
-      <form action="/api/portal/logout" method="post"><button type="submit">Sair</button></form>
-    </header>
-    <main className="rocha-portal-main">{children}</main>
-    <footer className="rocha-portal-foot">ROCHA · PRIMEIRA ETAPA · DADOS DE DEMONSTRAÇÃO · CORRETORES AINDA SEM ACESSO</footer>
+  return <div className="rocha-portal r79-shell">
+    <aside className="r79-sidebar" aria-label="Navegação lateral da plataforma">
+      <Link href="/portal" className="r79-side-brand">
+        <div className="r79-logo-dark"><img src="/rocha-logo.png" width={190} alt="Rocha Empreendimentos" /></div>
+        <span>PORTAL COMERCIAL</span>
+      </Link>
+      <div className="r79-nav-title">PAINEL</div>
+      <nav className="r79-side-nav" aria-label="Ferramentas Rocha">
+        <Link href="/portal">Visão geral</Link>
+        <Link href="/portal/gestao">Empreendimentos</Link>
+        <Link href="/portal/biblioteca">Biblioteca de materiais</Link>
+        <Link href="/portal/simulador">Simulador comercial</Link>
+      </nav>
+      <div className="r79-sidebar-bottom">
+        <div className="r79-sidebar-privacy"><strong>GESTÃO DE ACESSOS</strong><p>Somente o proprietário poderá criar ou excluir contas da equipe Rocha após a implantação da autenticação individual.</p></div>
+        <form action="/api/portal/logout" method="post"><button type="submit">Sair do portal</button></form>
+      </div>
+    </aside>
+    <div className="r79-workspace">
+      <header className="r79-toolbar">
+        <details className="r79-mobile-menu"><summary aria-label="Abrir menu de navegação">☰ Menu</summary>
+          <nav aria-label="Ferramentas Rocha no celular">
+            <Link href="/portal">Visão geral</Link>
+            <Link href="/portal/gestao">Empreendimentos</Link>
+            <Link href="/portal/biblioteca">Biblioteca de materiais</Link>
+            <Link href="/portal/simulador">Simulador comercial</Link>
+          </nav>
+        </details>
+        <strong>ROCHA <span>/</span> PORTAL COMERCIAL</strong>
+        <form action="/api/portal/logout" method="post"><button type="submit">Sair</button></form>
+      </header>
+      <main className="rocha-portal-main">{children}</main>
+      <footer className="rocha-portal-foot">ROCHA · ÁREA DE DEMONSTRAÇÃO · ARQUIVOS LOCAIS AO NAVEGADOR · CORRETORES SEM ACESSO NESTA ETAPA</footer>
+    </div>
   </div>;
 }

@@ -18,3 +18,67 @@
 .rocha-portal-simulador{max-width:100%}
 @media(max-width:950px){.rocha-portal-top{flex-wrap:wrap;padding:14px 20px}.rocha-portal-cards,.rocha-portal-library{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.rocha-portal-top{flex-direction:column;align-items:flex-start}.rocha-portal-top nav{gap:12px}.rocha-portal-main{padding:18px 12px 55px}.rocha-portal-hero{padding:34px 23px}.rocha-portal-cards,.rocha-portal-library{grid-template-columns:1fr}.rocha-portal-card{min-height:160px}.rocha-portal-login{margin:5vh 12px;padding:30px 21px}}
+
+/* R79 - Portal comercial: navegacao lateral, contraste da marca e biblioteca local.
+   Escopo restrito a .rocha-portal, .rocha-portal-login e classes r79-. */
+.rocha-portal.r79-shell{display:grid;grid-template-columns:256px minmax(0,1fr);min-height:100vh}
+.rocha-portal .r79-sidebar{position:sticky;top:0;height:100vh;background:#191923;color:#e6e8ed;display:flex;flex-direction:column;border-right:1px solid #30303c;z-index:5}
+.rocha-portal .r79-side-brand{padding:25px 18px 21px;border-bottom:1px solid #343440;display:grid;gap:12px}
+.rocha-portal .r79-logo-dark,.rocha-portal-login .r79-login-logo{background:linear-gradient(130deg,#201722,#411b2b);border:1px solid #5b3341;border-radius:12px;padding:17px 14px;display:flex;justify-content:center;align-items:center}
+.rocha-portal .r79-logo-dark img{display:block;width:190px;max-height:66px;object-fit:contain}
+.rocha-portal-login .r79-login-logo{margin-bottom:22px}
+.rocha-portal-login .r79-login-logo img{display:block;margin:0;width:210px;max-height:84px}
+.rocha-portal .r79-side-brand>span{font-size:10px;font-weight:800;letter-spacing:1.8px;color:#bdacb2}
+.rocha-portal .r79-nav-title{font-size:10px;font-weight:800;letter-spacing:2px;color:#8b909d;margin:29px 20px 9px}
+.rocha-portal .r79-side-nav{display:grid;gap:5px;padding:0 12px}
+.rocha-portal .r79-side-nav a{font-size:13px;font-weight:650;color:#d1d4dc;display:block;border-radius:9px;padding:14px 12px;transition:background .15s}
+.rocha-portal .r79-side-nav a:hover,.rocha-portal .r79-side-nav a:focus-visible{background:#342532;color:#fff;outline-offset:2px}
+.rocha-portal .r79-sidebar-bottom{margin-top:auto;padding:20px 15px;display:grid;gap:15px}
+.rocha-portal .r79-sidebar-privacy{background:#28252d;border:1px solid #3f3540;border-radius:12px;padding:12px;color:#d2d0d5}
+.rocha-portal .r79-sidebar-privacy strong{font-size:10px;letter-spacing:1px;color:#ffb0ba}
+.rocha-portal .r79-sidebar-privacy p{font-size:11px;line-height:1.55;color:#adb0ba;margin:7px 0 0}
+.rocha-portal .r79-sidebar-bottom button{background:transparent;border:1px solid #584150;border-radius:8px;color:#f5e5eb;padding:11px 14px;width:100%;cursor:pointer;font-weight:700}
+.rocha-portal .r79-workspace{min-width:0;display:flex;flex-direction:column}
+.rocha-portal .r79-toolbar{height:68px;padding:0 28px;background:#fff;border-bottom:1px solid #e7e9ec;display:flex;justify-content:space-between;align-items:center}
+.rocha-portal .r79-toolbar strong{font-size:11px;color:#5e6977;letter-spacing:1.3px}
+.rocha-portal .r79-toolbar strong span{color:#b8253b;margin:0 6px}
+.rocha-portal .r79-toolbar button{background:#fff4f5;color:#a72136;border:1px solid #f0d7dd;border-radius:9px;padding:10px 16px;font-weight:700;cursor:pointer}
+.rocha-portal .r79-workspace>.rocha-portal-main{width:100%;max-width:1540px;flex:1}
+.rocha-portal .r79-mobile-menu{display:none;position:relative}
+.rocha-portal .r79-mobile-menu summary{cursor:pointer;border:1px solid #e9d4d9;border-radius:9px;padding:10px 14px;color:#a72136;font-weight:800}
+.rocha-portal .r79-mobile-menu nav{position:absolute;top:45px;left:0;min-width:220px;z-index:8;background:#fff;border:1px solid #dfe3e8;border-radius:12px;box-shadow:0 12px 30px #10142420;display:grid;padding:9px}
+.rocha-portal .r79-mobile-menu nav a{padding:10px;color:#233144;font-size:13px;font-weight:700}
+.rocha-portal .r79-library{display:grid;gap:22px}
+.rocha-portal .r79-library-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.rocha-portal .r79-library-head span{color:#b22238;font-size:10px;letter-spacing:2px;font-weight:850}
+.rocha-portal .r79-library-head h1{font-size:31px;margin:8px 0 9px}
+.rocha-portal .r79-library-head p{font-size:13px;color:#778392;margin:0;line-height:1.65}
+.rocha-portal .r79-library-head>strong{font-size:12px;border-radius:40px;color:#9e2739;background:#ffeff2;padding:10px 15px;white-space:nowrap}
+.rocha-portal .r79-library-warning{border:1px solid #f0dbb5;border-radius:10px;background:#fff9ee;padding:15px 18px;font-size:12px;color:#805c28;line-height:1.65}
+.rocha-portal .r79-library-main{display:grid;grid-template-columns:minmax(240px,.65fr) minmax(0,1.65fr);align-items:start;gap:18px}
+.rocha-portal .r79-library-groups,.rocha-portal .r79-library-folder{background:#fff;border:1px solid #e7e9ed;border-radius:14px;padding:18px;min-width:0}
+.rocha-portal .r79-library-groups>label{display:block;font-size:11px;font-weight:800;color:#5b6775;margin-bottom:8px}
+.rocha-portal .r79-library-groups>input{border:1px solid #e3e6ea;border-radius:9px;width:100%;height:42px;padding:0 12px;margin-bottom:14px;font-size:13px}
+.rocha-portal .r79-library-groups nav{display:grid;gap:5px;max-height:66vh;overflow:auto}
+.rocha-portal .r79-library-groups nav button{border:1px solid transparent;border-radius:9px;padding:10px 11px;background:#fff;display:grid;gap:4px;text-align:left;cursor:pointer}
+.rocha-portal .r79-library-groups nav button:hover{background:#faf6f7}
+.rocha-portal .r79-library-groups nav button.r79-cat-active{background:#fff0f2;border-color:#efcbd3}
+.rocha-portal .r79-library-groups nav button span{font-size:12px;font-weight:800;color:#354355}
+.rocha-portal .r79-library-groups nav button small{font-size:10px;color:#87909e}
+.rocha-portal .r79-folder-title{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid #ebeef1}
+.rocha-portal .r79-folder-title small{display:block;color:#b22238;font-size:10px;font-weight:750;letter-spacing:1.1px}
+.rocha-portal .r79-folder-title h2{font-size:23px;margin:7px 0}
+.rocha-portal .r79-folder-title p{font-size:12px;color:#84909b;margin:0}
+.rocha-portal .r79-upload-button{position:relative;border-radius:9px;display:inline-flex;background:#a52339;color:#fff;padding:12px 17px;cursor:pointer;font-size:12px;font-weight:800;white-space:nowrap;overflow:hidden}
+.rocha-portal .r79-upload-button input{position:absolute;inset:0;opacity:0;cursor:pointer;max-width:100%}
+.rocha-portal .r79-library-feedback{padding:12px 14px;background:#eff8f1;color:#286142;border-radius:9px;font-size:12px}
+.rocha-portal .r79-file-list{display:grid;gap:10px;padding-top:14px}
+.rocha-portal .r79-file-item{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #e9ecef;border-radius:10px;padding:15px 14px}
+.rocha-portal .r79-file-item strong{font-size:12px;overflow-wrap:anywhere}
+.rocha-portal .r79-file-item p{font-size:10px;color:#8a929d;margin:6px 0 0}
+.rocha-portal .r79-file-actions{display:flex;gap:6px;flex-wrap:wrap}
+.rocha-portal .r79-file-actions button{border:1px solid #e0e5eb;background:#f8fafb;border-radius:7px;padding:8px 10px;color:#495b6a;font-size:11px;font-weight:700;cursor:pointer}
+.rocha-portal .r79-file-actions button.r79-delete{color:#ae3446;background:#fff7f8;border-color:#f2d3d9}
+.rocha-portal .r79-no-files{font-size:13px;line-height:1.7;color:#84909b;padding:30px 10px;text-align:center}
+@media(max-width:1060px){.rocha-portal.r79-shell{grid-template-columns:1fr}.rocha-portal .r79-sidebar{display:none}.rocha-portal .r79-mobile-menu{display:block}.rocha-portal .r79-toolbar{padding:0 16px}.rocha-portal .r79-library-main{grid-template-columns:1fr}}
+@media(max-width:660px){.rocha-portal .r79-file-item{display:grid}.rocha-portal .r79-library-head>strong{display:none}.rocha-portal .r79-toolbar strong{font-size:9px}.rocha-portal .r79-library-groups nav{max-height:230px}}
