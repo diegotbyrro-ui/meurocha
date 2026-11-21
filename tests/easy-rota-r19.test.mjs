@@ -68,7 +68,8 @@ test('R21: galeria com teclado, lightbox e videos sem arquivos falsos', () => {
   assert.match(client,/event\.key === 'Escape'/);
   assert.match(client,/event\.key === 'ArrowRight'/);
   assert.match(client,/event\.key === 'ArrowLeft'/);
-  assert.match(client,/O vídeo correspondente será vinculado/);
+  // R76: os videos reais (arquivos conferidos em easy-rota-r76-videos) substituem o aviso de previa.
+  assert.match(client,/const r76Videos: Record<R76Aba, R76Video\[\]> = \{/);
 });
 test('R21: proxy seguro, pagina institucional e informacoes preservados', () => {
   assert.match(proxy,/Object\.prototype\.hasOwnProperty\.call\(allowed, id\)/);
@@ -715,7 +716,7 @@ test('R40: onze fotografias distintas do decorado substituem plantas na galeria 
   const records=[...client.matchAll(/\{ id: '(erm40-decor-[^']+)', name: '([^']+)', category: 'apartamentos' \}/g)];
   assert.equal(records.length,11);
   assert.equal(new Set(records.map(x=>x[1])).size,11);
-  assert.ok(!/\{ id: '(?:slim|premium|master|spazzio)', name: 'Planta/.test(client.slice(client.indexOf('const gallery ='),client.indexOf('const mediaList'))));
+  assert.ok(!/\{ id: '(?:slim|premium|master|spazzio)', name: 'Planta/.test(client.slice(client.indexOf('const gallery ='),client.indexOf('const r76Videos'))));
   for (const record of records) for (const suffix of ['', '-thumb']) {
     const path=join(assetDir,record[1]+suffix+'.webp');
     assert.ok(existsSync(path),'Foto do decorado ausente: '+path);

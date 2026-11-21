@@ -2329,3 +2329,9 @@
 .erm21 .erm59-locationAerial:hover,.erm21 .erm59-locationReturn:hover{background:#06617a}
 .erm21 .erm59-locationAerial:focus-visible,.erm21 .erm59-locationReturn:focus-visible{outline:2px solid #fff;outline-offset:2px}
 @media(max-width:900px){.erm21 .erm59-location3dStage{inset:4px;border-radius:10px}.erm21 .erm59-locationAerial,.erm21 .erm59-locationReturn{right:8px;top:8px;font-size:10px;padding:7px 9px}}
+/* R76: player dos videos curtos. Sempre 16:9 e sem cortar: o nome e o aviso gravados no video ficam visiveis. */
+.erm21 .erm76-player{position:relative;width:100%;aspect-ratio:16/9;max-height:64vh;background:#000;overflow:hidden;border-radius:4px}
+.erm21 .erm76-video{display:block;width:100%;height:100%;object-fit:contain;background:#000;animation:erm76Entrar .45s ease-out both}
+.erm21 .erm76-player .erm20-filmStatus{z-index:1;pointer-events:none}
+@keyframes erm76Entrar{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.erm21 .erm76-video{animation:none}}

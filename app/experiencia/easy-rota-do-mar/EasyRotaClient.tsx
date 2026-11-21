@@ -232,11 +232,51 @@ const gallery = [
   { id: 'erm40-decor-banheiro', name: 'Banheiro do apartamento decorado', category: 'apartamentos' },
   { id: 'erm40-decor-circulacao', name: 'Circulação e acabamento', category: 'apartamentos' },
 ];
-const mediaList = [
-  { name: 'Vista geral do empreendimento', image: 'hero' },
-  { name: 'Fachada', image: 'fachada' },
-  ...facilities.map((p) => ({ name: p.name, image: p.image || 'hero' })),
-];
+// R76: videos curtos (8 s, 1920x1080, H.264 sem som) feitos com as perspectivas oficiais em alta
+// resolucao enviadas pela Rocha (pasta do Google Drive e anexos). Cada video e so um movimento de
+// camera suave sobre a imagem original, com o nome do ambiente e o aviso de perspectiva ilustrativa;
+// nada e redesenhado. Perspectivas animadas seguem EXATAMENTE a ordem e os nomes de ESCOLHA UM
+// AMBIENTE (Lazer), com a mesma imagem que a plataforma ja mostra em cada ponto (R39/R42).
+// O primeiro quadro de cada video e o poster (.webp); o video termina escurecendo e o proximo entra.
+type R76Aba = 'perspectivas' | 'empreendimento' | 'shorts';
+type R76Video = { arquivo: string; nome: string; nota?: string; aviso?: string };
+const R76_PASTA = `${BRAND_ASSETS}videos/`;
+const r76Videos: Record<R76Aba, R76Video[]> = {
+  perspectivas: [
+    { arquivo: 'perspectiva-01-portaria', nome: 'Portaria' },
+    { arquivo: 'perspectiva-02-piscina-adulto', nome: 'Piscina adulto' },
+    { arquivo: 'perspectiva-03-piscina-infantil', nome: 'Piscina infantil' },
+    { arquivo: 'perspectiva-04-area-de-lazer-da-piscina', nome: 'Área de lazer da piscina' },
+    { arquivo: 'perspectiva-05-espaco-grill', nome: 'Espaço Grill' },
+    { arquivo: 'perspectiva-06-espaco-gourmet', nome: 'Espaço Gourmet' },
+    { arquivo: 'perspectiva-07-espaco-fitness', nome: 'Espaço Fitness' },
+    { arquivo: 'perspectiva-08-easy-play-sala-gamer', nome: 'Easy Play / Sala Gamer' },
+    { arquivo: 'perspectiva-09-espaco-beleza', nome: 'Espaço Beleza' },
+    { arquivo: 'perspectiva-10-easy-wash-lavanderia', nome: 'Easy Wash / Lavanderia' },
+    { arquivo: 'perspectiva-11-bicicletarios', nome: 'Bicicletários' },
+    { arquivo: 'perspectiva-12-pet-place', nome: 'Pet Place' },
+    { arquivo: 'perspectiva-13-pista-de-cooper', nome: 'Pista de Cooper' },
+    { arquivo: 'perspectiva-14-playground', nome: 'Playground' },
+    { arquivo: 'perspectiva-15-lixeira', nome: 'Lixeira', nota: 'Vista geral do condomínio, a mesma imagem do ponto 15 em Lazer.' },
+    { arquivo: 'perspectiva-16-recarga-veiculos-eletricos', nome: 'Recarga de veículos elétricos' },
+  ],
+  empreendimento: [
+    { arquivo: 'empreendimento-01-vista-geral', nome: 'Vista geral do empreendimento' },
+    { arquivo: 'empreendimento-02-fachada', nome: 'Fachada' },
+    { arquivo: 'empreendimento-03-vista-aerea-da-regiao', nome: 'Vista aérea da região', aviso: 'Imagem ilustrativa' },
+    { arquivo: 'empreendimento-04-implantacao', nome: 'Implantação', aviso: 'Imagem ilustrativa' },
+    { arquivo: 'empreendimento-05-easy-market-mercado', nome: 'Easy Market / Mercado' },
+    { arquivo: 'empreendimento-06-easy-work-coworking', nome: 'Easy Work / Coworking' },
+  ],
+  shorts: [
+    { arquivo: 'short-01-sala-de-estar-e-jantar', nome: 'Sala de estar e jantar' },
+    { arquivo: 'short-02-sala-com-vista-para-o-mar', nome: 'Sala com vista para o mar' },
+    { arquivo: 'short-03-jantar-e-cozinha', nome: 'Jantar e cozinha' },
+    { arquivo: 'short-04-cozinha-integrada-a-sala', nome: 'Cozinha integrada à sala' },
+    { arquivo: 'short-05-planta-3d-spazzio-3-quartos', nome: 'Planta 3D Spazzio · 3 quartos', aviso: 'Imagem ilustrativa' },
+  ],
+};
+const r76Rotulo: Record<R76Aba, string> = { perspectivas: 'PERSPECTIVAS ANIMADAS', empreendimento: 'EMPREENDIMENTO', shorts: 'SHORT VÍDEOS' };
 const groupNames: Record<Group, string> = { todos: 'Todos', acessos: 'Acessos', lazer: 'Lazer', conveniencia: 'Conveniência', estrutura: 'Estrutura' };
 
 function Photo({ id, alt, className = '', fit = 'cover' }: { id: string; alt: string; className?: string; fit?: 'cover' | 'contain' }) {
@@ -302,6 +342,9 @@ export default function EasyRotaClient() {
   const [amenityGroup, setAmenityGroup] = useState<Group>('todos');
   const [imageIndex, setImageIndex] = useState(0);
   const [videoIndex, setVideoIndex] = useState(0);
+  const r76VideoRef = useRef<HTMLVideoElement | null>(null);
+  // R76: com movimento reduzido no aparelho, nenhum video comeca sozinho (o play continua disponivel).
+  const [r76SemMovimento, setR76SemMovimento] = useState(() => typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [openLightbox, setOpenLightbox] = useState(false);
   const [mapChoice, setMapChoice] = useState('Mobilidade');
   const [location3dEnabled, setLocation3dEnabled] = useState(true);
@@ -403,7 +446,33 @@ export default function EasyRotaClient() {
   const setType = (type: TypeKey) => { tone(); setSelectedType(type); setSelectedEnding(types[type].endings[0]); setPlant3D(false); };
   const setTypeAndShow = (type: TypeKey) => { setType(type); setTab('plantas'); };
   const stepType = (dir: number) => setType(typeKeys[(typeKeys.indexOf(selectedType) + dir + typeKeys.length) % typeKeys.length]);
-  const chooseTab = (newTab: string) => { tone(); setTab(newTab); setImageIndex(0); };
+  const chooseTab = (newTab: string) => { tone(); setTab(newTab); setImageIndex(0); setVideoIndex(0); };
+  // R76: video da aba atual; ao terminar, o proximo entra (e volta ao primeiro no fim da lista).
+  const r76Aba: R76Aba = tab === 'empreendimento' || tab === 'shorts' ? tab : 'perspectivas';
+  const r76Lista = r76Videos[r76Aba];
+  const r76Indice = Math.min(videoIndex, r76Lista.length - 1);
+  const r76Atual = r76Lista[r76Indice];
+  const r76Escolher = (i: number) => {
+    tone();
+    if (i === r76Indice && r76VideoRef.current) { r76VideoRef.current.currentTime = 0; void r76VideoRef.current.play().catch(() => undefined); return; }
+    setVideoIndex(i);
+  };
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
+    const consulta = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const atualizar = () => setR76SemMovimento(consulta.matches);
+    atualizar();
+    consulta.addEventListener('change', atualizar);
+    return () => consulta.removeEventListener('change', atualizar);
+  }, []);
+  useEffect(() => {
+    const video = r76VideoRef.current;
+    if (section !== 'videos' || !video) return;
+    video.muted = true;
+    if (r76SemMovimento) { video.pause(); return; }
+    // Comeca sozinho e mudo; se o navegador bloquear, o play continua disponivel nos controles.
+    void video.play().catch(() => undefined);
+  }, [section, r76Atual.arquivo, r76SemMovimento]);
 
   useEffect(() => {
     if (!openLightbox) return;
@@ -723,7 +792,18 @@ export default function EasyRotaClient() {
             <span className="erm20-photoCaption">{tab === 'apartamentos' ? `Fotografias do decorado · ${images.length} ângulos selecionados · Clique para ampliar` : `Perspectivas meramente ilustrativas · ${images.length} imagens`}</span>
           </div>}
 
-          {section === 'videos' && <div className="erm20-content erm20-videos"><SectionBanner title="VÍDEOS"/><div className="erm20-videoGrid"><div className="erm20-videoFocus"><div className="erm20-videoPoster"><Photo id={mediaList[videoIndex].image} alt={mediaList[videoIndex].name}/><span className="erm20-filmStatus">{tab === 'perspectivas' ? 'PERSPECTIVAS ANIMADAS' : tab === 'empreendimento' ? 'EMPREENDIMENTO' : 'SHORT VÍDEOS'}</span></div><h2>{mediaList[videoIndex].name}</h2><p>Prévia visual. O vídeo correspondente será vinculado assim que a Rocha selecionar e aprovar o arquivo original.</p></div><div className="erm20-videoList">{mediaList.map((v,i)=><button key={`${v.name}-${i}`} type="button" className={videoIndex===i?'active':''} onClick={()=>setVideoIndex(i)}><b>{String(i+1).padStart(2,'0')}</b><span>{v.name}</span></button>)}</div></div></div>}
+          {section === 'videos' && <div className="erm20-content erm20-videos"><SectionBanner title="VÍDEOS"/><div className="erm20-videoGrid"><div className="erm20-videoFocus">
+            <div className="erm76-player">
+              <video key={r76Atual.arquivo} ref={r76VideoRef} className="erm76-video"
+                src={`${R76_PASTA}${r76Atual.arquivo}.mp4`} poster={`${R76_PASTA}${r76Atual.arquivo}.webp`}
+                muted playsInline autoPlay={!r76SemMovimento} controls preload="auto"
+                aria-label={`Vídeo: ${r76Atual.nome}`}
+                onEnded={() => setVideoIndex((r76Indice + 1) % r76Lista.length)} />
+              <span className="erm20-filmStatus">{r76Rotulo[r76Aba]} · {String(r76Indice + 1).padStart(2, '0')}/{String(r76Lista.length).padStart(2, '0')}</span>
+            </div>
+            <h2>{r76Atual.nome}</h2>
+            <p>{r76Atual.nota ? `${r76Atual.nota} ` : ''}Vídeo de 8 segundos feito com a imagem oficial em alta resolução, só com movimento de câmera. {r76Atual.aviso || 'Perspectiva ilustrativa'}. Ao terminar, o próximo vídeo começa.</p>
+          </div><div className="erm20-videoList" role="group" aria-label={`Lista de vídeos: ${r76Rotulo[r76Aba].toLowerCase()}`}>{r76Lista.map((v, i) => <button key={v.arquivo} type="button" className={r76Indice === i ? 'active' : ''} aria-pressed={r76Indice === i} onClick={() => r76Escolher(i)}><b>{String(i + 1).padStart(2, '0')}</b><span>{v.nome}</span></button>)}</div></div></div>}
 
           {section === 'ficha' && <div className="erm20-content erm20-spec erm44-spec">
             <div className="erm44-sheet">
