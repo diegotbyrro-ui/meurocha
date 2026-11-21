@@ -35,6 +35,7 @@ export default async function PortalLayout({children}:{children:React.ReactNode}
         <Link href="/portal">Visão geral</Link>
         <Link href="/portal/gestao">Empreendimentos</Link>
         <Link href="/portal/biblioteca">Biblioteca de materiais</Link>
+        <Link href="/portal/tarefas">Tarefas da equipe</Link>
         <Link href="/portal/simulador">Simulador comercial</Link>
       </nav>
       <div className="r79-sidebar-bottom">
@@ -49,6 +50,7 @@ export default async function PortalLayout({children}:{children:React.ReactNode}
             <Link href="/portal">Visão geral</Link>
             <Link href="/portal/gestao">Empreendimentos</Link>
             <Link href="/portal/biblioteca">Biblioteca de materiais</Link>
+            <Link href="/portal/tarefas">Tarefas da equipe</Link>
             <Link href="/portal/simulador">Simulador comercial</Link>
           </nav>
         </details>

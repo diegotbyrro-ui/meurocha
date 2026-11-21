@@ -115,3 +115,148 @@
 .rocha-portal .r79-library-feedback{background:#eef6f2;color:#286142}
 @media(max-width:1120px){.rocha-portal .r79-library-main{grid-template-columns:1fr}.rocha-portal .r79-library-groups nav{grid-template-columns:repeat(4,minmax(0,1fr));max-height:390px}}
 @media(max-width:740px){.rocha-portal .r79-library-groups nav{grid-template-columns:repeat(2,minmax(0,1fr));max-height:440px}}
+
+/* R81 — Visão geral operacional + quadro de tarefas. Apenas .rocha-portal */
+.rocha-portal .r81-dashboard,.rocha-portal .r81-tasks-page{display:grid;gap:22px;color:#1b2636;font-family:inherit}
+.rocha-portal .r81-eyebrow{font-size:10px;color:#a12b42;font-weight:700;letter-spacing:1.7px}
+.rocha-portal .r81-dashboard-head,.rocha-portal .r81-page-head{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.rocha-portal .r81-dashboard-head h1,.rocha-portal .r81-page-head h1{font-size:clamp(27px,3vw,36px);letter-spacing:-1.2px;margin:6px 0 4px;line-height:1.15;font-weight:700}
+.rocha-portal .r81-dashboard-head p,.rocha-portal .r81-page-head p{color:#718091;font-size:12px;margin:0;line-height:1.7}
+.rocha-portal .r81-primary-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid #8e2135;background:#8e2135;color:#fff!important;border-radius:9px;padding:12px 18px;font-weight:600;font-size:12px;cursor:pointer;white-space:nowrap;transition:background .2s,transform .2s}
+.rocha-portal .r81-primary-btn:hover{background:#721a2c;transform:translateY(-1px)}
+.rocha-portal .r81-local-alert{background:#fff9f2;border:1px solid #f0dfc2;color:#805c33;font-size:11px;line-height:1.65;padding:12px 15px;border-radius:10px}
+.rocha-portal .r81-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.rocha-portal .r81-kpi{display:flex;align-items:center;gap:13px;background:#fff;padding:19px 18px;border:1px solid #e9e9ed;border-radius:12px;min-height:124px;box-shadow:0 5px 14px #25303d05}
+.rocha-portal .r81-kpi-icon{background:#f9eef1;color:#8b2940;width:42px;height:42px;min-width:42px;border-radius:10px;display:grid;place-items:center}
+.rocha-portal .r81-kpi small{display:block;color:#667181;font-size:10px;line-height:1.5;font-weight:500}
+.rocha-portal .r81-kpi strong{display:block;color:#172333;font-size:28px;line-height:1.3;font-weight:700;margin-top:5px}
+.rocha-portal .r81-kpi span{display:block;color:#9aa2ad;font-size:9px}
+.rocha-portal .r81-content-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,0.85fr);gap:16px}
+.rocha-portal .r81-panel{background:#fff;border:1px solid #e9e9ed;border-radius:12px;padding:20px;min-width:0;box-shadow:0 5px 14px #25303d05}
+.rocha-portal .r81-panel-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}
+.rocha-portal .r81-panel-heading>div{display:flex;align-items:center;gap:9px;color:#92283e}
+.rocha-portal .r81-panel-heading h2{font-size:14px;color:#1b2636;margin:0;letter-spacing:-.25px;font-weight:700}
+.rocha-portal .r81-panel-heading>a,.rocha-portal .r81-panel-heading>span{display:inline-flex;align-items:center;gap:6px;font-size:10px;color:#9a344a;font-weight:600;white-space:nowrap}
+.rocha-portal .r81-panel-heading>span{color:#8a97a3}
+.rocha-portal .r81-empty-state{min-height:166px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:7px;color:#9a4b5b;background:#fdfafb;border:1px dashed #ead8de;border-radius:9px;padding:19px}
+.rocha-portal .r81-empty-state strong{color:#293344;font-size:12px}
+.rocha-portal .r81-empty-state p{color:#718091;margin:0;font-size:11px;line-height:1.55}
+.rocha-portal .r81-empty-state a{color:#92283e;font-size:11px;font-weight:700;margin-top:4px}
+.rocha-portal .r81-task-lines,.rocha-portal .r81-activity-list{display:grid;gap:0}
+.rocha-portal .r81-task-line{display:flex;gap:11px;align-items:center;padding:12px 0;border-bottom:1px solid #f1f1f3}
+.rocha-portal .r81-task-line:last-child{border:0}
+.rocha-portal .r81-task-line>div{flex:1;min-width:0}
+.rocha-portal .r81-task-line>div strong,.rocha-portal .r81-activity-line strong{font-size:11px;line-height:1.55;font-weight:600;display:block}
+.rocha-portal .r81-task-line small,.rocha-portal .r81-activity-line small{font-size:10px;color:#929ca9;display:block}
+.rocha-portal .r81-task-line>span:last-child{color:#6d7989;font-size:10px;white-space:nowrap}
+.rocha-portal .r81-task-line>span.is-late{color:#c43944;font-weight:700}
+.rocha-portal .r81-task-check{width:21px;height:21px;border:1px solid #e2d8da;border-radius:6px;flex:0 0 21px}
+.rocha-portal .r81-task-check.andamento{background:#fff7e9;border-color:#e9d0a1}
+.rocha-portal .r81-task-check.revisao{background:#f3f0fa;border-color:#d3c4e8}
+.rocha-portal .r81-activity-line{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid #f0f1f3}
+.rocha-portal .r81-activity-line:last-child{border:0}
+.rocha-portal .r81-activity-mark{display:block;width:8px;height:8px;border-radius:50%;background:#9d2b46;flex:0 0 8px;margin-top:4px;box-shadow:0 0 0 4px #f7e9ed}
+.rocha-portal .r81-section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:7px 0 0}
+.rocha-portal .r81-section-heading h2{font-size:22px;margin:6px 0;font-weight:700;letter-spacing:-.7px}
+.rocha-portal .r81-section-heading p{font-size:11px;color:#89929f;margin:0;line-height:1.6}
+.rocha-portal .r81-section-heading>a{display:flex;align-items:center;gap:6px;color:#98314a;font-weight:600;font-size:11px}
+.rocha-portal .r81-project-search{display:flex;align-items:center;gap:10px;padding:0 13px;max-width:390px;height:42px;background:#fff;border:1px solid #e5e7ec;border-radius:9px;color:#a0a6b0}
+.rocha-portal .r81-project-search input{background:transparent;border:0;outline:none;min-width:0;width:100%;font:inherit;color:#202f3f;font-size:11px}
+.rocha-portal .r81-project-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.rocha-portal .r81-project{overflow:hidden;background:white;border:1px solid #e8e9ed;border-radius:11px;transition:transform .16s,border-color .16s}
+.rocha-portal .r81-project:hover{transform:translateY(-2px);border-color:#d8b8c2}
+.rocha-portal .r81-project-image{height:116px;position:relative;color:#fff;display:grid;place-items:center;overflow:hidden;background:linear-gradient(130deg,#643245,#b76e7b)}
+.rocha-portal .r81-project-image.tone-1{background:linear-gradient(130deg,#475c66,#9cafb3)}
+.rocha-portal .r81-project-image.tone-2{background:linear-gradient(130deg,#43545f,#8494a0)}
+.rocha-portal .r81-project-image.tone-3{background:linear-gradient(130deg,#6c5455,#b6978c)}
+.rocha-portal .r81-project-image svg{width:100%;height:100%;max-width:260px;opacity:.8}
+.rocha-portal .r81-project-image>span{position:absolute;left:15px;bottom:12px;font-size:10px;font-weight:700;letter-spacing:1.5px;color:#ffffffcc}
+.rocha-portal .r81-project-body{padding:14px}
+.rocha-portal .r81-project-body small{font-size:8px;color:#a14054;letter-spacing:.85px;font-weight:700}
+.rocha-portal .r81-project-body h3{font-size:13px;font-weight:700;margin:7px 0}
+.rocha-portal .r81-project-body p{font-size:10px;color:#7d8b98;margin:0 0 14px}
+.rocha-portal .r81-project-body>div{border-top:1px solid #f0f1f3;padding-top:11px}
+.rocha-portal .r81-project-body a{display:flex;align-items:center;justify-content:space-between;font-size:10px;font-weight:600;color:#912b43}
+.rocha-portal .r81-empty-project{grid-column:1/-1;color:#7d8794;font-size:12px;padding:24px;background:#fff;border:1px solid #e7e9ed;border-radius:9px}
+.rocha-portal .r81-lower-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.rocha-portal .r81-month-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;gap:12px}
+.rocha-portal .r81-month-nav strong{font-size:13px;text-transform:capitalize;font-weight:600}
+.rocha-portal .r81-month-nav>div{display:flex;align-items:center;gap:6px}
+.rocha-portal .r81-month-nav button{border:1px solid #ece7e9;border-radius:6px;background:#fff;padding:4px 8px;cursor:pointer;color:#8b3045;font-size:11px}
+.rocha-portal .r81-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;text-align:center}
+.rocha-portal .r81-weekday{font-size:10px;color:#8c96a2;padding:7px}
+.rocha-portal .r81-cal-day{display:grid;place-items:center;position:relative;border-radius:8px;min-height:31px;font-size:11px;color:#425166}
+.rocha-portal .r81-cal-day.is-today{background:#8e253d;color:#fff;font-weight:700}
+.rocha-portal .r81-cal-day i{position:absolute;bottom:1px;width:4px;height:4px;background:#d76860;border-radius:50%}
+.rocha-portal .r81-cal-day.is-today i{background:#fff}
+.rocha-portal .r81-calendar-foot{font-size:10px;color:#99a1ac;margin:10px 0 0}
+.rocha-portal .r81-shortcut-items{display:grid;gap:9px}
+.rocha-portal .r81-shortcut-items>a{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid #edeef1;border-radius:9px;transition:background .16s}
+.rocha-portal .r81-shortcut-items>a:hover{background:#fff8f9}
+.rocha-portal .r81-shortcut-items>a>span{width:37px;height:37px;flex:0 0 37px;border-radius:8px;display:grid;place-items:center;background:#f8edf0;color:#94314a}
+.rocha-portal .r81-shortcut-items>a>div{flex:1;min-width:0}
+.rocha-portal .r81-shortcut-items strong{font-size:11px;display:block;color:#233244}
+.rocha-portal .r81-shortcut-items small{font-size:9px;color:#8c98a7}
+.rocha-portal .r81-shortcut-items>a>svg{color:#9d364e}
+.rocha-portal .r81-access-note{margin-top:12px;display:flex;align-items:flex-start;gap:9px;padding:11px;background:#f8f7f8;border-radius:8px;color:#9a5763}
+.rocha-portal .r81-access-note p{font-size:10px;line-height:1.6;color:#7b7883;margin:0}
+/* Tarefas estilo Kanban */
+.rocha-portal .r81-task-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.rocha-portal .r81-task-summary>div{padding:17px;background:#fff;border:1px solid #e8e9ee;border-radius:10px}
+.rocha-portal .r81-task-summary span{font-size:10px;color:#8993a1;display:block}
+.rocha-portal .r81-task-summary strong{font-size:25px;display:block;margin-top:6px}
+.rocha-portal .r81-tasks-tools{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.rocha-portal .r81-task-filters{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.rocha-portal .r81-task-filters input,.rocha-portal .r81-task-filters select{padding:11px 12px;border:1px solid #e3e6eb;background:#fff;border-radius:8px;font:inherit;font-size:11px;min-width:180px;color:#37465b}
+.rocha-portal .r81-view-switch{display:flex;border:1px solid #e0e1e6;border-radius:8px;background:white;padding:3px}
+.rocha-portal .r81-view-switch button{border:0;border-radius:6px;background:transparent;color:#78828f;padding:8px 13px;cursor:pointer;font-size:11px;font-weight:600}
+.rocha-portal .r81-view-switch button[aria-pressed=true]{background:#8f293f;color:#fff}
+.rocha-portal .r81-message{background:#eff7f1;color:#277047;border-radius:8px;font-size:11px;padding:11px;margin:0}
+.rocha-portal .r81-board{display:grid;grid-template-columns:repeat(4,minmax(230px,1fr));gap:13px;overflow-x:auto;padding-bottom:5px;align-items:stretch}
+.rocha-portal .r81-board-column{background:#f7f7f9;border:1px solid #ebecf1;border-radius:12px;padding:13px;min-height:280px}
+.rocha-portal .r81-board-column>header{display:flex;align-items:center;gap:8px;margin-bottom:13px}
+.rocha-portal .r81-board-column h2{font-size:12px;font-weight:700;margin:0;flex:1}
+.rocha-portal .r81-board-column b{font-size:11px;color:#6d7b8b;background:#fff;border-radius:6px;padding:4px 7px}
+.rocha-portal .r81-status-dot{width:8px;height:8px;border-radius:50%;background:#a1aaba}
+.rocha-portal .r81-stage-andamento .r81-status-dot{background:#df9d38}
+.rocha-portal .r81-stage-revisao .r81-status-dot{background:#9b74c5}
+.rocha-portal .r81-stage-concluida .r81-status-dot{background:#4caa79}
+.rocha-portal .r81-board-cards{display:grid;gap:10px;align-content:start}
+.rocha-portal .r81-task-card{background:white;border:1px solid #e9e8ed;border-radius:10px;padding:13px;display:grid;gap:10px;box-shadow:0 3px 12px #12213205}
+.rocha-portal .r81-task-card[draggable=true]{cursor:grab}
+.rocha-portal .r81-task-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.rocha-portal .r81-task-card-top button,.rocha-portal .r81-delete{background:transparent;border:0;color:#94364d;font-size:10px;font-weight:600;cursor:pointer}
+.rocha-portal .r81-priority{border-radius:4px;padding:4px 7px;font-size:9px;font-weight:700;background:#eef3f7;color:#667c8c}
+.rocha-portal .r81-priority.is-alta{background:#fff0ee;color:#c14841}
+.rocha-portal .r81-priority.is-media{background:#fff5e8;color:#b58137}
+.rocha-portal .r81-task-card>strong{font-size:11.5px;line-height:1.5;overflow-wrap:anywhere}
+.rocha-portal .r81-task-card p{font-size:10px;color:#718091;margin:0;line-height:1.65;overflow-wrap:anywhere}
+.rocha-portal .r81-task-meta{display:flex;justify-content:space-between;gap:8px;color:#8994a1;font-size:9px}
+.rocha-portal .r81-task-meta .is-overdue{color:#c34a45;font-weight:700}
+.rocha-portal .r81-task-card>small{font-size:9px;color:#7b8796}
+.rocha-portal .r81-task-card-foot{border-top:1px solid #f0f0f3;padding-top:9px;display:flex;align-items:flex-end;justify-content:space-between;gap:7px}
+.rocha-portal .r81-task-card-foot label{display:grid;gap:3px;color:#95a0ab;font-size:9px}
+.rocha-portal .r81-task-card-foot select{font:inherit;color:#46556b;padding:5px;border:1px solid #e2e5e8;border-radius:6px;background:#fff;font-size:10px;max-width:135px}
+.rocha-portal .r81-empty-column{font-size:10px;text-align:center;color:#9aa3af;border:1px dashed #e3e3e8;background:#fff;border-radius:8px;padding:20px 10px;line-height:1.5}
+.rocha-portal .r81-tasks-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.rocha-portal .r81-empty-list{grid-column:1/-1;color:#8993a0;background:#fff;border:1px dashed #e5e5e9;border-radius:10px;padding:25px;text-align:center;font-size:11px}
+.rocha-portal .r81-starter{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:18px;background:#fff;border-radius:10px;border:1px solid #e7e9ed}
+.rocha-portal .r81-starter strong{font-size:12px}
+.rocha-portal .r81-starter span{flex:1;font-size:10px;color:#8d98a5}
+.rocha-portal .r81-starter button{background:#fff0f3;border:1px solid #e8c8d0;color:#963649;font-weight:700;font-size:10px;border-radius:7px;padding:10px;cursor:pointer}
+.rocha-portal .r81-modal-backdrop{position:fixed;inset:0;background:#13162499;display:grid;place-items:center;z-index:150;padding:20px;overflow:auto}
+.rocha-portal .r81-task-modal{background:#fff;width:min(100%,620px);max-height:90vh;overflow-y:auto;border-radius:14px;padding:23px;box-shadow:0 20px 70px #0003}
+.rocha-portal .r81-task-modal>header{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.rocha-portal .r81-task-modal h2{font-size:20px;margin:0 0 18px}
+.rocha-portal .r81-task-modal>header button{border:0;background:transparent;font-size:24px;cursor:pointer}
+.rocha-portal .r81-task-form{display:grid;gap:15px}
+.rocha-portal .r81-task-form label{display:grid;gap:6px;font-size:11px;font-weight:600;color:#4e5c70}
+.rocha-portal .r81-task-form input,.rocha-portal .r81-task-form textarea,.rocha-portal .r81-task-form select{font:inherit;font-size:12px;border:1px solid #dfe3e9;border-radius:8px;padding:11px;background:#fff;color:#253245;width:100%}
+.rocha-portal .r81-task-form textarea{resize:vertical}
+.rocha-portal .r81-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.rocha-portal .r81-task-form footer{display:flex;justify-content:flex-end;gap:10px;border-top:1px solid #ececf1;padding-top:15px}
+.rocha-portal .r81-task-form footer button:not(.r81-primary-btn){border:1px solid #e4e6e9;color:#5a6777;border-radius:7px;background:#fff;font-size:12px;padding:9px 13px;cursor:pointer}
+@media(max-width:1250px){.rocha-portal .r81-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.rocha-portal .r81-project-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rocha-portal .r81-board{grid-template-columns:repeat(4,minmax(240px,1fr))}}
+@media(max-width:920px){.rocha-portal .r81-content-grid,.rocha-portal .r81-lower-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.rocha-portal .r81-kpis,.rocha-portal .r81-project-grid,.rocha-portal .r81-task-summary,.rocha-portal .r81-tasks-list{grid-template-columns:1fr 1fr}.rocha-portal .r81-kpi{padding:12px;gap:8px;min-height:105px}.rocha-portal .r81-kpi-icon{width:32px;min-width:32px;height:32px}.rocha-portal .r81-kpi strong{font-size:22px}.rocha-portal .r81-page-head,.rocha-portal .r81-dashboard-head{align-items:flex-start}.rocha-portal .r81-form-grid{grid-template-columns:1fr}.rocha-portal .r81-task-filters input,.rocha-portal .r81-task-filters select{min-width:0;width:100%}.rocha-portal .r81-task-filters{width:100%}.rocha-portal .r81-month-nav{flex-wrap:wrap}}
+@media(max-width:460px){.rocha-portal .r81-project-grid,.rocha-portal .r81-tasks-list{grid-template-columns:1fr}}
