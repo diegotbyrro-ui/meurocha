@@ -10,6 +10,7 @@ const grupos: {title:string,items:{href:string,label:string,icon:IconName}[]}[] 
     {href:'/plataforma/empreendimentos',label:'Empreendimentos',icon:'building'},
     {href:'/plataforma/biblioteca',label:'Biblioteca digital',icon:'files'},
     {href:'/plataforma/simulador',label:'Simulador',icon:'calculator'},
+    {href:'/plataforma/gestao',label:'Gestão do acervo',icon:'folder'},
   ]},
   { title:'RELACIONAMENTO', items: [
     {href:'/plataforma/convites',label:'Convites Rocha',icon:'ticket'},
