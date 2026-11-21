@@ -1,15 +1,18 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { headers } from 'next/headers';
+import { Poppins } from 'next/font/google';
 import { portalCookieValid, portalLoginConfigured } from '@/lib/portal-rocha-auth';
 import './portal.css';
+
+const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'], display: 'swap' });
 
 export const metadata: Metadata = { title: 'Portal Comercial Rocha', robots: { index:false, follow:false, nocache:true } };
 export const dynamic = 'force-dynamic';
 
 export default async function PortalLayout({children}:{children:React.ReactNode}) {
   const cookie=(await headers()).get('cookie');
-  if(!portalCookieValid(cookie)) return <main className="rocha-portal-login">
+  if(!portalCookieValid(cookie)) return <main className={`rocha-portal-login ${poppins.className}`}>
     <div className="r79-login-logo"><img src="/rocha-logo.png" width={200} alt="Rocha Empreendimentos" /></div>
     <span>ACESSO RESERVADO · EQUIPE ROCHA</span>
     <h1>Portal comercial</h1>
@@ -21,7 +24,7 @@ export default async function PortalLayout({children}:{children:React.ReactNode}
     </form>:<div className="rocha-portal-indisponivel">Acesso aguardando configuração das credenciais no servidor. Nenhum cadastro ou arquivo está exposto.</div>}
     <small>Acesso de corretores com credenciais individuais será liberado após integração segura. <Link href="/home">Voltar</Link></small>
   </main>;
-  return <div className="rocha-portal r79-shell">
+  return <div className={`rocha-portal r79-shell ${poppins.className}`}>
     <aside className="r79-sidebar" aria-label="Navegação lateral da plataforma">
       <Link href="/portal" className="r79-side-brand">
         <div className="r79-logo-dark"><img src="/rocha-logo.png" width={190} alt="Rocha Empreendimentos" /></div>

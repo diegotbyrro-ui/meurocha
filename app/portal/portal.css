@@ -82,3 +82,36 @@
 .rocha-portal .r79-no-files{font-size:13px;line-height:1.7;color:#84909b;padding:30px 10px;text-align:center}
 @media(max-width:1060px){.rocha-portal.r79-shell{grid-template-columns:1fr}.rocha-portal .r79-sidebar{display:none}.rocha-portal .r79-mobile-menu{display:block}.rocha-portal .r79-toolbar{padding:0 16px}.rocha-portal .r79-library-main{grid-template-columns:1fr}}
 @media(max-width:660px){.rocha-portal .r79-file-item{display:grid}.rocha-portal .r79-library-head>strong{display:none}.rocha-portal .r79-toolbar strong{font-size:9px}.rocha-portal .r79-library-groups nav{max-height:230px}}
+
+
+/* R80 R2: melhorias visuais pontuais, totalmente isoladas na plataforma.
+   Nenhum arquivo 3D do Easy Rota do Mar e afetado. */
+.rocha-portal.r79-shell,.rocha-portal-login{font-family:inherit}
+.rocha-portal .r79-sidebar{background:#171923}
+.rocha-portal .r79-side-brand{padding:24px 18px 22px}
+.rocha-portal .r79-logo-dark{background:#3a1625;border-color:#6a3044;border-radius:11px;box-shadow:0 5px 18px #08080c26}
+.rocha-portal .r79-side-nav a{font-weight:600;letter-spacing:-.1px}
+.rocha-portal .r79-side-nav a:hover{background:#34202b}
+.rocha-portal .r79-toolbar{background:#fdfdfd}
+.rocha-portal .r79-library-head h1{font-size:32px;font-weight:700;letter-spacing:-.8px}
+.rocha-portal .r79-library-head>strong{background:#f7edf0;color:#8f2338}
+.rocha-portal .r79-library-main{grid-template-columns:minmax(290px,450px) minmax(0,1fr);gap:20px}
+.rocha-portal .r79-library-groups,.rocha-portal .r79-library-folder{border-radius:13px;border-color:#e2e5e9;box-shadow:0 5px 22px #1b26300a}
+.rocha-portal .r79-library-groups nav{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-height:min(70vh,730px);overflow:auto;padding:2px}
+.rocha-portal .r79-library-groups nav button{min-height:126px;padding:13px 11px 12px;align-content:start;justify-items:start;gap:6px;border:1px solid #e8e8eb;border-radius:12px;background:#fff;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}
+.rocha-portal .r79-library-groups nav button:hover{background:#fff;border-color:#d7b0bb;transform:translateY(-2px);box-shadow:0 9px 22px #4d253011}
+.rocha-portal .r79-library-groups nav button.r79-cat-active{background:#fff8f9;border-color:#b34c62;box-shadow:inset 3px 0 #aa3049}
+.rocha-portal .r79-library-groups nav button .r80-folder-symbol{display:inline-grid;width:52px;height:45px;align-items:center}
+.rocha-portal .r80-folder-symbol svg{width:52px;height:45px;display:block}
+.rocha-portal .r79-library-groups nav button .r80-folder-caption{display:grid;gap:4px;min-width:0;width:100%}
+.rocha-portal .r79-library-groups nav button .r80-folder-caption>span{font-size:11.5px;line-height:1.4;font-weight:650;color:#273240;overflow-wrap:anywhere}
+.rocha-portal .r79-library-groups nav button .r80-folder-caption small{font-size:9px;line-height:1.5;color:#87909c}
+.rocha-portal .r79-library-warning{background:#fff9f0;border-color:#eeddbf;color:#805a26}
+.rocha-portal .r79-folder-title h2{letter-spacing:-.5px;font-size:25px}
+.rocha-portal .r79-upload-button{background:#9f2741;border-radius:9px;transition:background .15s ease}
+.rocha-portal .r79-upload-button:hover{background:#821b32}
+.rocha-portal .r79-file-item{border-radius:11px;background:#fff;transition:border-color .15s ease}
+.rocha-portal .r79-file-item:hover{border-color:#d7b0bb}
+.rocha-portal .r79-library-feedback{background:#eef6f2;color:#286142}
+@media(max-width:1120px){.rocha-portal .r79-library-main{grid-template-columns:1fr}.rocha-portal .r79-library-groups nav{grid-template-columns:repeat(4,minmax(0,1fr));max-height:390px}}
+@media(max-width:740px){.rocha-portal .r79-library-groups nav{grid-template-columns:repeat(2,minmax(0,1fr));max-height:440px}}
