@@ -1,0 +1,217 @@
+/* Estilos dos componentes AjudaPagina e Termo. Carregados pelos proprios componentes,
+   para funcionarem em qualquer pagina do portal. */
+
+.r83a-ajuda {
+  background: var(--r-surface, #ffffff);
+  border: 1px solid var(--r-line, #d6d4cf);
+  border-radius: var(--r-radius, 8px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  padding: 16px 18px;
+  margin: 0 0 20px;
+  color: var(--r-ink, #1c1c1e);
+}
+
+.r83a-ajuda-cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+.r83a-ajuda-titulo {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--r-ink, #1c1c1e);
+}
+
+.r83a-ajuda-passos {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.r83a-ajuda-passo {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 10px;
+  align-items: start;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--r-ink-2, #45474c);
+}
+
+.r83a-ajuda-numero {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--r-line-strong, #b9b6af);
+  background: var(--r-surface-2, #f8f7f5);
+  color: var(--r-ink, #1c1c1e);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.r83a-botao {
+  appearance: none;
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: var(--r-radius, 8px);
+  border: 1px solid var(--r-line-strong, #b9b6af);
+  background: var(--r-surface, #ffffff);
+  color: var(--r-ink, #1c1c1e);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.r83a-botao:hover {
+  background: var(--r-surface-2, #f8f7f5);
+}
+
+.r83a-botao:focus-visible {
+  outline: none;
+  box-shadow: var(--r-focus, 0 0 0 2px #ffffff, 0 0 0 4px #a51c2c);
+}
+
+.r83a-botao-discreto {
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--r-ink-2, #45474c);
+  font: inherit;
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.r83a-botao-discreto:focus-visible {
+  outline: none;
+  box-shadow: var(--r-focus, 0 0 0 2px #ffffff, 0 0 0 4px #a51c2c);
+}
+
+.r83a-ajuda-mini {
+  margin: 0 0 16px;
+}
+
+/* Termo: texto + botao "?" + popover */
+
+.r83a-termo {
+  position: relative;
+  display: inline-block;
+  white-space: normal;
+}
+
+.r83a-termo-botao {
+  position: relative;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  margin: 0 0 0 4px;
+  padding: 0;
+  vertical-align: middle;
+  border-radius: 999px;
+  border: 1px solid var(--r-line-strong, #b9b6af);
+  background: var(--r-surface, #ffffff);
+  color: var(--r-ink-2, #45474c);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* Area de toque de pelo menos 32px sem alterar o desenho do circulo de 22px. */
+.r83a-termo-botao::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 32px;
+  height: 32px;
+  transform: translate(-50%, -50%);
+}
+
+.r83a-termo-botao:hover {
+  background: var(--r-surface-2, #f8f7f5);
+}
+
+.r83a-termo-botao:focus-visible {
+  outline: none;
+  box-shadow: var(--r-focus, 0 0 0 2px #ffffff, 0 0 0 4px #a51c2c);
+}
+
+.r83a-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 30;
+  display: block;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: min(320px, calc(100vw - 32px));
+  padding: 12px 14px;
+  background: var(--r-surface, #ffffff);
+  border: 1px solid var(--r-line, #d6d4cf);
+  border-radius: var(--r-radius, 8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  color: var(--r-ink-2, #45474c);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+  font-weight: 400;
+  white-space: normal;
+}
+
+.r83a-popover-titulo {
+  display: block;
+  margin: 0 0 4px;
+  color: var(--r-ink, #1c1c1e);
+  font-weight: 700;
+}
+
+.r83a-popover-texto {
+  display: block;
+}
+
+.r83a-popover-fechar {
+  appearance: none;
+  margin-top: 8px;
+  min-height: 44px;
+  padding: 6px 4px;
+  border: 0;
+  background: transparent;
+  color: var(--r-brand, #a51c2c);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.r83a-popover-fechar:focus-visible {
+  outline: none;
+  box-shadow: var(--r-focus, 0 0 0 2px #ffffff, 0 0 0 4px #a51c2c);
+}
+
+@media (max-width: 600px) {
+  .r83a-ajuda {
+    padding: 14px;
+  }
+
+  .r83a-popover {
+    left: auto;
+    right: 0;
+  }
+}

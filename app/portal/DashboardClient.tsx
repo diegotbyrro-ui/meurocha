@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { bibliotecaCategorias } from '@/lib/biblioteca.mjs';
 import { empreendimentos } from '@/lib/catalog.mjs';
 import { TASK_EVENT, countTasks, dueTasks, nextTasks } from '@/lib/portal-tarefas.mjs';
+import AjudaPagina from './ajuda/AjudaPagina';
 import { humanDate, readTasks, todayLocal, type RochaTask } from './tarefas/task-store';
 
 function Icon({ type, size = 22 }: { type:'building'|'folder'|'calendar'|'check'|'users'|'clock'|'arrow'|'alert'|'tasks'|'chart', size?: number }) {
@@ -65,8 +66,18 @@ export default function DashboardClient() {
   const projects = empreendimentos.filter(p=>`${p.nome} ${p.bairro} ${p.cidade}`.toLocaleLowerCase('pt-BR').includes(filter.trim().toLocaleLowerCase('pt-BR')));
 
   return <section className="r81-dashboard" aria-label="Visão geral da operação comercial Rocha">
-    <header className="r81-dashboard-head"><div><span className="r81-eyebrow">PORTAL COMERCIAL ROCHA · ÁREA DE TRABALHO</span><h1>Visão geral</h1><p>Empreendimentos, rotina da equipe e ferramentas em um único lugar.</p></div><Link href="/portal/tarefas" className="r81-primary-btn"><Icon type="tasks" size={18}/> Gerenciar tarefas</Link></header>
-    <div className="r81-local-alert"><strong>Prévia local.</strong> Os indicadores de tarefas usam apenas este navegador. Empreendimentos são referências do catálogo; não há sincronização com CRM, estoque, vendas ou dados de outras pessoas.</div>
+    <header className="r81-dashboard-head"><div><h1>Início</h1><p>Escolha o que você precisa fazer agora. Se for a primeira vez, siga os três passos abaixo.</p></div><Link href="/portal/ajuda" className="r81-primary-btn r83-btn-sec">Abrir a ajuda</Link></header>
+    <AjudaPagina id="inicio" titulo="Primeira vez no portal?" passos={['Use o menu à esquerda (no celular, o botão Menu no topo). Cada item diz para que serve.','Na Central dos empreendimentos você copia o CNPJ e o PIX e abre os materiais de venda.','No Simulador de entrada você monta a proposta em 4 passos e imprime para o cliente.','Viu um termo que não conhece? Clique no ponto de interrogação ao lado dele.']} />
+    <section className="r83-comece" aria-labelledby="r83-comece-titulo">
+      <h2 id="r83-comece-titulo">O que você quer fazer?</h2>
+      <div className="r83-comece-grid">
+        <Link href="/portal/central" className="r83-comece-item"><span className="r83-comece-num" aria-hidden="true">1</span><strong>Passar CNPJ ou PIX para um cliente</strong><small>Abra a Central, escolha o empreendimento e clique em copiar.</small><span className="r83-comece-cta">Ir para a Central</span></Link>
+        <Link href="/portal/simulador" className="r83-comece-item"><span className="r83-comece-num" aria-hidden="true">2</span><strong>Simular a entrada de uma unidade</strong><small>Informe valor, financiamento e parcelas. O portal faz as contas.</small><span className="r83-comece-cta">Abrir o simulador</span></Link>
+        <Link href="/portal/central" className="r83-comece-item"><span className="r83-comece-num" aria-hidden="true">3</span><strong>Enviar material de venda</strong><small>Plantas, book, vídeos e tabela de preços ficam na Central.</small><span className="r83-comece-cta">Ver materiais</span></Link>
+        <Link href="/portal/atualizar" className="r83-comece-item"><span className="r83-comece-num" aria-hidden="true">4</span><strong>Cadastrar ou corrigir dados</strong><small>Para quem cuida do portal: CNPJ, PIX, links e postagens.</small><span className="r83-comece-cta">Atualizar conteúdo</span></Link>
+      </div>
+    </section>
+    <div className="r81-local-alert"><strong>Atenção:</strong> as tarefas abaixo ficam salvas só neste navegador. Outra pessoa, em outro computador, não vê as suas tarefas.</div>
     <div className="r81-kpis">
       <div className="r81-kpi"><div className="r81-kpi-icon"><Icon type="building"/></div><div><small>Empreendimentos de referência</small><strong>{empreendimentos.length}</strong><span>Catálogo preliminar</span></div></div>
       <div className="r81-kpi"><div className="r81-kpi-icon"><Icon type="folder"/></div><div><small>Categorias da biblioteca</small><strong>{bibliotecaCategorias.length}</strong><span>Pastas fixas</span></div></div>
@@ -83,9 +94,9 @@ export default function DashboardClient() {
       </section>
     </div>
 
-    <div className="r81-section-heading"><div><span className="r81-eyebrow">CATÁLOGO ROCHA</span><h2>Empreendimentos</h2><p>Visão inicial dos projetos. Fotos, porcentagens e disponibilidade dependem de dados homologados.</p></div><Link href="/portal/gestao">Gerenciar empreendimentos <Icon type="arrow" size={17}/></Link></div>
+    <div className="r81-section-heading"><div><h2>Empreendimentos</h2><p>Clique em um empreendimento para ver CNPJ, PIX e materiais.</p></div><Link href="/portal/central">Abrir a Central <Icon type="arrow" size={17}/></Link></div>
     <div className="r81-project-search"><Icon type="building" size={17}/><input type="search" aria-label="Buscar empreendimentos" value={filter} onChange={e=>setFilter(e.target.value)} placeholder="Buscar empreendimento, bairro ou cidade..."/></div>
-    <div className="r81-project-grid">{projects.map((p,i)=><article className="r81-project" key={p.id}><div className={`r81-project-image tone-${i%4}`} aria-hidden="true"><svg viewBox="0 0 260 150" fill="none"><path d="M48 135V52l55-22 54 22v83M157 135V71l54-16v80" stroke="currentColor" strokeWidth="2" opacity=".5"/><path d="M70 66h15m21 0h15M70 87h15m21 0h15M70 109h15m21 0h15M174 89h17m-17 21h17" stroke="currentColor" strokeWidth="3" opacity=".5"/></svg><span>ROCHA</span></div><div className="r81-project-body"><small>EMPREENDIMENTO DE REFERÊNCIA</small><h3>{p.nome}</h3><p>{p.bairro} · {p.cidade}</p><div><Link href="/portal/gestao">Gerenciar projeto <Icon type="arrow" size={16}/></Link></div></div></article>)}{projects.length===0?<div className="r81-empty-project">Nenhum empreendimento encontrado.</div>:null}</div>
+    <div className="r81-project-grid">{projects.map((p,i)=><article className="r81-project" key={p.id}><div className={`r81-project-image tone-${i%4}`} aria-hidden="true"><svg viewBox="0 0 260 150" fill="none"><path d="M48 135V52l55-22 54 22v83M157 135V71l54-16v80" stroke="currentColor" strokeWidth="2" opacity=".5"/><path d="M70 66h15m21 0h15M70 87h15m21 0h15M70 109h15m21 0h15M174 89h17m-17 21h17" stroke="currentColor" strokeWidth="3" opacity=".5"/></svg></div><div className="r81-project-body"><small>{p.status}</small><h3>{p.nome}</h3><p>{p.bairro} · {p.cidade}</p><div><Link href={`/portal/central/${p.id}`}>Abrir na Central <Icon type="arrow" size={16}/></Link></div></div></article>)}{projects.length===0?<div className="r81-empty-project">Nenhum empreendimento encontrado.</div>:null}</div>
 
     <div className="r81-lower-grid"><Calendar tasks={tasks}/><section className="r81-panel r81-shortcuts"><div className="r81-panel-heading"><div><Icon type="chart"/><h2>Ferramentas rápidas</h2></div></div><div className="r81-shortcut-items">
         <Link href="/portal/central"><span><Icon type="building"/></span><div><strong>Central dos empreendimentos</strong><small>CNPJ, PIX, materiais e postagens</small></div><Icon type="arrow" size={17}/></Link>

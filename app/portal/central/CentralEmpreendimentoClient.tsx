@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
-import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
+import Termo from '../ajuda/Termo';
+import { useEffect, useState } from 'react';
 
 type ArquivoLink = { titulo: string; url: string };
 
@@ -29,9 +29,7 @@ type Props = {
   meses: readonly MesCentral[];
 };
 
-type AbaId = 'dados' | 'materiais' | 'videos' | 'redes' | 'simulador';
-
-const ABAS: readonly { id: AbaId; label: string }[] = [
+const INDICE_SECOES: readonly { id: string; label: string }[] = [
   { id: 'dados', label: 'Dados e pagamento' },
   { id: 'materiais', label: 'Materiais' },
   { id: 'videos', label: 'Vídeos' },
@@ -39,7 +37,16 @@ const ABAS: readonly { id: AbaId; label: string }[] = [
   { id: 'simulador', label: 'Simulador' },
 ];
 
-const AGUARDANDO = 'Aguardando cadastro pela equipe Rocha.';
+// Explicacoes dos termos tecnicos, abertas pelo componente Termo.
+
+
+// Relaciona o id do item de materiais ao termo explicado.
+const TERMO_DO_ITEM: Readonly<Record<string, string>> = {
+  'book-corretores': 'book',
+  memorial: 'memorial',
+  'tabela-precos': 'tabela-precos',
+};
+
 const MSG_COPIADO = 'Copiado!';
 const MSG_FALHA = 'Não foi possível copiar. Selecione o texto e copie manualmente.';
 
@@ -72,24 +79,33 @@ async function copiarTexto(texto: string): Promise<boolean> {
   }
 }
 
-function Campo({ rotulo, valor }: { rotulo: string; valor: string }) {
+function NaoCadastrado({ empId }: { empId: string }) {
   return (
-    <div className="r82-campo">
-      <span className="r82-label">{rotulo}</span>
-      {valor ? <p className="r82-value">{valor}</p> : <p className="r82-empty">{AGUARDANDO}</p>}
+    <div className="r82-empty">
+      <p>Ainda não cadastrado.</p>
+      <Link href={`/portal/atualizar?emp=${empId}`} className="r82-link">Cadastrar agora</Link>
     </div>
   );
 }
 
-function ListaLinks({ itens, prefixo }: { itens: ArquivoLink[]; prefixo: string }) {
-  if (itens.length === 0) return <p className="r82-empty">Nenhum arquivo publicado ainda.</p>;
+function Campo({ rotulo, valor, empId, termo }: { rotulo: string; valor: string; empId: string; termo?: string }) {
+  return (
+    <div className="r82-campo">
+      <span className="r82-label">{termo ? <Termo id={termo}>{rotulo}</Termo> : rotulo}</span>
+      {valor ? <p className="r82-value">{valor}</p> : <NaoCadastrado empId={empId} />}
+    </div>
+  );
+}
+
+function ListaLinks({ itens, prefixo, empId }: { itens: ArquivoLink[]; prefixo: string; empId: string }) {
+  if (itens.length === 0) return <NaoCadastrado empId={empId} />;
   return (
     <ul className="r82-links">
       {itens.map((arquivo, indice) => (
         <li key={`${prefixo}-${indice}`}>
           <a href={arquivo.url} target="_blank" rel="noopener noreferrer">
             <span>{arquivo.titulo}</span>
-            <span className="r82-open">Abrir</span>
+            <span className="r82-open">Abrir (nova aba)</span>
           </a>
         </li>
       ))}
@@ -98,10 +114,8 @@ function ListaLinks({ itens, prefixo }: { itens: ArquivoLink[]; prefixo: string 
 }
 
 export default function CentralEmpreendimentoClient({ emp, secoes, meses }: Props) {
-  const [aba, setAba] = useState<AbaId>('dados');
-  const [feedback, setFeedback] = useState<{ texto: string } | null>(null);
+  const [feedback, setFeedback] = useState<string>('');
   const [mesAtual, setMesAtual] = useState(-1);
-  const abaRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
     setMesAtual(new Date().getMonth());
@@ -109,43 +123,31 @@ export default function CentralEmpreendimentoClient({ emp, secoes, meses }: Prop
 
   useEffect(() => {
     if (!feedback) return;
-    const timer = window.setTimeout(() => setFeedback(null), 2000);
+    const timer = window.setTimeout(() => setFeedback(''), 2000);
     return () => window.clearTimeout(timer);
   }, [feedback]);
 
   async function copiar(texto: string) {
     const ok = await copiarTexto(texto);
-    setFeedback({ texto: ok ? MSG_COPIADO : MSG_FALHA });
-  }
-
-  function onTabKeyDown(event: ReactKeyboardEvent<HTMLButtonElement>, indice: number) {
-    let proximo = -1;
-    if (event.key === 'ArrowRight') proximo = (indice + 1) % ABAS.length;
-    else if (event.key === 'ArrowLeft') proximo = (indice - 1 + ABAS.length) % ABAS.length;
-    else if (event.key === 'Home') proximo = 0;
-    else if (event.key === 'End') proximo = ABAS.length - 1;
-    if (proximo < 0) return;
-    event.preventDefault();
-    setAba(ABAS[proximo].id);
-    abaRefs.current[proximo]?.focus();
+    setFeedback(ok ? MSG_COPIADO : MSG_FALHA);
   }
 
   const secoesMateriais = secoes.filter((secao) => secao.id !== 'videos');
   const secaoVideos = secoes.find((secao) => secao.id === 'videos');
 
-  function renderSecao(secao: SecaoMateriais) {
+  function renderItens(secao: SecaoMateriais) {
     return (
-      <section key={secao.id} className="r82-block" aria-labelledby={`r82-secao-${secao.id}`}>
-        <h2 className="r82-section-title" id={`r82-secao-${secao.id}`}>{secao.titulo}</h2>
-        <div className="r82-items">
-          {secao.itens.map((item) => (
+      <div className="r82-items">
+        {secao.itens.map((item) => {
+          const termo: string | undefined = TERMO_DO_ITEM[item.id];
+          return (
             <article key={item.id} className="r82-item">
-              <h3>{item.nome}</h3>
-              <ListaLinks itens={emp.materiais[item.id] ?? []} prefixo={item.id} />
+              <h4>{termo ? <Termo id={termo}>{item.nome}</Termo> : item.nome}</h4>
+              <ListaLinks itens={emp.materiais[item.id] ?? []} prefixo={item.id} empId={emp.id} />
             </article>
-          ))}
-        </div>
-      </section>
+          );
+        })}
+      </div>
     );
   }
 
@@ -157,133 +159,118 @@ export default function CentralEmpreendimentoClient({ emp, secoes, meses }: Prop
         <span aria-current="page">{emp.nome}</span>
       </nav>
 
-      <header className="r82-hero">
+      <header className="r82-head">
         <h1>{emp.nome}</h1>
         <p>{emp.bairro} · {emp.cidade}</p>
-        <span className="r82-chip">{emp.status}</span>
+        <p className="r82-status-text">Status: {emp.status}</p>
       </header>
 
-      <div className="r82-tabs" role="tablist" aria-label="Seções do empreendimento">
-        {ABAS.map((item, indice) => (
-          <button
-            key={item.id}
-            ref={(el) => { abaRefs.current[indice] = el; }}
-            type="button"
-            role="tab"
-            id={`r82-tab-${item.id}`}
-            aria-selected={aba === item.id}
-            aria-controls="r82-tabpanel"
-            tabIndex={aba === item.id ? 0 : -1}
-            className="r82-tab"
-            onClick={() => setAba(item.id)}
-            onKeyDown={(event) => onTabKeyDown(event, indice)}
-          >
-            {item.label}
-          </button>
+      <nav className="r82-index" aria-label="Nesta página">
+        <span className="r82-index-label">Nesta página</span>
+        {INDICE_SECOES.map((item) => (
+          <a key={item.id} href={`#${item.id}`} className="r82-index-link">{item.label}</a>
         ))}
-      </div>
+      </nav>
 
-      <div role="tabpanel" id="r82-tabpanel" aria-labelledby={`r82-tab-${aba}`} className="r82-panel">
-        {aba === 'dados' && (
-          <>
-            <div className="r82-grid r82-grid-2">
-              <section className="r82-card" aria-labelledby="r82-cnpj-titulo">
-                <h2 id="r82-cnpj-titulo">CNPJ do empreendimento</h2>
-                <Campo rotulo="Razão social" valor={emp.razaoSocial} />
-                {emp.cnpj ? (
-                  <>
-                    <div className="r82-campo">
-                      <span className="r82-label">CNPJ</span>
-                      <p className="r82-big">{emp.cnpj}</p>
-                    </div>
-                    <button type="button" className="r82-btn" onClick={() => void copiar(emp.cnpj)}>Copiar CNPJ</button>
-                  </>
-                ) : (
-                  <Campo rotulo="CNPJ" valor="" />
-                )}
-              </section>
-
-              <section className="r82-card" aria-labelledby="r82-pix-titulo">
-                <h2 id="r82-pix-titulo">PIX do empreendimento</h2>
-                <Campo rotulo="Tipo de chave" valor={emp.pix.tipo} />
-                {emp.pix.chave ? (
-                  <>
-                    <div className="r82-campo">
-                      <span className="r82-label">Chave PIX</span>
-                      <p className="r82-mono">{emp.pix.chave}</p>
-                    </div>
-                    <button type="button" className="r82-btn" onClick={() => void copiar(emp.pix.chave)}>Copiar chave PIX</button>
-                  </>
-                ) : (
-                  <Campo rotulo="Chave PIX" valor="" />
-                )}
-                <Campo rotulo="Favorecido" valor={emp.pix.favorecido} />
-                <Campo rotulo="Banco" valor={emp.pix.banco} />
-              </section>
-            </div>
-
-            <p className="r82-warning" role="note">Antes de enviar o PIX ao cliente, confirme o favorecido com o financeiro.</p>
-            <p className="r82-status" role="status">{feedback?.texto ?? ''}</p>
-          </>
-        )}
-
-        {aba === 'materiais' && (
-          <>
-            <div className="r82-blocks">
-              {secoesMateriais.map((secao) => renderSecao(secao))}
-            </div>
-            <div>
-              <Link href="/portal/biblioteca" className="r82-btn-ghost">Biblioteca local de arquivos</Link>
-            </div>
-          </>
-        )}
-
-        {aba === 'videos' && (
-          <div className="r82-blocks">
-            {secaoVideos && renderSecao(secaoVideos)}
+      <section id="dados" className="r82-section" aria-labelledby="r82-h-dados">
+        <h2 id="r82-h-dados">Dados e pagamento</h2>
+        <div className="r82-grid-2">
+          <div className="r82-card">
+            <h3>CNPJ do empreendimento</h3>
+            <Campo rotulo="Razão social" valor={emp.razaoSocial} empId={emp.id} />
+            {emp.cnpj ? (
+              <div className="r82-campo">
+                <span className="r82-label"><Termo id="cnpj">CNPJ</Termo></span>
+                <p className="r82-big">{emp.cnpj}</p>
+                <div>
+                  <button type="button" className="r82-btn" onClick={() => void copiar(emp.cnpj)}>Copiar CNPJ</button>
+                </div>
+              </div>
+            ) : (
+              <Campo rotulo="CNPJ" valor="" empId={emp.id} termo="cnpj" />
+            )}
           </div>
-        )}
 
-        {aba === 'redes' && (
-          <>
-            <p className="r82-muted-line">Postagens mensais para redes sociais. O mês atual aparece destacado.</p>
-            <div className="r82-months">
-              {meses.map((mes, indice) => {
-                const postagens = emp.postagens[mes.id] ?? [];
-                const atual = indice === mesAtual;
-                return (
-                  <article
-                    key={mes.id}
-                    className={`r82-month${atual ? ' is-current' : ''}`}
-                    aria-current={atual ? 'date' : undefined}
-                  >
-                    <div className="r82-month-head">
-                      <h3>{mes.nome}</h3>
-                      <span className="r82-month-count">
-                        {postagens.length} {postagens.length === 1 ? 'postagem' : 'postagens'}
-                      </span>
-                    </div>
-                    {atual && <span className="r82-now">Mês atual</span>}
-                    {postagens.length === 0 ? (
-                      <p className="r82-empty">Nenhuma postagem publicada.</p>
-                    ) : (
-                      <ListaLinks itens={postagens} prefixo={mes.id} />
-                    )}
-                  </article>
-                );
-              })}
+          <div className="r82-card">
+            <h3>PIX do empreendimento</h3>
+            <Campo rotulo="Tipo de chave" valor={emp.pix.tipo} empId={emp.id} />
+            {emp.pix.chave ? (
+              <div className="r82-campo">
+                <span className="r82-label"><Termo id="pix">Chave PIX</Termo></span>
+                <p className="r82-mono">{emp.pix.chave}</p>
+                <div>
+                  <button type="button" className="r82-btn" onClick={() => void copiar(emp.pix.chave)}>Copiar chave PIX</button>
+                </div>
+              </div>
+            ) : (
+              <Campo rotulo="Chave PIX" valor="" empId={emp.id} termo="pix" />
+            )}
+            <Campo rotulo="Favorecido" valor={emp.pix.favorecido} empId={emp.id} />
+            <Campo rotulo="Banco" valor={emp.pix.banco} empId={emp.id} />
+          </div>
+        </div>
+
+        <p className="r82-warning" role="note">Antes de enviar o PIX ao cliente, confirme o favorecido com o financeiro.</p>
+        <p className="r82-status" role="status">{feedback}</p>
+      </section>
+
+      <section id="materiais" className="r82-section" aria-labelledby="r82-h-materiais">
+        <h2 id="r82-h-materiais">Materiais</h2>
+        <p className="r82-muted-line">Arquivos para venda: plantas, book, tabela de preços e outros. Cada link abre em nova aba.</p>
+        {secoesMateriais.map((secao) => {
+          const termoSecao: string | undefined = secao.id === 'perspectivas' ? 'perspectivas' : undefined;
+          return (
+            <div key={secao.id} className="r82-block">
+              <h3>{termoSecao ? <Termo id={termoSecao}>{secao.titulo}</Termo> : secao.titulo}</h3>
+              {renderItens(secao)}
             </div>
-          </>
-        )}
+          );
+        })}
+        <div>
+          <Link href="/portal/biblioteca" className="r82-btn-secondary">Biblioteca local de arquivos</Link>
+        </div>
+      </section>
 
-        {aba === 'simulador' && (
-          <section className="r82-card">
-            <h2>Simulador de entrada</h2>
-            <p className="r82-muted-line">Abra o simulador comercial já vinculado a este empreendimento para montar a proposta de entrada.</p>
-            <Link href={`/portal/simulador?emp=${emp.id}`} className="r82-btn">Abrir simulador de entrada</Link>
-          </section>
-        )}
-      </div>
+      <section id="videos" className="r82-section" aria-labelledby="r82-h-videos">
+        <h2 id="r82-h-videos">Vídeos</h2>
+        <p className="r82-muted-line">Vídeos de localização e apresentação do empreendimento. Cada link abre em nova aba.</p>
+        {secaoVideos && renderItens(secaoVideos)}
+      </section>
+
+      <section id="redes" className="r82-section" aria-labelledby="r82-h-redes">
+        <h2 id="r82-h-redes">Redes sociais</h2>
+        <p className="r82-muted-line">Postagens prontas para as redes sociais, separadas por mês. O mês atual aparece marcado com o texto Mês atual.</p>
+        <div className="r82-months">
+          {meses.map((mes, indice) => {
+            const postagens = emp.postagens[mes.id] ?? [];
+            const atual = indice === mesAtual;
+            return (
+              <article
+                key={mes.id}
+                className={`r82-month${atual ? ' is-current' : ''}`}
+                aria-current={atual ? 'date' : undefined}
+              >
+                <div className="r82-month-head">
+                  <h3>{mes.nome}</h3>
+                  {atual && <span className="r82-now">Mês atual</span>}
+                </div>
+                <p className="r82-muted-line">
+                  {postagens.length} {postagens.length === 1 ? 'postagem' : 'postagens'}
+                </p>
+                <ListaLinks itens={postagens} prefixo={mes.id} empId={emp.id} />
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section id="simulador" className="r82-section" aria-labelledby="r82-h-simulador">
+        <h2 id="r82-h-simulador">Simulador</h2>
+        <p>O simulador de entrada abre já vinculado a este empreendimento, para montar a proposta de entrada.</p>
+        <div>
+          <Link href={`/portal/simulador?emp=${emp.id}`} className="r82-btn">Abrir o simulador com este empreendimento</Link>
+        </div>
+      </section>
     </div>
   );
 }

@@ -1,0 +1,97 @@
+/* R83 - Estrutura do portal: tokens, menu lateral claro, barra superior e login.
+   Regras visuais em docs/R83_DESIGN.md. Escopo: .rocha-portal e .rocha-portal-login. */
+.rocha-portal,.rocha-portal-login{
+  --r-bg:#f3f2ef;--r-surface:#ffffff;--r-surface-2:#f8f7f5;
+  --r-ink:#1c1c1e;--r-ink-2:#45474c;--r-ink-3:#5d6066;
+  --r-line:#d6d4cf;--r-line-strong:#b9b6af;
+  --r-brand:#a51c2c;--r-brand-hover:#8a1624;--r-brand-soft:#f6e8e9;
+  --r-ok:#146c3c;--r-ok-soft:#e6f4ec;
+  --r-warn:#7a4b00;--r-warn-soft:#fdf1d8;
+  --r-err:#b42318;--r-err-soft:#fdeceb;
+  --r-radius:8px;
+  --r-focus:0 0 0 2px #ffffff,0 0 0 4px #a51c2c;
+  /* compatibilidade com variaveis antigas do portal */
+  --rp-red:#a51c2c;--rp-ink:#1c1c1e;--rp-line:#d6d4cf;
+}
+
+/* Base */
+.rocha-portal.r83-shell{background:var(--r-bg);color:var(--r-ink);font-size:15px;line-height:1.55;grid-template-columns:272px minmax(0,1fr)}
+.rocha-portal.r83-shell a:focus-visible,.rocha-portal.r83-shell button:focus-visible,.rocha-portal.r83-shell summary:focus-visible,.rocha-portal.r83-shell input:focus-visible,.rocha-portal.r83-shell select:focus-visible,.rocha-portal.r83-shell textarea:focus-visible{outline:none;box-shadow:var(--r-focus)}
+.rocha-portal.r83-shell .r83-pular{position:absolute;left:12px;top:-60px;z-index:50;background:var(--r-ink);color:#fff;padding:10px 14px;border-radius:6px;font-weight:600}
+.rocha-portal.r83-shell .r83-pular:focus{top:12px}
+.rocha-portal.r83-shell .rocha-portal-main{padding:32px 32px 64px;max-width:1320px;margin:0 auto;width:100%}
+.rocha-portal.r83-shell .rocha-portal-main:focus{outline:none}
+.rocha-portal.r83-shell .rocha-portal-foot{font-size:13px;letter-spacing:0;color:var(--r-ink-3);background:var(--r-surface);border-top:1px solid var(--r-line);text-align:left;padding:18px 32px}
+
+/* Menu lateral */
+.rocha-portal.r83-shell .r83-sidebar{background:var(--r-surface);color:var(--r-ink);border-right:1px solid var(--r-line);padding:20px 14px;gap:8px;overflow-y:auto}
+.rocha-portal.r83-shell .r83-brand{display:flex;align-items:center;gap:12px;padding:4px 8px 18px;border-bottom:1px solid var(--r-line);margin-bottom:6px}
+.rocha-portal.r83-shell .r83-logo{background:none;border:0;padding:0;border-radius:0;display:block;flex:0 0 auto}
+.rocha-portal.r83-shell .r83-logo img{display:block;width:64px;height:auto;max-height:none}
+.rocha-portal.r83-shell .r83-brand-text{display:grid;gap:2px}
+.rocha-portal.r83-shell .r83-brand-text strong{font-size:16px;color:var(--r-ink)}
+.rocha-portal.r83-shell .r83-brand-text small{font-size:13px;color:var(--r-ink-3)}
+.rocha-portal.r83-shell .r83-nav{display:grid;gap:2px}
+.rocha-portal.r83-shell .r83-nav-group{margin:16px 10px 6px;font-size:13px;font-weight:600;color:var(--r-ink-3)}
+.rocha-portal.r83-shell .r83-nav a{display:grid;gap:1px;padding:9px 10px 9px 12px;border-radius:6px;border-left:3px solid transparent;color:var(--r-ink);min-height:44px}
+.rocha-portal.r83-shell .r83-nav a strong{font-size:15px;font-weight:600}
+.rocha-portal.r83-shell .r83-nav a small{font-size:13px;color:var(--r-ink-3);line-height:1.35}
+.rocha-portal.r83-shell .r83-nav a:hover{background:var(--r-surface-2)}
+.rocha-portal.r83-shell .r83-nav a[aria-current="page"]{background:var(--r-brand-soft);border-left-color:var(--r-brand)}
+.rocha-portal.r83-shell .r83-nav a[aria-current="page"] strong{color:var(--r-brand-hover)}
+.rocha-portal.r83-shell .r83-sair{margin-top:auto;padding-top:16px;border-top:1px solid var(--r-line)}
+.rocha-portal.r83-shell .r83-sair button{width:100%;min-height:44px;background:var(--r-surface);border:1px solid var(--r-line-strong);color:var(--r-ink);border-radius:var(--r-radius);font-weight:600;font-size:15px;font-family:inherit;cursor:pointer}
+.rocha-portal.r83-shell .r83-sair button:hover{background:var(--r-surface-2)}
+
+/* Barra superior */
+.rocha-portal.r83-shell .r83-topbar{height:auto;min-height:60px;padding:8px 32px;background:var(--r-surface);border-bottom:1px solid var(--r-line);gap:16px}
+.rocha-portal.r83-shell .r83-topbar-title{font-size:14px;font-weight:500;color:var(--r-ink-2)}
+.rocha-portal.r83-shell .r83-topbar-actions{display:flex;align-items:center;gap:8px}
+.rocha-portal.r83-shell .r83-topbar-help,.rocha-portal.r83-shell .r83-topbar-actions button{display:inline-flex;align-items:center;min-height:40px;padding:8px 14px;border-radius:var(--r-radius);border:1px solid var(--r-line-strong);background:var(--r-surface);color:var(--r-ink);font-weight:600;font-size:14px;font-family:inherit;cursor:pointer}
+.rocha-portal.r83-shell .r83-topbar-help:hover,.rocha-portal.r83-shell .r83-topbar-actions button:hover{background:var(--r-surface-2)}
+.rocha-portal.r83-shell .r83-mobile-menu summary{list-style:none;min-height:44px;display:inline-flex;align-items:center;padding:8px 14px;border:1px solid var(--r-line-strong);border-radius:var(--r-radius);color:var(--r-ink);font-weight:600;background:var(--r-surface)}
+.rocha-portal.r83-shell .r83-mobile-menu summary::-webkit-details-marker{display:none}
+.rocha-portal.r83-shell .r83-mobile-menu nav{top:52px;min-width:260px;border-color:var(--r-line);box-shadow:0 4px 12px rgba(0,0,0,.12);padding:8px;border-radius:var(--r-radius)}
+
+/* Celular e tablet */
+@media(max-width:980px){
+  .rocha-portal.r83-shell{grid-template-columns:1fr}
+  .rocha-portal.r83-shell .r83-sidebar{display:none}
+  .rocha-portal.r83-shell .r83-mobile-menu{display:block}
+  .rocha-portal.r83-shell .r83-topbar{padding:8px 16px}
+  .rocha-portal.r83-shell .r83-topbar-title{display:none}
+  .rocha-portal.r83-shell .rocha-portal-main{padding:20px 16px 48px}
+  .rocha-portal.r83-shell .rocha-portal-foot{padding:16px}
+}
+
+/* Login */
+.rocha-portal-login.r83-login{background:var(--r-surface);border:1px solid var(--r-line);border-radius:var(--r-radius);box-shadow:0 1px 2px rgba(0,0,0,.06);max-width:440px;margin:8vh auto;padding:36px;text-align:left;color:var(--r-ink);font-size:15px}
+.rocha-portal-login.r83-login .r83-login-logo{background:none;border:0;padding:0;margin:0 0 20px;justify-content:flex-start}
+.rocha-portal-login.r83-login .r83-login-logo img{width:110px;height:auto;max-height:none}
+.rocha-portal-login.r83-login h1{font-size:28px;letter-spacing:0;margin:0 0 8px}
+.rocha-portal-login.r83-login p{font-size:15px;line-height:1.6;color:var(--r-ink-2);margin:0 0 24px}
+.rocha-portal-login.r83-login form{gap:8px}
+.rocha-portal-login.r83-login label{font-size:15px;font-weight:600}
+.rocha-portal-login.r83-login input{min-height:48px;border:1px solid var(--r-line-strong);border-radius:6px;font-size:16px;padding:10px 12px}
+.rocha-portal-login.r83-login input:focus-visible,.rocha-portal-login.r83-login button:focus-visible,.rocha-portal-login.r83-login a:focus-visible{outline:none;box-shadow:var(--r-focus)}
+.rocha-portal-login.r83-login .r83-login-hint{margin:0 0 8px;font-size:13px;color:var(--r-ink-3)}
+.rocha-portal-login.r83-login button{min-height:48px;background:var(--r-brand);border-radius:var(--r-radius);font-size:16px;font-weight:600}
+.rocha-portal-login.r83-login button:hover{background:var(--r-brand-hover)}
+.rocha-portal-login.r83-login>small{font-size:13px;color:var(--r-ink-3);margin-top:20px}
+.rocha-portal-login.r83-login>small a{color:var(--r-brand-hover)}
+.rocha-portal-login.r83-login .rocha-portal-indisponivel{background:var(--r-warn-soft);border-color:#e9cf8f;color:var(--r-warn);font-size:15px}
+@media(max-width:520px){.rocha-portal-login.r83-login{margin:16px;padding:24px}}
+
+/* Início: "O que você quer fazer?" */
+.rocha-portal.r83-shell .r83-comece{margin:8px 0 24px}
+.rocha-portal.r83-shell .r83-comece h2{font-size:20px;margin:0 0 12px;color:var(--r-ink)}
+.rocha-portal.r83-shell .r83-comece-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.rocha-portal.r83-shell .r83-comece-item{display:flex;flex-direction:column;gap:6px;background:var(--r-surface);border:1px solid var(--r-line);border-radius:var(--r-radius);padding:18px;color:var(--r-ink);min-height:100%}
+.rocha-portal.r83-shell .r83-comece-item:hover{border-color:var(--r-line-strong);background:var(--r-surface-2)}
+.rocha-portal.r83-shell .r83-comece-num{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:999px;border:1px solid var(--r-line-strong);font-size:14px;font-weight:600;color:var(--r-ink-2)}
+.rocha-portal.r83-shell .r83-comece-item strong{font-size:16px;line-height:1.35}
+.rocha-portal.r83-shell .r83-comece-item small{font-size:14px;color:var(--r-ink-2);line-height:1.5}
+.rocha-portal.r83-shell .r83-comece-cta{margin-top:auto;padding-top:8px;font-weight:600;color:var(--r-brand-hover);text-decoration:underline;text-underline-offset:3px}
+.rocha-portal.r83-shell .r83-btn-sec{background:var(--r-surface);color:var(--r-ink);border:1px solid var(--r-line-strong)}
+@media(max-width:1180px){.rocha-portal.r83-shell .r83-comece-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.rocha-portal.r83-shell .r83-comece-grid{grid-template-columns:1fr}}

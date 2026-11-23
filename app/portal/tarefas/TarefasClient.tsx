@@ -94,7 +94,7 @@ export default function TarefasClient() {
   }
 
   return <section className="r81-tasks-page" aria-label="Gestão local de tarefas Rocha">
-    <header className="r81-page-head"><div><span className="r81-eyebrow">GESTÃO DA EQUIPE · WORKSPACE ROCHA</span><h1>Tarefas e projetos</h1><p>Organize entregas, revisões e prioridades em um quadro no estilo Kanban.</p></div><button className="r81-primary-btn" type="button" onClick={openCreate}>+ Nova tarefa</button></header>
+    <header className="r81-page-head"><div><h1>Tarefas da equipe</h1><p>Crie uma tarefa, defina prazo e responsável, e arraste o cartão entre as colunas conforme avança. As tarefas ficam salvas só neste navegador.</p></div><button className="r81-primary-btn" type="button" onClick={openCreate}>+ Nova tarefa</button></header>
     <div className="r81-local-alert"><strong>Modo local de demonstração.</strong> As tarefas ficam somente neste navegador. Responsáveis digitados aqui não recebem notificações, e nenhuma tarefa é compartilhada ou enviada aos funcionários.</div>
     <div className="r81-task-summary"><div><span>Tarefas</span><strong>{counts.total}</strong></div><div><span>Em aberto</span><strong>{counts.abertas}</strong></div><div><span>Concluídas</span><strong>{counts.concluidas}</strong></div><div><span>Vencidas</span><strong>{vencidas.filter((t: RochaTask) => t.prazo < todayLocal()).length}</strong></div></div>
     <div className="r81-tasks-tools"><div className="r81-task-filters"><input type="search" aria-label="Buscar tarefas" placeholder="Buscar tarefas..." value={search} onChange={e=>setSearch(e.target.value)} />

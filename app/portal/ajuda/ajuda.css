@@ -1,0 +1,156 @@
+/* Estilos exclusivos da pagina de ajuda. Componentes ficam em componentes.css. */
+
+.r83a-pagina {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+  color: var(--r-ink, #1c1c1e);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.r83a-cabecalho {
+  margin: 0 0 20px;
+}
+
+.r83a-titulo {
+  margin: 0 0 6px;
+  font-size: 28px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--r-ink, #1c1c1e);
+}
+
+.r83a-intro {
+  margin: 0;
+  color: var(--r-ink-3, #5d6066);
+}
+
+.r83a-secao {
+  margin: 32px 0 0;
+}
+
+.r83a-secao-titulo {
+  margin: 0 0 12px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--r-ink, #1c1c1e);
+}
+
+.r83a-cartoes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.r83a-cartao {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  background: var(--r-surface, #ffffff);
+  border: 1px solid var(--r-line, #d6d4cf);
+  border-radius: var(--r-radius, 8px);
+  color: var(--r-ink, #1c1c1e);
+  text-decoration: none;
+}
+
+.r83a-cartao:hover {
+  background: var(--r-surface-2, #f8f7f5);
+  border-color: var(--r-line-strong, #b9b6af);
+}
+
+.r83a-cartao:focus-visible {
+  outline: none;
+  box-shadow: var(--r-focus, 0 0 0 2px #ffffff, 0 0 0 4px #a51c2c);
+}
+
+.r83a-cartao-titulo {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--r-ink, #1c1c1e);
+}
+
+.r83a-cartao-texto {
+  font-size: 14px;
+  color: var(--r-ink-3, #5d6066);
+}
+
+.r83a-faq {
+  display: grid;
+  gap: 8px;
+}
+
+.r83a-faq-item {
+  background: var(--r-surface, #ffffff);
+  border: 1px solid var(--r-line, #d6d4cf);
+  border-radius: var(--r-radius, 8px);
+}
+
+.r83a-faq-pergunta {
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: var(--r-ink, #1c1c1e);
+  cursor: pointer;
+  list-style-position: outside;
+  border-radius: var(--r-radius, 8px);
+}
+
+.r83a-faq-pergunta:focus-visible {
+  outline: none;
+  box-shadow: var(--r-focus, 0 0 0 2px #ffffff, 0 0 0 4px #a51c2c);
+}
+
+.r83a-faq-resposta {
+  margin: 0;
+  padding: 0 16px 14px;
+  color: var(--r-ink-2, #45474c);
+}
+
+.r83a-glossario {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.r83a-glossario-item {
+  padding: 12px 16px;
+  background: var(--r-surface, #ffffff);
+  border: 1px solid var(--r-line, #d6d4cf);
+  border-radius: var(--r-radius, 8px);
+}
+
+.r83a-glossario-termo {
+  margin: 0 0 2px;
+  font-weight: 600;
+  color: var(--r-ink, #1c1c1e);
+}
+
+.r83a-glossario-definicao {
+  margin: 0;
+  color: var(--r-ink-2, #45474c);
+}
+
+@media (max-width: 600px) {
+  .r83a-pagina {
+    padding: 16px 12px 40px;
+  }
+
+  .r83a-titulo {
+    font-size: 24px;
+  }
+
+  .r83a-cartoes {
+    grid-template-columns: 1fr;
+  }
+}

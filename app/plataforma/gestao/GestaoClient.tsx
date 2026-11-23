@@ -130,9 +130,9 @@ export default function GestaoClient() {
   }
 
   return <div className="r77-gestao" aria-label="Gestao de empreendimentos e midias - previa local">
-    <div className="r77-heading"><div><span className="eyebrow">EQUIPE ROCHA · HOMOLOGACAO</span>
+    <div className="r77-heading"><div>
       <h1>Gestão de empreendimentos</h1><p>Prepare o portfólio, organize imagens e revise materiais antes da futura publicação.</p></div>
-      <span className="r77-marker">PRÉVIA LOCAL · NÃO PUBLICADA</span>
+      <span className="r77-marker">Rascunho salvo só neste navegador</span>
     </div>
     <div className="r77-alert" role="note"><strong>Ambiente de demonstração.</strong> Os dados são guardados somente neste navegador.
       Não há login de equipe, banco ou Storage conectado. Não insira documentos, preços ou dados confidenciais. Em produção, este módulo permanece bloqueado.
@@ -141,7 +141,7 @@ export default function GestaoClient() {
       <article><span>Fotos de demonstração</span><strong>{registros.reduce((total,item)=>total+item.fotos.length,0)}</strong></article>
       <article><span>Referências públicas existentes</span><strong>{empreendimentos.length}</strong></article></div>
     <div className="r77-columns"><section className="r77-panel" id="rocha-gestao-form"><div className="r77-panel-top">
-      <div><span className="r77-kicker">CADASTRO INTERNO</span><h2>{editando?'Editar rascunho':'Novo empreendimento'}</h2></div>
+      <div><h2>{editando?'Editar rascunho':'Novo empreendimento'}</h2></div>
       {editando&&<button type="button" className="r77-link-button" onClick={cancelar}>Cancelar edição</button>}</div>
       <p className="r77-subtitle">Informações para revisão da equipe. Nenhum cadastro é enviado ao site ou a corretores.</p>
       <form className="r77-form" onSubmit={salvar}>
@@ -158,7 +158,7 @@ export default function GestaoClient() {
         {erro&&<p className="r77-error" role="alert">{erro}</p>}
         <button className="r77-main-button" type="submit">{editando?'Salvar alterações locais':'Adicionar rascunho local'}</button>
       </form>
-    </section><section className="r77-panel r77-inventory"><div className="r77-panel-top"><div><span className="r77-kicker">ORGANIZAÇÃO DO ACERVO</span><h2>Rascunhos da equipe</h2></div>
+    </section><section className="r77-panel r77-inventory"><div className="r77-panel-top"><div><h2>Rascunhos da equipe</h2></div>
       <button className="r77-export" type="button" onClick={exportar} disabled={!registros.length}>Exportar JSON</button></div>
       <p className="r77-subtitle">Rascunhos privados desta prévia, sem publicar novos empreendimentos na vitrine.</p>
       <label className="r77-search">Buscar por nome, bairro ou cidade <input value={busca} onChange={e=>setBusca(e.target.value)} placeholder="Pesquisar rascunhos" /></label>
