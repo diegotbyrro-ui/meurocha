@@ -1,4 +1,5 @@
-/* Estilos exclusivos da pagina de ajuda. Componentes ficam em componentes.css. */
+/* Estilos exclusivos da pagina de ajuda (R83 + R84). Area "ajuda" = petroleo (--a-ajuda, definida em ui.css).
+   Componentes (AjudaPagina, Termo) ficam em componentes.css. Sem gradientes. */
 
 .r83a-pagina {
   max-width: 880px;
@@ -9,23 +10,6 @@
   line-height: 1.5;
 }
 
-.r83a-cabecalho {
-  margin: 0 0 20px;
-}
-
-.r83a-titulo {
-  margin: 0 0 6px;
-  font-size: 28px;
-  line-height: 1.2;
-  font-weight: 700;
-  color: var(--r-ink, #1c1c1e);
-}
-
-.r83a-intro {
-  margin: 0;
-  color: var(--r-ink-3, #5d6066);
-}
-
 .r83a-secao {
   margin: 32px 0 0;
 }
@@ -33,11 +17,19 @@
 .r83a-secao-titulo {
   margin: 0 0 12px;
   font-size: 20px;
+  line-height: 1.3;
   font-weight: 700;
   color: var(--r-ink, #1c1c1e);
 }
 
-.r83a-cartoes {
+.r83a-vazio {
+  margin: 0;
+  padding: 12px 0;
+  color: var(--r-ink-2, #45474c);
+}
+
+/* Cartoes de area: a.r84-cartao com icone em bloco na cor de cada area */
+.r83a-pagina .r83a-cartoes {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -46,34 +38,29 @@
   gap: 12px;
 }
 
-.r83a-cartao {
+.r83a-pagina .r83a-cartoes > li {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  height: 100%;
+}
+
+.r83a-pagina a.r84-cartao.r83a-area {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  width: 100%;
   min-height: 44px;
   box-sizing: border-box;
-  padding: 14px 16px;
-  background: var(--r-surface, #ffffff);
-  border: 1px solid var(--r-line, #d6d4cf);
-  border-radius: var(--r-radius, 8px);
-  color: var(--r-ink, #1c1c1e);
-  text-decoration: none;
+  padding: 18px;
 }
 
-.r83a-cartao:hover {
-  background: var(--r-surface-2, #f8f7f5);
-  border-color: var(--r-line-strong, #b9b6af);
-}
-
-.r83a-cartao:focus-visible {
+.r83a-pagina a.r84-cartao.r83a-area:focus-visible {
   outline: none;
   box-shadow: var(--r-focus, 0 0 0 2px #ffffff, 0 0 0 4px #a51c2c);
 }
 
 .r83a-cartao-titulo {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
+  line-height: 1.3;
   color: var(--r-ink, #1c1c1e);
 }
 
@@ -82,6 +69,66 @@
   color: var(--r-ink-3, #5d6066);
 }
 
+/* Busca */
+.r83a-busca {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  background: var(--r-surface, #ffffff);
+  border: 1px solid var(--r-line, #d6d4cf);
+  border-radius: 12px;
+}
+
+.r83a-busca-rotulo {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--r-ink, #1c1c1e);
+}
+
+.r83a-busca-campo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 8px 0 12px;
+  background: var(--r-surface, #ffffff);
+  border: 1px solid var(--r-line-strong, #b9b6af);
+  border-radius: var(--r-radius, 8px);
+}
+
+.r83a-busca-campo:focus-within {
+  box-shadow: var(--r-focus, 0 0 0 2px #ffffff, 0 0 0 4px #a51c2c);
+}
+
+.r83a-busca-icone {
+  flex: 0 0 auto;
+  color: var(--r-ink-3, #5d6066);
+}
+
+.r83a-busca-campo input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 42px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--r-ink, #1c1c1e);
+  font: inherit;
+  font-size: 16px;
+}
+
+.r83a-busca-campo input:focus {
+  outline: none;
+}
+
+.r83a-busca-resumo {
+  min-height: 1.5em;
+  margin: 0;
+  font-size: 14px;
+  color: var(--r-ink-2, #45474c);
+}
+
+/* FAQ */
 .r83a-faq {
   display: grid;
   gap: 8px;
@@ -93,22 +140,47 @@
   border-radius: var(--r-radius, 8px);
 }
 
+.r83a-faq-item[open] {
+  border-color: var(--a-ajuda, #0e7c78);
+}
+
 .r83a-faq-pergunta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   min-height: 44px;
   box-sizing: border-box;
   padding: 12px 16px;
-  display: flex;
-  align-items: center;
+  font-size: 16px;
   font-weight: 600;
   color: var(--r-ink, #1c1c1e);
   cursor: pointer;
-  list-style-position: outside;
+  list-style: none;
   border-radius: var(--r-radius, 8px);
+}
+
+.r83a-faq-pergunta::-webkit-details-marker {
+  display: none;
+}
+
+.r83a-faq-pergunta > span {
+  min-width: 0;
 }
 
 .r83a-faq-pergunta:focus-visible {
   outline: none;
   box-shadow: var(--r-focus, 0 0 0 2px #ffffff, 0 0 0 4px #a51c2c);
+}
+
+.r83a-chevron {
+  flex: 0 0 auto;
+  color: var(--a-ajuda, #0e7c78);
+  transition: transform 0.15s ease;
+}
+
+.r83a-faq-item[open] > .r83a-faq-pergunta .r83a-chevron {
+  transform: rotate(90deg);
 }
 
 .r83a-faq-resposta {
@@ -117,27 +189,80 @@
   color: var(--r-ink-2, #45474c);
 }
 
-.r83a-glossario {
+/* Glossario: letras para pular e grade de cartoes */
+.r83a-letras ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
   margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.r83a-letras a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 0 10px;
+  background: var(--r-surface, #ffffff);
+  border: 1px solid var(--r-line-strong, #b9b6af);
+  border-radius: var(--r-radius, 8px);
+  color: var(--a-ajuda, #0e7c78);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.r83a-letras a:hover {
+  background: var(--r-surface-2, #f8f7f5);
+}
+
+.r83a-letras a:focus-visible {
+  outline: none;
+  box-shadow: var(--r-focus, 0 0 0 2px #ffffff, 0 0 0 4px #a51c2c);
+}
+
+.r83a-letra {
+  margin-top: 20px;
+  scroll-margin-top: 16px;
+}
+
+.r83a-letra-titulo {
+  margin: 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--r-line, #d6d4cf);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--r-ink, #1c1c1e);
+}
+
+.r83a-glossario {
+  margin: 12px 0 0;
   display: grid;
-  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
 }
 
 .r83a-glossario-item {
-  padding: 12px 16px;
+  padding: 14px 16px;
   background: var(--r-surface, #ffffff);
   border: 1px solid var(--r-line, #d6d4cf);
   border-radius: var(--r-radius, 8px);
 }
 
 .r83a-glossario-termo {
-  margin: 0 0 2px;
+  margin: 0 0 4px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--r-ink, #1c1c1e);
 }
 
 .r83a-glossario-definicao {
   margin: 0;
+  font-size: 15px;
   color: var(--r-ink-2, #45474c);
 }
 
@@ -146,11 +271,14 @@
     padding: 16px 12px 40px;
   }
 
-  .r83a-titulo {
-    font-size: 24px;
-  }
-
-  .r83a-cartoes {
+  .r83a-pagina .r83a-cartoes,
+  .r83a-glossario {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .r83a-chevron {
+    transition: none;
   }
 }

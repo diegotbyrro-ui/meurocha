@@ -1,43 +1,62 @@
 import './ajuda.css';
 import Link from 'next/link';
 import AjudaPagina from './AjudaPagina';
+import BuscaAjuda from './BuscaAjuda';
+import Icone, {type NomeIcone} from '../ui/Icone';
+import CabecalhoPagina from '../ui/CabecalhoPagina';
 import {GLOSSARIO} from '@/lib/portal-glossario.mjs';
 
 export const dynamic = 'force-dynamic';
 
-const areas = [
+type AreaAjuda = {href: string; area: string; icone: NomeIcone; nome: string; uso: string};
+
+const areas: AreaAjuda[] = [
   {
     href: '/portal',
+    area: 'inicio',
+    icone: 'inicio',
     nome: 'Início',
     uso: 'Use quando quiser começar pelo painel geral e chegar às demais áreas.',
   },
   {
     href: '/portal/central',
+    area: 'central',
+    icone: 'predio',
     nome: 'Central dos empreendimentos',
     uso: 'Use quando precisar do CNPJ, da chave PIX, dos materiais ou dos vídeos e postagens prontos para as redes sociais.',
   },
   {
     href: '/portal/simulador',
+    area: 'simulador',
+    icone: 'calculadora',
     nome: 'Simulador de entrada',
     uso: 'Use quando precisar calcular a entrada e as parcelas para um cliente.',
   },
   {
     href: '/portal/atualizar',
+    area: 'atualizar',
+    icone: 'editar',
     nome: 'Atualizar conteúdo',
     uso: 'Use quando precisar cadastrar ou trocar o CNPJ, a chave PIX ou os links de um empreendimento.',
   },
   {
     href: '/portal/biblioteca',
+    area: 'biblioteca',
+    icone: 'pasta',
     nome: 'Biblioteca de arquivos',
     uso: 'Use quando quiser organizar ou abrir arquivos. Eles ficam guardados só neste navegador.',
   },
   {
     href: '/portal/tarefas',
+    area: 'tarefas',
+    icone: 'tarefas',
     nome: 'Tarefas da equipe',
     uso: 'Use quando precisar ver o que a equipe tem para fazer e quem está responsável por cada item.',
   },
   {
     href: '/portal/gestao',
+    area: 'cadastro',
+    icone: 'cadastro',
     nome: 'Cadastro de empreendimentos',
     uso: 'Use quando precisar cadastrar um empreendimento novo ou deixar um rascunho para terminar depois.',
   },
@@ -78,19 +97,34 @@ const perguntas = [
   },
 ];
 
-const glossarioOrdenado = Object.entries(GLOSSARIO).sort(([, a], [, b]) =>
-  a.termo.localeCompare(b.termo, 'pt-BR'),
-);
+const glossarioOrdenado = Object.entries(GLOSSARIO)
+  .map(([id, entrada]) => ({id, termo: entrada.termo, definicao: entrada.definicao}))
+  .sort((a, b) => a.termo.localeCompare(b.termo, 'pt-BR'));
+
+/** Cada pergunta vira um details pronto; a busca so esconde ou mostra, sem refazer o texto. */
+const itensFaq = perguntas.map((item) => ({
+  chave: item.pergunta,
+  busca: `${item.pergunta} ${item.resposta}`,
+  node: (
+    <details className="r83a-faq-item">
+      <summary className="r83a-faq-pergunta">
+        <span>{item.pergunta}</span>
+        <Icone nome="chevron" tamanho={18} className="r83a-chevron" />
+      </summary>
+      <p className="r83a-faq-resposta">{item.resposta}</p>
+    </details>
+  ),
+}));
 
 export default function AjudaPaginaRota() {
   return (
     <main className="r83a-pagina">
-      <header className="r83a-cabecalho">
-        <h1 className="r83a-titulo">Ajuda do portal</h1>
-        <p className="r83a-intro">
-          Explica cada área do portal, responde às dúvidas mais comuns e define os termos usados nas telas.
-        </p>
-      </header>
+      <CabecalhoPagina
+        area="ajuda"
+        icone="ajuda"
+        titulo="Ajuda do portal"
+        descricao="Explica cada área do portal, responde às dúvidas mais comuns e define os termos usados nas telas."
+      />
 
       <AjudaPagina
         id="ajuda"
@@ -106,7 +140,10 @@ export default function AjudaPaginaRota() {
         <ul className="r83a-cartoes">
           {areas.map((area) => (
             <li key={area.href}>
-              <Link href={area.href} className="r83a-cartao">
+              <Link href={area.href} className="r84-cartao r83a-area" data-area={area.area}>
+                <span className="r84-icone-bloco r84-icone-bloco-lg" aria-hidden="true">
+                  <Icone nome={area.icone} tamanho={26} />
+                </span>
                 <span className="r83a-cartao-titulo">{area.nome}</span>
                 <span className="r83a-cartao-texto">{area.uso}</span>
               </Link>
@@ -115,29 +152,12 @@ export default function AjudaPaginaRota() {
         </ul>
       </section>
 
-      <section className="r83a-secao" aria-labelledby="r83a-secao-faq">
-        <h2 id="r83a-secao-faq" className="r83a-secao-titulo">Perguntas frequentes</h2>
-        <div className="r83a-faq">
-          {perguntas.map((item) => (
-            <details key={item.pergunta} className="r83a-faq-item">
-              <summary className="r83a-faq-pergunta">{item.pergunta}</summary>
-              <p className="r83a-faq-resposta">{item.resposta}</p>
-            </details>
-          ))}
-        </div>
-      </section>
-
-      <section className="r83a-secao" aria-labelledby="r83a-secao-glossario">
-        <h2 id="r83a-secao-glossario" className="r83a-secao-titulo">Glossário</h2>
-        <dl className="r83a-glossario">
-          {glossarioOrdenado.map(([id, entrada]) => (
-            <div key={id} className="r83a-glossario-item">
-              <dt className="r83a-glossario-termo">{entrada.termo}</dt>
-              <dd className="r83a-glossario-definicao">{entrada.definicao}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
+      <BuscaAjuda
+        faq={itensFaq}
+        glossario={glossarioOrdenado}
+        tituloFaq="Perguntas frequentes"
+        tituloGlossario="Glossário"
+      />
     </main>
   );
 }

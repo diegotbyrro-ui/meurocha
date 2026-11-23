@@ -1,0 +1,127 @@
+/* R84 - Página Início: cartões coloridos, KPIs por área, empreendimentos com capa sólida.
+   Regras em docs/R84_VISUAL.md e docs/R83_DESIGN.md: sem gradiente, sem caixa alta, texto >= 13px. */
+
+/* Base da página */
+.rocha-portal .r84i-inicio{color:var(--r-ink,#1c1c1e);gap:24px;font-family:inherit}
+.rocha-portal .r84i-inicio .r81-section-heading h2{font-size:22px;font-weight:600;color:var(--r-ink,#1c1c1e);letter-spacing:0}
+.rocha-portal .r84i-inicio .r81-section-heading p{font-size:15px;color:var(--r-ink-3,#5d6066);line-height:1.5}
+.rocha-portal .r84i-inicio .r81-section-heading>a{font-size:15px;font-weight:600;color:var(--r-brand-hover,#8a1624);text-decoration:underline;text-underline-offset:3px;min-height:44px;align-items:center}
+.rocha-portal .r84i-inicio a:focus-visible,.rocha-portal .r84i-inicio button:focus-visible,.rocha-portal .r84i-inicio input:focus-visible{outline:none;box-shadow:var(--r-focus,0 0 0 2px #fff,0 0 0 4px #a51c2c)}
+
+/* Ícone em bloco colorido (kit R84) */
+.rocha-portal .r84i-inicio .r84-icone-bloco{border-radius:10px}
+.rocha-portal .r84i-inicio .r84-icone-bloco-lg{border-radius:12px}
+
+/* "O que você quer fazer?" */
+.rocha-portal .r84i-inicio .r83-comece h2{font-size:20px;font-weight:600;letter-spacing:0;margin:0 0 14px}
+.rocha-portal .r84i-inicio .r83-comece-grid{gap:16px}
+.rocha-portal .r84i-inicio .r83-comece-grid a.r84-comece-cartao{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:22px 20px 20px;height:100%;box-sizing:border-box;border-top:4px solid var(--a,#a51c2c)}
+.rocha-portal .r84i-inicio .r84-comece-cartao strong{font-size:17px;line-height:1.35;font-weight:600;color:var(--r-ink,#1c1c1e)}
+.rocha-portal .r84i-inicio .r84-comece-cartao small{font-size:15px;line-height:1.5;color:var(--r-ink-2,#45474c)}
+.rocha-portal .r84i-inicio .r84-comece-cartao .r84-comece-cta{display:inline-flex;align-items:center;gap:8px;margin-top:auto;padding-top:6px;font-size:15px;font-weight:600;color:var(--a,#a51c2c)}
+.rocha-portal .r84i-inicio .r84-comece-cartao .r84-comece-cta .r84-icone{transition:transform .15s}
+.rocha-portal .r84i-inicio a.r84-comece-cartao:hover .r84-comece-cta .r84-icone{transform:translateX(3px)}
+@media(prefers-reduced-motion:reduce){.rocha-portal .r84i-inicio a.r84-comece-cartao:hover .r84-comece-cta .r84-icone{transform:none}}
+
+/* Aviso local */
+.rocha-portal .r84i-inicio .r81-local-alert{font-size:15px;line-height:1.55;padding:14px 16px;background:var(--r-warn-soft,#fdf1d8);border-color:#e9cf8f;color:var(--r-warn,#7a4b00)}
+
+/* KPIs */
+.rocha-portal .r84i-inicio .r81-kpis{gap:16px}
+.rocha-portal .r84i-inicio .r81-kpi{min-height:0;padding:20px;gap:16px;border-color:var(--r-line,#d6d4cf);border-top:4px solid var(--a,#a51c2c);border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.06);align-items:center}
+.rocha-portal .r84i-inicio .r84i-kpi-icone{width:48px;height:48px;min-width:48px;border-radius:12px}
+.rocha-portal .r84i-inicio .r81-kpi small{font-size:15px;line-height:1.4;font-weight:600;color:var(--r-ink-2,#45474c)}
+.rocha-portal .r84i-inicio .r81-kpi strong{font-size:32px;line-height:1.1;font-weight:600;margin-top:4px;color:var(--r-ink,#1c1c1e);font-variant-numeric:tabular-nums}
+.rocha-portal .r84i-inicio .r81-kpi span{font-size:13px;line-height:1.4;color:var(--r-ink-3,#5d6066);display:block;margin-top:2px}
+
+/* Painéis */
+.rocha-portal .r84i-inicio .r81-content-grid,.rocha-portal .r84i-inicio .r81-lower-grid{gap:20px}
+.rocha-portal .r84i-inicio .r81-panel{border-color:var(--r-line,#d6d4cf);border-radius:12px;padding:22px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.rocha-portal .r84i-inicio .r81-panel-heading{margin-bottom:14px}
+.rocha-portal .r84i-inicio .r81-panel-heading>div{color:var(--r-ink,#1c1c1e);gap:12px}
+.rocha-portal .r84i-inicio .r81-panel-heading h2{font-size:20px;font-weight:600;color:var(--r-ink,#1c1c1e);letter-spacing:0}
+.rocha-portal .r84i-inicio .r81-panel-heading>a{font-size:15px;font-weight:600;color:var(--r-brand-hover,#8a1624);min-height:44px;align-items:center}
+.rocha-portal .r84i-inicio .r81-panel-heading>span{font-size:13px;color:var(--r-ink-3,#5d6066)}
+.rocha-portal .r84i-inicio .r81-empty-state{min-height:0;background:var(--r-surface-2,#f8f7f5);border:1px dashed var(--r-line-strong,#b9b6af);color:var(--r-ink-2,#45474c);padding:22px;gap:8px;border-radius:12px}
+.rocha-portal .r84i-inicio .r81-empty-state strong{font-size:17px;color:var(--r-ink,#1c1c1e)}
+.rocha-portal .r84i-inicio .r81-empty-state p{font-size:15px;line-height:1.5;color:var(--r-ink-2,#45474c)}
+.rocha-portal .r84i-inicio .r81-empty-state a{font-size:15px;font-weight:600;color:var(--r-brand-hover,#8a1624);text-decoration:underline;text-underline-offset:3px;min-height:44px;display:inline-flex;align-items:center}
+.rocha-portal .r84i-inicio .r81-task-line{padding:14px 0;gap:12px}
+.rocha-portal .r84i-inicio .r81-task-line>div strong,.rocha-portal .r84i-inicio .r81-activity-line strong{font-size:15px;color:var(--r-ink,#1c1c1e);font-weight:600}
+.rocha-portal .r84i-inicio .r81-task-line small,.rocha-portal .r84i-inicio .r81-activity-line small{font-size:14px;color:var(--r-ink-3,#5d6066)}
+.rocha-portal .r84i-inicio .r81-task-line>span:last-child{font-size:14px;color:var(--r-ink-2,#45474c);white-space:nowrap}
+.rocha-portal .r84i-inicio .r81-task-line>span.is-late{color:var(--r-err,#b42318);font-weight:600}
+.rocha-portal .r84i-inicio .r81-task-check{width:22px;height:22px;flex:0 0 22px}
+.rocha-portal .r84i-inicio .r81-activity-line{padding:14px 0}
+.rocha-portal .r84i-inicio .r81-activity-mark{background:var(--a-atualizar,#b45309);box-shadow:0 0 0 4px var(--a-atualizar-soft,#fdf0e1)}
+
+/* Busca de empreendimentos */
+.rocha-portal .r84i-inicio .r81-project-search{height:48px;max-width:460px;border-color:var(--r-line-strong,#b9b6af);border-radius:10px;color:var(--r-ink-3,#5d6066);padding:0 14px}
+.rocha-portal .r84i-inicio .r81-project-search input{font-size:15px;color:var(--r-ink,#1c1c1e)}
+.rocha-portal .r84i-inicio .r81-project-search input::placeholder{color:var(--r-ink-3,#5d6066);opacity:1}
+
+/* Cartões de empreendimento: capa sólida + corpo com link inteiro */
+.rocha-portal .r84i-inicio .r81-project-grid{gap:18px}
+.rocha-portal a.r84i-projeto{padding:0;overflow:hidden;background:var(--r-surface,#fff);border:1px solid var(--r-line,#d6d4cf);border-radius:12px;box-shadow:none;color:var(--r-ink,#1c1c1e);display:flex;flex-direction:column}
+.rocha-portal a.r84i-projeto:hover{border-color:var(--a,#a51c2c);box-shadow:0 6px 18px rgba(43,15,20,.08);transform:translateY(-2px)}
+.rocha-portal .r84i-projeto .r81-project-image{height:140px;position:relative;display:grid;place-items:center;background:var(--r-brand,#a51c2c);color:#fff;overflow:visible;border-radius:0}
+.rocha-portal .r84i-projeto .r81-project-image.tone-0{background:#a51c2c}
+.rocha-portal .r84i-projeto .r81-project-image.tone-1{background:#3d1219}
+.rocha-portal .r84i-projeto .r81-project-image.tone-2{background:#1f5fae}
+.rocha-portal .r84i-projeto .r81-project-image.tone-3{background:#1b7a4a}
+.rocha-portal .r84i-projeto .r81-project-image .r84-icone{opacity:1;width:56px;height:56px;max-width:none}
+.rocha-portal .r84i-projeto .r81-project-image .r84i-capa-status{position:absolute;left:14px;top:14px;bottom:auto;letter-spacing:0;background:#1c1c1e;color:#fff;font-size:13px;font-weight:600;line-height:1.3;padding:5px 11px;border-radius:999px;white-space:nowrap}
+.rocha-portal .r84i-projeto .r81-project-body{padding:18px 18px 16px;display:flex;flex-direction:column;flex:1;min-width:0}
+.rocha-portal .r84i-projeto .r81-project-body h3{font-size:18px;font-weight:600;line-height:1.3;margin:0 0 6px;color:var(--r-ink,#1c1c1e)}
+.rocha-portal .r84i-projeto .r81-project-body p{font-size:15px;line-height:1.5;color:var(--r-ink-2,#45474c);margin:0 0 14px}
+.rocha-portal .r84i-projeto .r84i-projeto-cta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;border-top:1px solid var(--r-line,#d6d4cf);padding-top:12px;font-size:15px;font-weight:600;color:var(--a,#a51c2c)}
+.rocha-portal .r84i-inicio .r81-empty-project{font-size:15px;color:var(--r-ink-2,#45474c);border-color:var(--r-line,#d6d4cf)}
+
+/* Calendário */
+.rocha-portal .r84i-inicio .r81-calendar .r81-month-nav{margin-bottom:14px}
+.rocha-portal .r84i-inicio .r81-month-nav strong{font-size:17px;font-weight:600;color:var(--r-ink,#1c1c1e)}
+.rocha-portal .r84i-inicio .r81-month-nav button{min-width:44px;min-height:44px;font-size:15px;font-weight:600;color:var(--r-ink,#1c1c1e);border:1px solid var(--r-line-strong,#b9b6af);border-radius:8px;padding:6px 12px}
+.rocha-portal .r84i-inicio .r81-month-nav button:hover{background:var(--r-surface-2,#f8f7f5)}
+.rocha-portal .r84i-inicio .r81-calendar-grid{gap:4px}
+.rocha-portal .r84i-inicio .r81-weekday{font-size:13px;font-weight:600;color:var(--r-ink-3,#5d6066);padding:6px 0}
+.rocha-portal .r84i-inicio .r81-cal-day{min-height:42px;font-size:15px;color:var(--r-ink,#1c1c1e);border-radius:8px}
+.rocha-portal .r84i-inicio .r81-cal-day.is-outside{color:var(--r-ink-3,#5d6066)}
+.rocha-portal .r84i-inicio .r81-cal-day.is-today{background:var(--r-brand,#a51c2c);color:#fff;font-weight:600}
+.rocha-portal .r84i-inicio .r81-cal-day i{bottom:5px;width:6px;height:6px;background:var(--a-atualizar,#b45309)}
+.rocha-portal .r84i-inicio .r81-cal-day.is-today i{background:#fff}
+.rocha-portal .r84i-inicio .r81-calendar-foot{font-size:13px;line-height:1.5;color:var(--r-ink-3,#5d6066)}
+
+/* Ferramentas rápidas */
+.rocha-portal .r84i-inicio .r81-shortcut-items{gap:10px}
+.rocha-portal .r84i-inicio .r81-shortcut-items>a{padding:12px 14px;gap:14px;min-height:44px;border:1px solid var(--r-line,#d6d4cf);border-radius:10px;color:var(--r-ink,#1c1c1e)}
+.rocha-portal .r84i-inicio .r81-shortcut-items>a:hover{background:var(--a-soft,#fbe9eb);border-color:var(--a,#a51c2c)}
+.rocha-portal .r84i-inicio .r81-shortcut-items>a>.r84-icone-bloco{width:44px;height:44px;flex:0 0 44px;background:var(--a-soft,#fbe9eb);color:var(--a,#a51c2c)}
+.rocha-portal .r84i-inicio .r81-shortcut-items>a>div{min-width:0}
+.rocha-portal .r84i-inicio .r81-shortcut-items strong{font-size:15px;font-weight:600;color:var(--r-ink,#1c1c1e);line-height:1.35}
+.rocha-portal .r84i-inicio .r81-shortcut-items small{font-size:14px;line-height:1.4;color:var(--r-ink-3,#5d6066)}
+.rocha-portal .r84i-inicio .r81-shortcut-items>a>svg{color:var(--a,#a51c2c)}
+.rocha-portal .r84i-inicio .r81-access-note{background:var(--r-surface-2,#f8f7f5);border:1px solid var(--r-line,#d6d4cf);border-radius:10px;color:var(--r-ink-2,#45474c);padding:14px;margin-top:16px;align-items:center}
+.rocha-portal .r84i-inicio .r81-access-note p{font-size:14px;line-height:1.55;color:var(--r-ink-2,#45474c)}
+
+/* Celular e tablet */
+@media(max-width:1250px){
+  .rocha-portal .r84i-inicio .r81-project-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:920px){
+  .rocha-portal .r84i-inicio .r81-panel{padding:18px}
+}
+@media(max-width:650px){
+  .rocha-portal .r84i-inicio .r81-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .rocha-portal .r84i-inicio .r81-kpi{flex-direction:column;align-items:flex-start;gap:12px;padding:16px 14px;min-height:0}
+  .rocha-portal .r84i-inicio .r84i-kpi-icone{width:44px;height:44px;min-width:44px}
+  .rocha-portal .r84i-inicio .r81-kpi strong{font-size:32px}
+  .rocha-portal .r84i-inicio .r81-kpi small{font-size:14px}
+  .rocha-portal .r84i-inicio .r81-section-heading h2{font-size:20px}
+  .rocha-portal .r84i-inicio .r81-project-grid{grid-template-columns:1fr}
+  .rocha-portal .r84i-inicio .r81-task-line>span:last-child{white-space:normal;max-width:6.5em;text-align:right}
+  .rocha-portal .r84i-inicio .r81-month-nav{flex-wrap:wrap}
+}
+@media(max-width:420px){
+  .rocha-portal .r84i-inicio .r81-kpis{grid-template-columns:1fr}
+  .rocha-portal .r84i-inicio .r81-kpi{flex-direction:row;align-items:center}
+}

@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import { empreendimentos } from '@/lib/catalog.mjs';
 import {
   calcularEntrada,
+  cent,
   comprometimento,
   cronograma,
   LIMITE_COMPROMETIMENTO,
@@ -17,12 +18,24 @@ import {
 } from '@/lib/simulador-entrada.mjs';
 import AjudaPagina from '../ajuda/AjudaPagina';
 import Termo from '../ajuda/Termo';
+import CabecalhoPagina from '../ui/CabecalhoPagina';
+import Icone, { type NomeIcone } from '../ui/Icone';
 
 type Sistema = 'PRICE' | 'SAC';
 type CampoRecalc = 'ato' | 'atoParcelado' | 'mensal' | 'intercalada' | 'entrega';
 type Tentativa<T> = { ok: true; valor: T } | { ok: false; erro: string };
 type Passo = 1 | 2 | 3 | 4;
 type Tom = 'ok' | 'warn' | 'err';
+type ChaveSegmento =
+  | 'financiamento'
+  | 'fgts'
+  | 'subsidio'
+  | 'ato'
+  | 'atoParcelado'
+  | 'mensais'
+  | 'intercaladas'
+  | 'chaves'
+  | 'falta';
 
 type Estado = {
   empreendimentoId: string;
@@ -73,6 +86,7 @@ type ParcelaBancaria =
 
 type LinhaMes = { mes: string; nominal: number; corrigido: number };
 type AvisoRecalc = { tipo: 'ok' | 'erro'; texto: string };
+type Segmento = { chave: ChaveSegmento; rotulo: string; cor: string; valor: number; pct: number };
 
 const CAMPO_ESTADO: Record<CampoRecalc, keyof Estado> = {
   ato: 'ato',
@@ -90,9 +104,27 @@ const ROTULO_RECALC: Record<CampoRecalc, string> = {
   entrega: 'Entrega das chaves',
 };
 
+// Cores fixas da divisão da entrada (por tipo de pagamento). "Falta definir" usa cinza claro com borda tracejada.
+const SEGMENTOS_CONFIG: { chave: ChaveSegmento; rotulo: string; cor: string }[] = [
+  { chave: 'financiamento', rotulo: 'Financiamento', cor: '#1f5fae' },
+  { chave: 'fgts', rotulo: 'FGTS', cor: '#0e7c78' },
+  { chave: 'subsidio', rotulo: 'Subsídio', cor: '#6b3fb8' },
+  { chave: 'ato', rotulo: 'Ato', cor: '#a51c2c' },
+  { chave: 'atoParcelado', rotulo: 'Ato parcelado', cor: '#d22630' },
+  { chave: 'mensais', rotulo: 'Mensais', cor: '#b45309' },
+  { chave: 'intercaladas', rotulo: 'Intercaladas', cor: '#1b7a4a' },
+  { chave: 'chaves', rotulo: 'Chaves', cor: '#3d1219' },
+  { chave: 'falta', rotulo: 'Falta definir', cor: '#e7e5e0' },
+];
+
 const LINHAS_INICIAIS = 24;
 
-const PASSOS_NOME = ['Unidade e cliente', 'Financiamento', 'Plano da entrada', 'Revisar e imprimir'] as const;
+const PASSOS = [
+  { nome: 'Unidade e cliente', icone: 'predio' },
+  { nome: 'Financiamento', icone: 'banco' },
+  { nome: 'Plano da entrada', icone: 'moedas' },
+  { nome: 'Revisar e imprimir', icone: 'imprimir' },
+] as const satisfies readonly { nome: string; icone: NomeIcone }[];
 
 const PASSOS_AJUDA = [
   'Preencha a unidade e o cliente. Só o valor da unidade é obrigatório para continuar.',
@@ -104,6 +136,7 @@ const PASSOS_AJUDA = [
 const formatadorBRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 const formatadorNumero = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const formatadorPct = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+const formatadorPct1 = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 1 });
 
 function brl(valor: number): string {
   return formatadorBRL.format(valor);
@@ -312,10 +345,35 @@ function ComRecalc({
         onClick={() => aoClicar(campo)}
         disabled={desabilitado}
       >
-        <span aria-hidden="true">↻ </span>
+        <Icone nome="refazer" tamanho={18} />
         Calcular o que falta
       </button>
     </div>
+  );
+}
+
+function Grupo({
+  icone,
+  titulo,
+  children,
+  emGrade = true,
+}: {
+  icone: NomeIcone;
+  titulo: string;
+  children: ReactNode;
+  emGrade?: boolean;
+}) {
+  const idGrupo = useId();
+  return (
+    <section className="r82s-grupo" aria-labelledby={idGrupo}>
+      <div className="r82s-grupo-titulo">
+        <span className="r84-icone-bloco r82s-grupo-icone" aria-hidden="true">
+          <Icone nome={icone} tamanho={18} />
+        </span>
+        <h3 id={idGrupo}>{titulo}</h3>
+      </div>
+      {emGrade ? <div className="r82s-grid">{children}</div> : children}
+    </section>
   );
 }
 
@@ -350,9 +408,12 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
   const [aviso, setAviso] = useState<AvisoRecalc | null>(null);
   const [mostrarTodos, setMostrarTodos] = useState(false);
   const [dataImpressao, setDataImpressao] = useState('');
+  const [destaque, setDestaque] = useState<ChaveSegmento | null>(null);
+  const [fixado, setFixado] = useState<ChaveSegmento | null>(null);
   const progressoRef = useRef<HTMLParagraphElement>(null);
   const idMensagem = useId();
   const idTitulo = useId();
+  const idDivisao = useId();
 
   useEffect(() => {
     setDataImpressao(new Date().toLocaleDateString('pt-BR'));
@@ -458,6 +519,36 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
     [estado],
   );
 
+  // Divisão da unidade por tipo de pagamento. Larguras = valor / valor líquido (ou soma, se exceder).
+  const distribuicao = useMemo(() => {
+    if (!entrada.ok || entrada.valor.valorLiquido <= 0) return null;
+    const liquido = entrada.valor.valorLiquido;
+    const v = valores.ok ? valores.valor : null;
+    const p = plano.ok ? plano.valor : null;
+    const valorPorChave: Record<ChaveSegmento, number> = {
+      financiamento: v?.financiamento ?? 0,
+      fgts: v?.fgts ?? 0,
+      subsidio: v?.subsidio ?? 0,
+      ato: p?.totalAto ?? 0,
+      atoParcelado: p?.totalAtoParcelado ?? 0,
+      mensais: p?.totalMensais ?? 0,
+      intercaladas: p?.totalIntercaladas ?? 0,
+      chaves: p?.totalEntrega ?? 0,
+      falta: 0,
+    };
+    const usado = cent(
+      SEGMENTOS_CONFIG.filter((s) => s.chave !== 'falta').reduce((soma, s) => soma + valorPorChave[s.chave], 0),
+    );
+    valorPorChave.falta = cent(Math.max(0, liquido - usado));
+    const total = cent(usado + valorPorChave.falta);
+    const segmentos: Segmento[] = SEGMENTOS_CONFIG.map((s) => ({
+      ...s,
+      valor: valorPorChave[s.chave],
+      pct: total > 0 ? (valorPorChave[s.chave] / total) * 100 : 0,
+    }));
+    return { segmentos, liquido, excede: usado > liquido };
+  }, [entrada, valores, plano]);
+
   const linhas: LinhaMes[] = cronogramaRes.ok ? cronogramaRes.valor.porMes : [];
   const limitarLinhas = passo !== 4 && !mostrarTodos;
   const linhasVisiveis = limitarLinhas ? linhas.slice(0, LINHAS_INICIAIS) : linhas;
@@ -478,6 +569,18 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
   } else {
     textoPlano = `Passou ${brl(Math.abs(plano.valor.diferenca))} do valor da entrada`;
   }
+
+  // Pílula de status do resumo: ok (verde), falta (âmbar), excede ou erro (vermelho). Sempre com texto.
+  const pilula: { classe: string; icone: NomeIcone; texto: string } =
+    tomPlano === 'ok'
+      ? { classe: 'r84-selo r84-selo-ok', icone: 'checkCirculo', texto: 'Plano fecha a entrada' }
+      : tomPlano === 'warn' && plano.ok
+        ? { classe: 'r84-selo r84-selo-falta', icone: 'alerta', texto: `Falta ${brl(plano.valor.diferenca)}` }
+        : entrada.ok && plano.ok
+          ? { classe: 'r82s-selo-err', icone: 'alerta', texto: `Excede ${brl(Math.abs(plano.valor.diferenca))}` }
+          : { classe: 'r82s-selo-err', icone: 'alerta', texto: 'Confira os valores' };
+
+  const ativo = destaque ?? fixado;
 
   function irPara(destino: Passo) {
     setPasso(destino > 1 && !unidadeOk ? 1 : destino);
@@ -508,6 +611,8 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
     setEstado(estadoInicial(empreendimentoInicial));
     setAviso(null);
     setMostrarTodos(false);
+    setDestaque(null);
+    setFixado(null);
     setPasso(1);
     progressoRef.current?.scrollIntoView({ block: 'start' });
   }
@@ -516,7 +621,12 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
     const editar = modo === 'editar';
     return (
       <details className="r82s-details" open={!editar}>
-        <summary>Ver mês a mês (cronograma)</summary>
+        <summary>
+          <span className="r84-icone-bloco r82s-grupo-icone" aria-hidden="true">
+            <Icone nome="calendario" tamanho={18} />
+          </span>
+          Ver mês a mês (cronograma)
+        </summary>
         <div className="r82s-details-corpo">
           {editar ? (
             <Campo
@@ -546,7 +656,7 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
                   <tbody>
                     {linhasVisiveis.map((linha, i) => (
                       <tr key={`${linha.mes}-${i}`}>
-                        <td>{formatarMes(linha.mes)}</td>
+                        <td className="r82s-mes">{formatarMes(linha.mes)}</td>
                         <td>{brl(linha.nominal)}</td>
                         <td>{brl(linha.corrigido)}</td>
                       </tr>
@@ -585,7 +695,7 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
   function renderPasso1() {
     return (
       <>
-        <div className="r82s-grid">
+        <Grupo icone="predio" titulo="Empreendimento e unidade">
           <SelectCampo
             titulo="Empreendimento"
             valor={estado.empreendimentoId}
@@ -599,24 +709,6 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
             aoMudar={set('unidade')}
             placeholder="Ex.: Bloco 02, apto 304"
             ajuda="Bloco, andar e número, como aparecem na tabela."
-          />
-          <Campo
-            titulo="Nome do cliente"
-            valor={estado.cliente}
-            aoMudar={set('cliente')}
-            ajuda="Nome completo de quem vai comprar."
-          />
-          <Campo
-            titulo="Corretor"
-            valor={estado.corretor}
-            aoMudar={set('corretor')}
-            ajuda="Quem atende o cliente nesta simulação."
-          />
-          <Campo
-            titulo="Imobiliária"
-            valor={estado.imobiliaria}
-            aoMudar={set('imobiliaria')}
-            ajuda="Imobiliária responsável pela venda, se houver."
           />
           <Campo
             titulo="Valor da unidade (R$)"
@@ -636,12 +728,32 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
             placeholder="0,00"
             ajuda="Quanto foi abatido do valor de tabela. Use 0 se não houve."
           />
-        </div>
+        </Grupo>
         {!unidadeOk && (
           <p className="r82s-erro-campo" id={idMensagem}>
             {mensagemUnidade}
           </p>
         )}
+        <Grupo icone="usuarios" titulo="Cliente e atendimento">
+          <Campo
+            titulo="Nome do cliente"
+            valor={estado.cliente}
+            aoMudar={set('cliente')}
+            ajuda="Nome completo de quem vai comprar."
+          />
+          <Campo
+            titulo="Corretor"
+            valor={estado.corretor}
+            aoMudar={set('corretor')}
+            ajuda="Quem atende o cliente nesta simulação."
+          />
+          <Campo
+            titulo="Imobiliária"
+            valor={estado.imobiliaria}
+            aoMudar={set('imobiliaria')}
+            ajuda="Imobiliária responsável pela venda, se houver."
+          />
+        </Grupo>
       </>
     );
   }
@@ -649,7 +761,7 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
   function renderPasso2() {
     return (
       <>
-        <div className="r82s-grid">
+        <Grupo icone="carteira" titulo="Renda">
           <Campo
             titulo="Renda formal (R$)"
             valor={estado.rendaFormal}
@@ -665,6 +777,9 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
             ajuda="Outras rendas comprovadas, por mês. Use 0 se não houver."
           />
           <Resultado titulo="Renda total" valor={renda.ok ? brl(renda.valor) : '—'} detalhe={renda.ok ? undefined : renda.erro} />
+        </Grupo>
+
+        <Grupo icone="banco" titulo="Financiamento, FGTS e subsídio">
           <Campo
             titulo="Valor financiado (R$)"
             valor={estado.valorFinanciado}
@@ -722,7 +837,7 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
             placeholder="0,00"
             ajuda="Desconto do programa habitacional, se a unidade tiver. Use 0 se não houver."
           />
-        </div>
+        </Grupo>
 
         <div className="r82s-results">
           {parcela.ok && parcela.valor.tipo === 'PRICE' && (
@@ -790,10 +905,13 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
           <p className="r82s-status-linha">
             {`Entrada: ${entrada.ok ? brl(entrada.valor.entradaTotal) : '—'} · No plano: ${plano.ok ? brl(plano.valor.totalPlano) : '—'}`}
           </p>
-          <p className="r82s-status-estado">{textoPlano}</p>
+          <p className="r82s-status-estado">
+            <Icone nome={tomPlano === 'ok' ? 'checkCirculo' : 'alerta'} tamanho={20} />
+            <span>{textoPlano}</span>
+          </p>
         </div>
 
-        <div className="r82s-grid">
+        <Grupo icone="moedas" titulo="Pagamentos da entrada">
           <Campo
             titulo="Mês da assinatura"
             tipo="month"
@@ -908,7 +1026,7 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
             aoMudar={set('mesEntrega')}
             ajuda="Mês previsto para a entrega."
           />
-        </div>
+        </Grupo>
 
         {aviso && (
           <p className={'r82s-aviso' + (aviso.tipo === 'erro' ? ' is-erro' : '')} role="status">
@@ -936,8 +1054,14 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
         <div className="r82s-revisao">
           <section className="r82s-bloco" aria-labelledby={`${idTitulo}-b1`}>
             <div className="r82s-bloco-cabeca">
-              <h3 id={`${idTitulo}-b1`}>Unidade e cliente</h3>
+              <div className="r82s-bloco-titulo">
+                <span className="r84-icone-bloco r82s-grupo-icone" aria-hidden="true">
+                  <Icone nome="predio" tamanho={18} />
+                </span>
+                <h3 id={`${idTitulo}-b1`}>Unidade e cliente</h3>
+              </div>
               <button type="button" className="r82s-editar" onClick={() => irPara(1)}>
+                <Icone nome="editar" tamanho={18} />
                 Editar<span className="r82s-sr"> unidade e cliente</span>
               </button>
             </div>
@@ -954,8 +1078,14 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
 
           <section className="r82s-bloco" aria-labelledby={`${idTitulo}-b2`}>
             <div className="r82s-bloco-cabeca">
-              <h3 id={`${idTitulo}-b2`}>Financiamento</h3>
+              <div className="r82s-bloco-titulo">
+                <span className="r84-icone-bloco r82s-grupo-icone" aria-hidden="true">
+                  <Icone nome="banco" tamanho={18} />
+                </span>
+                <h3 id={`${idTitulo}-b2`}>Financiamento</h3>
+              </div>
               <button type="button" className="r82s-editar" onClick={() => irPara(2)}>
+                <Icone nome="editar" tamanho={18} />
                 Editar<span className="r82s-sr"> financiamento</span>
               </button>
             </div>
@@ -986,8 +1116,14 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
 
           <section className="r82s-bloco" aria-labelledby={`${idTitulo}-b3`}>
             <div className="r82s-bloco-cabeca">
-              <h3 id={`${idTitulo}-b3`}>Entrada e plano</h3>
+              <div className="r82s-bloco-titulo">
+                <span className="r84-icone-bloco r82s-grupo-icone" aria-hidden="true">
+                  <Icone nome="moedas" tamanho={18} />
+                </span>
+                <h3 id={`${idTitulo}-b3`}>Entrada e plano</h3>
+              </div>
               <button type="button" className="r82s-editar" onClick={() => irPara(3)}>
+                <Icone nome="editar" tamanho={18} />
                 Editar<span className="r82s-sr"> entrada e plano</span>
               </button>
             </div>
@@ -1008,11 +1144,9 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
         </div>
 
         <div className="r82s-acoes-finais">
-          <button type="button" className="r82s-btn-grande" onClick={() => window.print()}>
+          <button type="button" className="r84-btn r82s-btn-grande" onClick={() => window.print()}>
+            <Icone nome="imprimir" tamanho={20} />
             Imprimir proposta
-          </button>
-          <button type="button" className="r82s-btn-sec-grande" onClick={limpar}>
-            Começar nova simulação
           </button>
         </div>
       </>
@@ -1020,9 +1154,10 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
   }
 
   const bloqueiaContinuar = passo === 1 && !unidadeOk;
+  const percentualPasso = (passo / 4) * 100;
 
   return (
-    <section className="r82s" aria-label="Simulador de entrada">
+    <section className="r82s" data-area="simulador" aria-label="Simulador de entrada">
       <div className="r82s-print-only r82s-print-head">
         <strong>Rocha Empreendimentos — Proposta de simulação</strong>
         <p>
@@ -1042,10 +1177,17 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
         </p>
       </div>
 
-      <header className="r82s-head">
-        <h1>Simulador de entrada</h1>
-        <p>Calcule a entrada de uma unidade e monte o plano de pagamento, passo a passo.</p>
-      </header>
+      <CabecalhoPagina
+        area="simulador"
+        icone="calculadora"
+        titulo="Simulador de entrada"
+        descricao="Calcule a entrada de uma unidade e monte o plano de pagamento, passo a passo."
+      >
+        <button type="button" className="r84-btn-sec" onClick={limpar}>
+          <Icone nome="refazer" tamanho={18} />
+          Começar nova simulação
+        </button>
+      </CabecalhoPagina>
 
       <div className="r82s-ajuda">
         <AjudaPagina id="simulador" passos={PASSOS_AJUDA} />
@@ -1055,30 +1197,53 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
         <div className="r82s-main">
           <nav aria-label="Passos da simulação">
             <ol className="r82s-steps">
-              {PASSOS_NOME.map((nome, i) => {
+              {PASSOS.map((passoInfo, i) => {
                 const numero = (i + 1) as Passo;
-                const ativo = numero === passo;
+                const atual = numero === passo;
                 const concluido = numero < passo;
                 const bloqueado = numero > 1 && !unidadeOk;
+                const classes = ['r82s-step', atual && 'is-atual', concluido && 'is-feito', bloqueado && 'is-bloqueado']
+                  .filter(Boolean)
+                  .join(' ');
                 return (
-                  <li key={nome}>
+                  <li key={passoInfo.nome}>
                     <button
                       type="button"
-                      className="r82s-step"
-                      aria-current={ativo ? 'step' : undefined}
+                      className={classes}
+                      aria-current={atual ? 'step' : undefined}
                       disabled={bloqueado}
+                      title={bloqueado ? 'Informe o valor da unidade para liberar este passo' : undefined}
                       onClick={() => irPara(numero)}
                     >
-                      <span className="r82s-step-num" aria-hidden="true">
-                        {numero}
+                      <span className="r82s-step-icone" aria-hidden="true">
+                        <Icone nome={passoInfo.icone} tamanho={22} />
                       </span>
-                      <span className="r82s-step-nome">{nome}</span>
-                      {concluido && <span className="r82s-step-ok">Concluído</span>}
+                      <span className="r82s-step-texto">
+                        <span className="r82s-step-pre">{`Passo ${numero}`}</span>
+                        <span className="r82s-step-nome">{passoInfo.nome}</span>
+                        {concluido && (
+                          <span className="r82s-step-ok">
+                            <Icone nome="checkCirculo" tamanho={16} />
+                            Concluído
+                          </span>
+                        )}
+                      </span>
                     </button>
                   </li>
                 );
               })}
             </ol>
+            <div
+              className="r82s-barra"
+              role="progressbar"
+              aria-label="Progresso da simulação"
+              aria-valuemin={1}
+              aria-valuemax={4}
+              aria-valuenow={passo}
+              aria-valuetext={`Passo ${passo} de 4`}
+            >
+              <span className="r82s-barra-preench" style={{ width: `${percentualPasso}%` }} />
+            </div>
           </nav>
 
           <p className="r82s-progresso" ref={progressoRef}>
@@ -1086,7 +1251,12 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
           </p>
 
           <section className="r82s-card" aria-labelledby={idTitulo}>
-            <h2 id={idTitulo}>{PASSOS_NOME[passo - 1]}</h2>
+            <header className="r82s-card-titulo">
+              <span className="r84-icone-bloco" aria-hidden="true">
+                <Icone nome={PASSOS[passo - 1].icone} tamanho={20} />
+              </span>
+              <h2 id={idTitulo}>{PASSOS[passo - 1].nome}</h2>
+            </header>
             {passo === 1 && renderPasso1()}
             {passo === 2 && renderPasso2()}
             {passo === 3 && renderPasso3()}
@@ -1096,6 +1266,7 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
               <div className="r82s-nav">
                 {anterior && (
                   <button type="button" className="r82s-btn-sec" onClick={() => irPara(anterior)}>
+                    <Icone nome="setaEsquerda" tamanho={18} />
                     Voltar
                   </button>
                 )}
@@ -1108,6 +1279,7 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
                     onClick={() => irPara(proximo)}
                   >
                     Continuar
+                    <Icone nome="setaDireita" tamanho={18} />
                   </button>
                 )}
               </div>
@@ -1116,6 +1288,7 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
               <div className="r82s-nav">
                 {anterior && (
                   <button type="button" className="r82s-btn-sec" onClick={() => irPara(anterior)}>
+                    <Icone nome="setaEsquerda" tamanho={18} />
                     Voltar
                   </button>
                 )}
@@ -1124,8 +1297,80 @@ export default function SimuladorEntradaClient({ empreendimentoInicial }: { empr
           </section>
         </div>
 
-        <aside className="r82s-summary" aria-label="Resumo da simulação">
+        <aside className="r82s-summary r84-cartao" aria-label="Resumo da simulação">
+          <div className="r84-cartao-topo" aria-hidden="true" />
           <h2 className="r82s-summary-title">Resumo</h2>
+
+          <div className="r82s-entrada">
+            <span>Entrada</span>
+            <strong>{entrada.ok ? brl(entrada.valor.entradaTotal) : '—'}</strong>
+          </div>
+          <p className={`r82s-pilula ${pilula.classe}`} role="status">
+            <Icone nome={pilula.icone} tamanho={16} />
+            {pilula.texto}
+          </p>
+
+          <section className="r82s-divisao" aria-labelledby={idDivisao}>
+            <h3 id={idDivisao}>Como a unidade será paga</h3>
+            {distribuicao ? (
+              <>
+                <div className="r82s-pilha" onMouseLeave={() => setDestaque(null)}>
+                  {distribuicao.segmentos
+                    .filter((s) => s.valor > 0)
+                    .map((s) => {
+                      const apagado = ativo !== null && ativo !== s.chave;
+                      const textoPct = `${formatadorPct1.format(s.pct)}%`;
+                      return (
+                        <span
+                          key={s.chave}
+                          role="img"
+                          className={`r82s-seg${s.chave === 'falta' ? ' is-falta' : ''}${apagado ? ' is-apagado' : ''}`}
+                          style={{ width: `${s.pct}%`, background: s.cor }}
+                          title={`${s.rotulo}: ${brl(s.valor)} (${textoPct})`}
+                          aria-label={`${s.rotulo}: ${brl(s.valor)}, ${textoPct}`}
+                          onMouseEnter={() => setDestaque(s.chave)}
+                        />
+                      );
+                    })}
+                </div>
+                <ul className="r82s-legenda">
+                  {distribuicao.segmentos.map((s) => {
+                    const pressionado = fixado === s.chave;
+                    const destacado = ativo === s.chave;
+                    return (
+                      <li key={s.chave}>
+                        <button
+                          type="button"
+                          className={`r82s-legenda-item${destacado ? ' is-destacado' : ''}`}
+                          aria-pressed={pressionado}
+                          onMouseEnter={() => setDestaque(s.chave)}
+                          onMouseLeave={() => setDestaque(null)}
+                          onFocus={() => setDestaque(s.chave)}
+                          onBlur={() => setDestaque(null)}
+                          onClick={() => setFixado((f) => (f === s.chave ? null : s.chave))}
+                        >
+                          <span
+                            className={`r82s-cor${s.chave === 'falta' ? ' is-falta' : ''}`}
+                            style={{ background: s.cor }}
+                            aria-hidden="true"
+                          />
+                          <span className="r82s-legenda-rotulo">{s.rotulo}</span>
+                          <span className="r82s-legenda-valor">{brl(s.valor)}</span>
+                          <span className="r82s-legenda-pct">{`${formatadorPct1.format(s.pct)}%`}</span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <p className="r82s-help">
+                  {`Base: valor líquido de ${brl(distribuicao.liquido)}.${distribuicao.excede ? ' Os pagamentos passam desse valor.' : ''}`}
+                </p>
+              </>
+            ) : (
+              <p className="r82s-help">Informe o valor da unidade para ver a divisão.</p>
+            )}
+          </section>
+
           <dl className="r82s-dl">
             <Linha rotulo="Valor da unidade" valor={valores.ok ? brl(valores.valor.valorImovel) : '—'} />
             <Linha rotulo="Desconto" valor={valores.ok ? brl(valores.valor.desconto) : '—'} />

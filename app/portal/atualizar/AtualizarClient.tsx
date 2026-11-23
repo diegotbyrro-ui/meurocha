@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import AjudaPagina from '../ajuda/AjudaPagina';
 import Termo from '../ajuda/Termo';
+import Icone, { type NomeIcone } from '../ui/Icone';
+import CabecalhoPagina from '../ui/CabecalhoPagina';
 import {
   MAX_POSTAGENS,
   cnpjValido,
@@ -42,7 +44,21 @@ const CHAVE_RASCUNHO = 'rocha-atualizar-rascunho';
 const LIMITE_LINKS = 20;
 const MSG_HTTPS = 'O link precisa começar com https://';
 const NOMES_PASSOS = ['Empreendimento', 'Pagamento', 'Materiais', 'Redes sociais', 'Publicar'];
+const ICONES_PASSOS: readonly NomeIcone[] = ['predio', 'carteira', 'imagens', 'megafone', 'upload'];
+const ESTADO_PASSO: Record<'feito' | 'atual' | 'proximo', string> = {
+  feito: 'Feito',
+  atual: 'Atual',
+  proximo: 'Próximo',
+};
 const TOTAL_PASSOS = NOMES_PASSOS.length;
+
+const PASSOS_PUBLICAR: readonly { icone: NomeIcone; texto: string }[] = [
+  { icone: 'copiar', texto: 'Clique em “Copiar arquivo”.' },
+  { icone: 'abrir', texto: 'Clique em “Abrir o arquivo no GitHub”. Ele abre em outra aba.' },
+  { icone: 'editar', texto: 'No GitHub, clique dentro do texto, aperte Ctrl+A e depois Ctrl+V.' },
+  { icone: 'checkCirculo', texto: 'Clique no botão verde “Commit changes” e confirme.' },
+  { icone: 'relogio', texto: 'Aguarde cerca de 2 minutos e atualize o portal.' },
+];
 
 const DICAS_PIX: Record<string, string> = {
   CNPJ: 'Use os 14 números do CNPJ. Ex.: 11.222.333/0001-81',
@@ -81,6 +97,16 @@ function statusPix(pix: Pix): Status | null {
   if (pix.chave.trim() === '') return null;
   if (pixValido(pix)) return { ok: true, texto: 'Chave válida' };
   return { ok: false, texto: MSG_PIX[pix.tipo] ?? 'Confira a chave PIX.' };
+}
+
+/** Mensagem de validacao com icone e texto (nunca so a cor). */
+function StatusCampo({ id, status }: { id: string; status: Status }) {
+  return (
+    <p id={id} className={status.ok ? 'r83u-status r83u-status-ok' : 'r83u-status r83u-status-erro'}>
+      <Icone nome={status.ok ? 'checkCirculo' : 'alerta'} tamanho={16} />
+      <span>{status.texto}</span>
+    </p>
+  );
 }
 
 function temLinks(mapa: Record<string, Link[]>): boolean {
@@ -195,6 +221,7 @@ function EditorLinks({
                 aria-label={`Remover ${link.titulo}`}
                 onClick={() => onChange(links.filter((_, j) => j !== i))}
               >
+                <Icone nome="lixeira" tamanho={18} />
                 Remover
               </button>
             </li>
@@ -234,12 +261,14 @@ function EditorLinks({
           />
         </div>
         <button type="button" className="r83u-btn r83u-btn-primario" onClick={adicionar} disabled={cheio}>
+          <Icone nome="mais" tamanho={18} />
           Adicionar link
         </button>
       </div>
       {erro !== '' && (
         <p id={`${id}-erro`} role="alert" className="r83u-erro">
-          {erro}
+          <Icone nome="alerta" tamanho={16} />
+          <span>{erro}</span>
         </p>
       )}
       <p className="r83u-contagem">
@@ -305,6 +334,7 @@ function EditorPostagens({
                 aria-label={`Remover ${post.titulo}`}
                 onClick={() => onChange(postagens.filter((_, j) => j !== i))}
               >
+                <Icone nome="lixeira" tamanho={18} />
                 Remover
               </button>
             </li>
@@ -354,12 +384,14 @@ function EditorPostagens({
           />
         </div>
         <button type="button" className="r83u-btn r83u-btn-primario" onClick={adicionar} disabled={cheio}>
+          <Icone nome="mais" tamanho={18} />
           Adicionar postagem
         </button>
       </div>
       {erro !== '' && (
         <p id="post-erro" role="alert" className="r83u-erro">
-          {erro}
+          <Icone nome="alerta" tamanho={16} />
+          <span>{erro}</span>
         </p>
       )}
       <p className="r83u-contagem">
@@ -401,6 +433,31 @@ function GrupoMateriais({
   );
 }
 
+/** Trilha dos 5 passos: icone por passo, check nos feitos e texto de estado em cada um. */
+function TrilhaPassos({ passo }: { passo: number }) {
+  return (
+    <ol className="r83u-trilha" aria-label="Etapas do cadastro">
+      {NOMES_PASSOS.map((nome, i) => {
+        const numero = i + 1;
+        const estado: keyof typeof ESTADO_PASSO = numero < passo ? 'feito' : numero === passo ? 'atual' : 'proximo';
+        return (
+          <li
+            key={nome}
+            className={`r83u-etapa r83u-etapa-${estado}`}
+            aria-current={numero === passo ? 'step' : undefined}
+          >
+            <span className="r83u-etapa-icone" aria-hidden="true">
+              <Icone nome={estado === 'feito' ? 'check' : ICONES_PASSOS[i]} tamanho={20} />
+            </span>
+            <span className="r83u-etapa-nome">{nome}</span>
+            <span className="r83u-etapa-estado">{ESTADO_PASSO[estado]}</span>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
 export default function AtualizarClient({
   inicial,
   secoes,
@@ -415,7 +472,7 @@ export default function AtualizarClient({
   const [selecionado, setSelecionado] = useState<string>(empInicial ?? '');
   const [tocou, setTocou] = useState(false);
   const [rascunho, setRascunho] = useState<Emp[] | null>(null);
-  const [copiado, setCopiado] = useState('');
+  const [copia, setCopia] = useState<{ sucesso: boolean; n: number } | null>(null);
 
   const arquivoInicial = useMemo(() => gerarArquivoDados(inicial), [inicial]);
   const arquivo = useMemo(() => gerarArquivoDados(estado), [estado]);
@@ -452,6 +509,13 @@ export default function AtualizarClient({
     }, 400);
     return () => window.clearTimeout(timer);
   }, [estado, tocou, arquivo, arquivoInicial]);
+
+  // Some com o aviso "Arquivo copiado" depois de um tempo curto.
+  useEffect(() => {
+    if (copia === null) return;
+    const timer = window.setTimeout(() => setCopia(null), 2500);
+    return () => window.clearTimeout(timer);
+  }, [copia]);
 
   const emp = estado.find((e) => e.id === selecionado) ?? null;
 
@@ -501,7 +565,7 @@ export default function AtualizarClient({
       ok = false;
     }
     if (!ok) ok = copiarPeloTextarea(arquivo);
-    setCopiado(ok ? 'Arquivo copiado' : 'Não foi possível copiar sozinho. Use “Baixar arquivo”.');
+    setCopia((antes) => ({ sucesso: ok, n: (antes?.n ?? 0) + 1 }));
   }
 
   function baixar() {
@@ -516,12 +580,16 @@ export default function AtualizarClient({
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
+  const copiadoOk = copia?.sucesso === true;
+
   return (
-    <main className="r83u-pagina">
-      <header className="r83u-cabecalho">
-        <h1>Atualizar conteúdo do portal</h1>
-        <p>Atualize CNPJ, PIX, materiais e postagens dos empreendimentos. Não é preciso saber programar.</p>
-      </header>
+    <main className="r83u-pagina" data-area="atualizar">
+      <CabecalhoPagina
+        area="atualizar"
+        icone="editar"
+        titulo="Atualizar conteúdo"
+        descricao="Atualize CNPJ, PIX, materiais e postagens dos empreendimentos. Não é preciso saber programar."
+      />
 
       <AjudaPagina
         id="atualizar"
@@ -542,6 +610,7 @@ export default function AtualizarClient({
               Continuar rascunho
             </button>
             <button type="button" className="r83u-btn r83u-btn-perigo" onClick={descartarRascunho}>
+              <Icone nome="lixeira" tamanho={18} />
               Descartar
             </button>
           </div>
@@ -549,6 +618,8 @@ export default function AtualizarClient({
       )}
 
       <section className="r83u-assistente" aria-label="Passos do cadastro">
+        <TrilhaPassos passo={passo} />
+
         <div className="r83u-progresso">
           <p className="r83u-passo-titulo" aria-live="polite">
             Passo {passo} de {TOTAL_PASSOS} · {NOMES_PASSOS[passo - 1]}
@@ -573,8 +644,12 @@ export default function AtualizarClient({
               {estado.map((e) => {
                 const falta = faltas(e);
                 const ativo = selecionado === e.id;
+                const completo = falta.length === 0;
+                const classes = ['r83u-card'];
+                if (ativo) classes.push('r83u-card-ativo');
+                if (completo) classes.push('r83u-card-completo');
                 return (
-                  <label key={e.id} className={ativo ? 'r83u-card r83u-card-ativo' : 'r83u-card'}>
+                  <label key={e.id} className={classes.join(' ')}>
                     <input
                       type="radio"
                       name="empreendimento"
@@ -584,9 +659,18 @@ export default function AtualizarClient({
                       onChange={() => setSelecionado(e.id)}
                     />
                     <span className="r83u-card-nome">{nomes[e.id] ?? e.id}</span>
-                    <span className="r83u-card-falta">
-                      {falta.length > 0 ? `Falta: ${falta.join(', ')}` : 'Tudo cadastrado'}
-                    </span>
+                    {completo ? (
+                      <span className="r84-selo r84-selo-ok">
+                        <Icone nome="check" tamanho={14} />
+                        Tudo cadastrado
+                      </span>
+                    ) : (
+                      <span className="r84-selo r84-selo-falta">
+                        <Icone nome="alerta" tamanho={14} />
+                        Falta cadastrar
+                      </span>
+                    )}
+                    {!completo && <span className="r83u-card-falta">Falta: {falta.join(', ')}</span>}
                   </label>
                 );
               })}
@@ -597,7 +681,8 @@ export default function AtualizarClient({
 
         {passo > 1 && emp === null && (
           <p className="r83u-erro" role="alert">
-            Escolha um empreendimento no passo 1 antes de continuar.
+            <Icone nome="alerta" tamanho={16} />
+            <span>Escolha um empreendimento no passo 1 antes de continuar.</span>
           </p>
         )}
 
@@ -639,14 +724,7 @@ export default function AtualizarClient({
                   atualizarEmp((e) => ({ ...e, cnpj: valor }));
                 }}
               />
-              {statusCnpjAtual && (
-                <p
-                  id="pag-cnpj-status"
-                  className={statusCnpjAtual.ok ? 'r83u-status r83u-status-ok' : 'r83u-status r83u-status-erro'}
-                >
-                  {statusCnpjAtual.texto}
-                </p>
-              )}
+              {statusCnpjAtual && <StatusCampo id="pag-cnpj-status" status={statusCnpjAtual} />}
             </div>
 
             <div className="r83u-campo">
@@ -685,14 +763,7 @@ export default function AtualizarClient({
                   atualizarEmp((e) => ({ ...e, pix: { ...e.pix, chave } }));
                 }}
               />
-              {statusPixAtual && (
-                <p
-                  id="pag-pix-status"
-                  className={statusPixAtual.ok ? 'r83u-status r83u-status-ok' : 'r83u-status r83u-status-erro'}
-                >
-                  {statusPixAtual.texto}
-                </p>
-              )}
+              {statusPixAtual && <StatusCampo id="pag-pix-status" status={statusPixAtual} />}
             </div>
 
             <div className="r83u-campo">
@@ -727,8 +798,11 @@ export default function AtualizarClient({
 
             {bloqueadoPorPagamento && (
               <p className="r83u-erro" role="alert">
-                Não dá para continuar com CNPJ ou chave PIX errados. Eles aparecem na conta e no pagamento,
-                por isso corrija o campo marcado em vermelho antes de seguir.
+                <Icone nome="alerta" tamanho={16} />
+                <span>
+                  Não dá para continuar com CNPJ ou chave PIX errados. Eles aparecem na conta e no pagamento,
+                  por isso corrija o campo marcado em vermelho antes de seguir.
+                </span>
               </p>
             )}
           </div>
@@ -790,33 +864,41 @@ export default function AtualizarClient({
             )}
 
             <h2 className="r83u-secao">Como publicar</h2>
-            <ol className="r83u-passos">
-              <li>Clique em “Copiar arquivo”.</li>
-              <li>Clique em “Abrir o arquivo no GitHub”. Ele abre em outra aba.</li>
-              <li>No GitHub, clique dentro do texto, aperte Ctrl+A e depois Ctrl+V.</li>
-              <li>Clique no botão verde “Commit changes” e confirme.</li>
-              <li>Aguarde cerca de 2 minutos e atualize o portal.</li>
+            <ol className="r83u-passos-cartoes">
+              {PASSOS_PUBLICAR.map((p, i) => (
+                <li key={p.texto} className="r83u-passo-cartao">
+                  <span className="r83u-numero" aria-hidden="true">{i + 1}</span>
+                  <span className="r84-icone-bloco" aria-hidden="true">
+                    <Icone nome={p.icone} tamanho={22} />
+                  </span>
+                  <span className="r83u-passo-texto">{p.texto}</span>
+                </li>
+              ))}
             </ol>
 
-            <div className="r83u-acoes">
-              <button type="button" className="r83u-btn r83u-btn-primario" onClick={copiar}>
-                Copiar arquivo
+            <div className="r83u-acoes-publicar">
+              <button
+                type="button"
+                className={copiadoOk ? 'r84-btn r83u-btn-grande is-feito' : 'r84-btn r83u-btn-grande'}
+                onClick={copiar}
+              >
+                <Icone nome={copiadoOk ? 'check' : 'copiar'} tamanho={22} />
+                {copiadoOk ? 'Copiado' : 'Copiar arquivo'}
               </button>
               <a
-                className="r83u-btn r83u-btn-secundario"
+                className="r84-btn-sec r83u-btn-grande"
                 href={githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
+                <Icone nome="abrir" tamanho={20} />
                 Abrir o arquivo no GitHub
               </a>
-              <button type="button" className="r83u-btn r83u-btn-secundario" onClick={baixar}>
+              <button type="button" className="r84-btn-sec r83u-btn-grande" onClick={baixar}>
+                <Icone nome="baixar" tamanho={20} />
                 Baixar arquivo
               </button>
             </div>
-            <p role="status" className="r83u-status-copia">
-              {copiado}
-            </p>
 
             <details className="r83u-detalhe">
               <summary>Ver o texto do arquivo</summary>
@@ -832,6 +914,15 @@ export default function AtualizarClient({
         )}
       </section>
 
+      {copia !== null && (
+        <div className="r84-toast" role="status" key={copia.n}>
+          {copia.sucesso ? <Icone nome="checkCirculo" tamanho={20} /> : null}
+          <span>
+            {copia.sucesso ? 'Arquivo copiado' : 'Não foi possível copiar sozinho. Use “Baixar arquivo”.'}
+          </span>
+        </div>
+      )}
+
       <nav className="r83u-nav" aria-label="Navegação dos passos">
         <button
           type="button"
@@ -839,6 +930,7 @@ export default function AtualizarClient({
           disabled={passo === 1}
           onClick={() => setPasso((p) => Math.max(1, p - 1))}
         >
+          <Icone nome="setaEsquerda" tamanho={18} />
           Voltar
         </button>
         {passo < TOTAL_PASSOS && (
@@ -849,6 +941,7 @@ export default function AtualizarClient({
             onClick={() => setPasso((p) => Math.min(TOTAL_PASSOS, p + 1))}
           >
             Continuar
+            <Icone nome="setaDireita" tamanho={18} />
           </button>
         )}
       </nav>

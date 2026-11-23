@@ -4,9 +4,12 @@ import { headers } from 'next/headers';
 import { Poppins } from 'next/font/google';
 import { portalCookieValid, portalLoginConfigured } from '@/lib/portal-rocha-auth';
 import NavAtivo from './NavAtivo';
+import Icone from './ui/Icone';
 import './portal.css';
 import './r83-tema.css';
 import './r83-shell.css';
+import './ui/ui.css';
+import './r84-shell.css';
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'], display: 'swap' });
 
@@ -34,40 +37,40 @@ export default async function PortalLayout({children}:{children:React.ReactNode}
     <NavAtivo />
     <aside className="r79-sidebar r83-sidebar" aria-label="Menu do portal">
       <Link href="/portal" className="r83-brand" aria-label="Início do portal Rocha">
-        <span className="r79-logo-dark r83-logo"><img src="/rocha-logo-escuro.png" width={96} height={78} alt="Rocha Empreendimentos" /></span>
-        <span className="r83-brand-text"><strong>Portal comercial</strong><small>Equipe Rocha</small></span>
+        <span className="r79-logo-dark r83-logo"><img src="/rocha-logo.png" width={150} height={49} alt="Rocha Empreendimentos" /></span>
+        <span className="r83-brand-text"><strong>Portal comercial</strong></span>
       </Link>
       <nav className="r83-nav" aria-label="Áreas do portal">
         <p className="r83-nav-group">Dia a dia</p>
-        <Link href="/portal"><strong>Início</strong><small>Por onde começar e avisos</small></Link>
-        <Link href="/portal/central"><strong>Central dos empreendimentos</strong><small>CNPJ, PIX, materiais e postagens</small></Link>
-        <Link href="/portal/simulador"><strong>Simulador de entrada</strong><small>Monte e imprima a proposta</small></Link>
-        <Link href="/portal/tarefas"><strong>Tarefas da equipe</strong><small>O que fazer e até quando</small></Link>
+        <Link href="/portal" data-area="inicio"><span className="r84-icone-bloco r84-icone-bloco-cheio" aria-hidden="true"><Icone nome="inicio" tamanho={18} /></span><span><strong>Início</strong><small>Por onde começar e avisos</small></span></Link>
+        <Link href="/portal/central" data-area="central"><span className="r84-icone-bloco r84-icone-bloco-cheio" aria-hidden="true"><Icone nome="predio" tamanho={18} /></span><span><strong>Central dos empreendimentos</strong><small>CNPJ, PIX, materiais e postagens</small></span></Link>
+        <Link href="/portal/simulador" data-area="simulador"><span className="r84-icone-bloco r84-icone-bloco-cheio" aria-hidden="true"><Icone nome="calculadora" tamanho={18} /></span><span><strong>Simulador de entrada</strong><small>Monte e imprima a proposta</small></span></Link>
+        <Link href="/portal/tarefas" data-area="tarefas"><span className="r84-icone-bloco r84-icone-bloco-cheio" aria-hidden="true"><Icone nome="tarefas" tamanho={18} /></span><span><strong>Tarefas da equipe</strong><small>O que fazer e até quando</small></span></Link>
         <p className="r83-nav-group">Manutenção</p>
-        <Link href="/portal/atualizar"><strong>Atualizar conteúdo</strong><small>Cadastrar CNPJ, PIX e links</small></Link>
-        <Link href="/portal/biblioteca"><strong>Biblioteca de arquivos</strong><small>Arquivos só deste computador</small></Link>
-        <Link href="/portal/gestao"><strong>Cadastro de empreendimentos</strong><small>Rascunhos e fotos</small></Link>
-        <Link href="/portal/ajuda"><strong>Ajuda</strong><small>Dúvidas frequentes e glossário</small></Link>
+        <Link href="/portal/atualizar" data-area="atualizar"><span className="r84-icone-bloco r84-icone-bloco-cheio" aria-hidden="true"><Icone nome="editar" tamanho={18} /></span><span><strong>Atualizar conteúdo</strong><small>Cadastrar CNPJ, PIX e links</small></span></Link>
+        <Link href="/portal/biblioteca" data-area="biblioteca"><span className="r84-icone-bloco r84-icone-bloco-cheio" aria-hidden="true"><Icone nome="pasta" tamanho={18} /></span><span><strong>Biblioteca de arquivos</strong><small>Arquivos só deste computador</small></span></Link>
+        <Link href="/portal/gestao" data-area="cadastro"><span className="r84-icone-bloco r84-icone-bloco-cheio" aria-hidden="true"><Icone nome="cadastro" tamanho={18} /></span><span><strong>Cadastro de empreendimentos</strong><small>Rascunhos e fotos</small></span></Link>
+        <Link href="/portal/ajuda" data-area="ajuda"><span className="r84-icone-bloco r84-icone-bloco-cheio" aria-hidden="true"><Icone nome="ajuda" tamanho={18} /></span><span><strong>Ajuda</strong><small>Dúvidas frequentes e glossário</small></span></Link>
       </nav>
-      <form action="/api/portal/logout" method="post" className="r83-sair"><button type="submit">Sair do portal</button></form>
+      <form action="/api/portal/logout" method="post" className="r83-sair"><button type="submit"><Icone nome="sair" tamanho={18} /> Sair do portal</button></form>
     </aside>
     <div className="r79-workspace r83-workspace">
       <header className="r79-toolbar r83-topbar">
-        <details className="r79-mobile-menu r83-mobile-menu"><summary>Menu</summary>
+        <details className="r79-mobile-menu r83-mobile-menu"><summary><Icone nome="menu" tamanho={20} /> Menu</summary>
           <nav className="r83-nav" aria-label="Áreas do portal no celular">
-            <Link href="/portal"><strong>Início</strong></Link>
-            <Link href="/portal/central"><strong>Central dos empreendimentos</strong></Link>
-            <Link href="/portal/simulador"><strong>Simulador de entrada</strong></Link>
-            <Link href="/portal/tarefas"><strong>Tarefas da equipe</strong></Link>
-            <Link href="/portal/atualizar"><strong>Atualizar conteúdo</strong></Link>
-            <Link href="/portal/biblioteca"><strong>Biblioteca de arquivos</strong></Link>
-            <Link href="/portal/gestao"><strong>Cadastro de empreendimentos</strong></Link>
-            <Link href="/portal/ajuda"><strong>Ajuda</strong></Link>
+            <Link href="/portal" data-area="inicio"><span className="r84-icone-bloco r84-icone-bloco-cheio" aria-hidden="true"><Icone nome="inicio" tamanho={18} /></span><strong>Início</strong></Link>
+            <Link href="/portal/central" data-area="central"><span className="r84-icone-bloco r84-icone-bloco-cheio" aria-hidden="true"><Icone nome="predio" tamanho={18} /></span><strong>Central dos empreendimentos</strong></Link>
+            <Link href="/portal/simulador" data-area="simulador"><span className="r84-icone-bloco r84-icone-bloco-cheio" aria-hidden="true"><Icone nome="calculadora" tamanho={18} /></span><strong>Simulador de entrada</strong></Link>
+            <Link href="/portal/tarefas" data-area="tarefas"><span className="r84-icone-bloco r84-icone-bloco-cheio" aria-hidden="true"><Icone nome="tarefas" tamanho={18} /></span><strong>Tarefas da equipe</strong></Link>
+            <Link href="/portal/atualizar" data-area="atualizar"><span className="r84-icone-bloco r84-icone-bloco-cheio" aria-hidden="true"><Icone nome="editar" tamanho={18} /></span><strong>Atualizar conteúdo</strong></Link>
+            <Link href="/portal/biblioteca" data-area="biblioteca"><span className="r84-icone-bloco r84-icone-bloco-cheio" aria-hidden="true"><Icone nome="pasta" tamanho={18} /></span><strong>Biblioteca de arquivos</strong></Link>
+            <Link href="/portal/gestao" data-area="cadastro"><span className="r84-icone-bloco r84-icone-bloco-cheio" aria-hidden="true"><Icone nome="cadastro" tamanho={18} /></span><strong>Cadastro de empreendimentos</strong></Link>
+            <Link href="/portal/ajuda" data-area="ajuda"><span className="r84-icone-bloco r84-icone-bloco-cheio" aria-hidden="true"><Icone nome="ajuda" tamanho={18} /></span><strong>Ajuda</strong></Link>
           </nav>
         </details>
         <span className="r83-topbar-title">Rocha Empreendimentos · Portal comercial</span>
         <div className="r83-topbar-actions">
-          <Link href="/portal/ajuda" className="r83-topbar-help">Ajuda</Link>
+          <Link href="/portal/ajuda" className="r83-topbar-help"><Icone nome="pergunta" tamanho={18} /> Ajuda</Link>
           <form action="/api/portal/logout" method="post"><button type="submit">Sair</button></form>
         </div>
       </header>

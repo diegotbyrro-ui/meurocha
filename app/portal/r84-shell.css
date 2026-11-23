@@ -1,0 +1,22 @@
+/* R84 - Menu lateral na cor da marca, com ícones coloridos por área. Carregado depois de r83-shell.css. */
+.rocha-portal.r83-shell .r83-sidebar{background:var(--r-vinho-900,#2b0f14);border-right:0;color:#f3e9eb;padding:22px 14px}
+.rocha-portal.r83-shell .r83-brand{border-bottom:1px solid rgba(255,255,255,.12);padding:6px 8px 20px;flex-direction:column;align-items:flex-start;gap:10px}
+.rocha-portal.r83-shell .r83-logo img{width:150px}
+.rocha-portal.r83-shell .r83-brand-text strong{color:#f3e9eb;font-size:14px;font-weight:500}
+.rocha-portal.r83-shell .r83-sidebar .r83-nav-group{color:#d9bfc4}
+.rocha-portal.r83-shell .r83-sidebar .r83-nav a{display:flex;align-items:center;gap:12px;color:#fff;border-left:0;border-radius:10px;padding:8px 10px;transition:background-color .15s}
+.rocha-portal.r83-shell .r83-sidebar .r83-nav a>span:last-child{display:grid;gap:1px;min-width:0}
+.rocha-portal.r83-shell .r83-sidebar .r83-nav a small{color:#dcc6ca}
+.rocha-portal.r83-shell .r83-sidebar .r83-nav .r84-icone-bloco{width:34px;height:34px;border-radius:9px}
+.rocha-portal.r83-shell .r83-sidebar .r83-nav a:hover{background:rgba(255,255,255,.08)}
+.rocha-portal.r83-shell .r83-sidebar .r83-nav a[aria-current="page"]{background:#fff;}
+.rocha-portal.r83-shell .r83-sidebar .r83-nav a[aria-current="page"] strong{color:var(--r-vinho-900,#2b0f14)}
+.rocha-portal.r83-shell .r83-sidebar .r83-nav a[aria-current="page"] small{color:var(--r-ink-2,#45474c)}
+.rocha-portal.r83-shell .r83-sidebar a:focus-visible,.rocha-portal.r83-shell .r83-sidebar button:focus-visible{box-shadow:0 0 0 2px var(--r-vinho-900,#2b0f14),0 0 0 4px #fff}
+.rocha-portal.r83-shell .r83-sidebar .r83-sair{border-top:1px solid rgba(255,255,255,.12)}
+.rocha-portal.r83-shell .r83-sidebar .r83-sair button{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}
+.rocha-portal.r83-shell .r83-sidebar .r83-sair button:hover{background:rgba(255,255,255,.08)}
+.rocha-portal.r83-shell .r83-topbar-help,.rocha-portal.r83-shell .r83-mobile-menu summary{gap:6px}
+.rocha-portal.r83-shell .r83-mobile-menu .r83-nav a{display:flex;align-items:center;gap:10px;border-left:0}
+.rocha-portal.r83-shell .r83-mobile-menu .r83-nav .r84-icone-bloco{width:30px;height:30px;border-radius:8px}
+.rocha-portal.r83-shell .r83-mobile-menu .r83-nav a[aria-current="page"]{background:var(--r-brand-soft,#f6e8e9)}

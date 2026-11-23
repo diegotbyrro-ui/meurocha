@@ -1,4 +1,5 @@
 import { SimuladorNativo } from '../../plataforma/simulador/SimuladorNativo';
+import Icone from '../ui/Icone';
 import SimuladorEntradaClient from './SimuladorEntradaClient';
 import './simulador-entrada.css';
 
@@ -12,7 +13,7 @@ export default async function Simulador({ searchParams }: { searchParams: Promis
   return <div className="rocha-portal-simulador">
     <SimuladorEntradaClient empreendimentoInicial={emp} />
     <details className="r82s-legado">
-      <summary>Painel de disponibilidade, CAIXA e evolução da obra (prévia, aguardando integração com o CV CRM)</summary>
+      <summary><Icone nome="camadas" tamanho={20} />Painel de disponibilidade, CAIXA e evolução da obra (prévia, aguardando integração com o CV CRM)</summary>
       <aside className="rocha-portal-notice">Simulador em prévia demonstrativa, sem conexão com taxas CAIXA, tabelas do CV CRM ou valores oficiais. Use apenas dados de teste.</aside>
       <SimuladorNativo />
     </details>

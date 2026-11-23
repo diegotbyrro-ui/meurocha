@@ -2,6 +2,7 @@
 
 import './componentes.css';
 import {useEffect, useId, useState} from 'react';
+import Icone from '../ui/Icone';
 
 type Props = {
   id: string;
@@ -50,8 +51,9 @@ export default function AjudaPagina({id, titulo = 'Como usar esta página', pass
 
   if (!visivel) {
     return (
-      <div className="r83a-ajuda-mini">
+      <div className="r83a-ajuda-mini" data-area="ajuda">
         <button type="button" className="r83a-botao-discreto" onClick={mostrar}>
+          <Icone nome="dica" tamanho={18} />
           Mostrar ajuda desta página
         </button>
       </div>
@@ -59,10 +61,16 @@ export default function AjudaPagina({id, titulo = 'Como usar esta página', pass
   }
 
   return (
-    <section className="r83a-ajuda" aria-labelledby={tituloId}>
+    <section className="r83a-ajuda" aria-labelledby={tituloId} data-area="ajuda">
       <div className="r83a-ajuda-cabecalho">
-        <h2 id={tituloId} className="r83a-ajuda-titulo">{titulo}</h2>
+        <div className="r83a-ajuda-titulo-linha">
+          <span className="r84-icone-bloco" aria-hidden="true">
+            <Icone nome="dica" tamanho={22} />
+          </span>
+          <h2 id={tituloId} className="r83a-ajuda-titulo">{titulo}</h2>
+        </div>
         <button type="button" className="r83a-botao" onClick={esconder}>
+          <Icone nome="fechar" tamanho={18} />
           Entendi, esconder ajuda
         </button>
       </div>

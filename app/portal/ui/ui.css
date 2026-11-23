@@ -1,0 +1,84 @@
+/* R84 - Componentes visuais comuns do portal (cores por área, ícones, cabeçalho, botões, cartões).
+   Escopo: .rocha-portal. Regras em docs/R83_DESIGN.md e docs/R84_VISUAL.md. */
+.rocha-portal{
+  --r-vinho-900:#2b0f14;--r-vinho-800:#3d1219;--r-vinho-700:#5a1a24;--r-vermelho:#d22630;
+  --a-inicio:#a51c2c;--a-inicio-soft:#fbe9eb;
+  --a-central:#a51c2c;--a-central-soft:#fbe9eb;
+  --a-simulador:#1f5fae;--a-simulador-soft:#e8f0fb;
+  --a-tarefas:#1b7a4a;--a-tarefas-soft:#e5f4ec;
+  --a-atualizar:#b45309;--a-atualizar-soft:#fdf0e1;
+  --a-biblioteca:#6b3fb8;--a-biblioteca-soft:#f0eafb;
+  --a-cadastro:#3f5468;--a-cadastro-soft:#e9eef3;
+  --a-ajuda:#0e7c78;--a-ajuda-soft:#e2f4f3;
+}
+.rocha-portal [data-area="inicio"]{--a:var(--a-inicio);--a-soft:var(--a-inicio-soft)}
+.rocha-portal [data-area="central"]{--a:var(--a-central);--a-soft:var(--a-central-soft)}
+.rocha-portal [data-area="simulador"]{--a:var(--a-simulador);--a-soft:var(--a-simulador-soft)}
+.rocha-portal [data-area="tarefas"]{--a:var(--a-tarefas);--a-soft:var(--a-tarefas-soft)}
+.rocha-portal [data-area="atualizar"]{--a:var(--a-atualizar);--a-soft:var(--a-atualizar-soft)}
+.rocha-portal [data-area="biblioteca"]{--a:var(--a-biblioteca);--a-soft:var(--a-biblioteca-soft)}
+.rocha-portal [data-area="cadastro"]{--a:var(--a-cadastro);--a-soft:var(--a-cadastro-soft)}
+.rocha-portal [data-area="ajuda"]{--a:var(--a-ajuda);--a-soft:var(--a-ajuda-soft)}
+
+.rocha-portal .r84-icone{display:inline-block;flex:0 0 auto;vertical-align:middle}
+
+/* Bloco de ícone: quadrado na cor da área */
+.rocha-portal .r84-icone-bloco{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:10px;background:var(--a-soft,#fbe9eb);color:var(--a,#a51c2c);flex:0 0 auto}
+.rocha-portal .r84-icone-bloco-lg{width:52px;height:52px;border-radius:12px}
+.rocha-portal .r84-icone-bloco-cheio{background:var(--a,#a51c2c);color:#fff}
+
+/* Cabeçalho de página */
+.rocha-portal .r84-cabecalho{position:relative;overflow:hidden;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;background:var(--r-vinho-800);color:#fff;border-radius:14px;padding:28px 32px;margin:0 0 24px;isolation:isolate}
+.rocha-portal .r84-cabecalho::before{content:'';position:absolute;z-index:-1;top:0;bottom:0;right:-40px;width:300px;background:var(--r-brand,#a51c2c);clip-path:polygon(38% 0,62% 0,100% 100%,76% 100%)}
+.rocha-portal .r84-cabecalho::after{content:'';position:absolute;z-index:-1;top:0;bottom:0;right:120px;width:120px;background:var(--r-vinho-700);clip-path:polygon(0 0,40% 0,100% 100%,60% 100%)}
+.rocha-portal .r84-cabecalho-texto{max-width:760px;display:grid;gap:10px}
+.rocha-portal .r84-cabecalho-titulo{display:flex;align-items:center;gap:14px}
+.rocha-portal .r84-cabecalho .r84-icone-bloco{background:#fff;color:var(--a,#a51c2c)}
+.rocha-portal .r84-cabecalho h1{font-size:30px;line-height:1.15;margin:0;color:#fff;letter-spacing:-.01em}
+.rocha-portal .r84-cabecalho p{margin:0;font-size:16px;line-height:1.55;color:#f3e3e6}
+.rocha-portal .r84-cabecalho-antes{font-size:14px;color:#f3e3e6}
+.rocha-portal .r84-cabecalho-antes a{color:#fff;text-decoration:underline;text-underline-offset:3px}
+.rocha-portal .r84-cabecalho-acoes{display:flex;gap:10px;flex-wrap:wrap;position:relative}
+.rocha-portal .r84-cabecalho .r84-btn{background:#fff;color:var(--r-vinho-800);border-color:#fff}
+.rocha-portal .r84-cabecalho .r84-btn:hover{background:#f6e8e9}
+.rocha-portal .r84-cabecalho .r84-btn-sec{background:transparent;color:#fff;border-color:#e7c9ce}
+.rocha-portal .r84-cabecalho .r84-btn-sec:hover{background:rgba(255,255,255,.1)}
+.rocha-portal .r84-cabecalho a:focus-visible,.rocha-portal .r84-cabecalho button:focus-visible{box-shadow:0 0 0 2px var(--r-vinho-800),0 0 0 4px #fff}
+
+/* Botões */
+.rocha-portal .r84-btn,.rocha-portal .r84-btn-sec{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;border-radius:var(--r-radius,8px);font:inherit;font-size:15px;font-weight:600;cursor:pointer;border:1px solid transparent;text-decoration:none;transition:background-color .15s,border-color .15s,transform .1s}
+.rocha-portal .r84-btn{background:var(--r-brand,#a51c2c);color:#fff;border-color:var(--r-brand,#a51c2c)}
+.rocha-portal .r84-btn:hover{background:var(--r-brand-hover,#8a1624)}
+.rocha-portal .r84-btn-sec{background:var(--r-surface,#fff);color:var(--r-ink,#1c1c1e);border-color:var(--r-line-strong,#b9b6af)}
+.rocha-portal .r84-btn-sec:hover{background:var(--r-surface-2,#f8f7f5);border-color:var(--r-ink-3,#5d6066)}
+.rocha-portal .r84-btn:active,.rocha-portal .r84-btn-sec:active{transform:translateY(1px)}
+.rocha-portal .r84-btn.is-feito{background:var(--r-ok,#146c3c);border-color:var(--r-ok,#146c3c)}
+
+/* Cartão interativo */
+.rocha-portal .r84-cartao{background:var(--r-surface,#fff);border:1px solid var(--r-line,#d6d4cf);border-radius:12px;padding:20px;transition:border-color .15s,box-shadow .15s,transform .15s}
+.rocha-portal a.r84-cartao,.rocha-portal .r84-cartao-clicavel{color:inherit;text-decoration:none;display:block}
+.rocha-portal a.r84-cartao:hover,.rocha-portal .r84-cartao-clicavel:hover{border-color:var(--a,#a51c2c);box-shadow:0 6px 18px rgba(43,15,20,.08);transform:translateY(-2px)}
+.rocha-portal .r84-cartao-topo{height:4px;margin:-20px -20px 16px;border-radius:12px 12px 0 0;background:var(--a,#a51c2c)}
+
+/* Selos */
+.rocha-portal .r84-selo{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:13px;font-weight:600;background:var(--a-soft,#fbe9eb);color:var(--a,#a51c2c)}
+.rocha-portal .r84-selo-ok{background:var(--r-ok-soft,#e6f4ec);color:var(--r-ok,#146c3c)}
+.rocha-portal .r84-selo-falta{background:var(--r-warn-soft,#fdf1d8);color:var(--r-warn,#7a4b00)}
+
+/* Aviso flutuante (toast) */
+.rocha-portal .r84-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:10px;background:var(--r-ink,#1c1c1e);color:#fff;padding:12px 18px;border-radius:10px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);animation:r84-sobe .2s ease-out}
+.rocha-portal .r84-toast .r84-icone{color:#7ee2a8}
+@keyframes r84-sobe{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+
+@media(max-width:720px){
+  .rocha-portal .r84-cabecalho{padding:22px 20px;border-radius:12px}
+  .rocha-portal .r84-cabecalho::before{width:180px;right:-60px}
+  .rocha-portal .r84-cabecalho::after{display:none}
+  .rocha-portal .r84-cabecalho h1{font-size:24px}
+}
+@media(prefers-reduced-motion:reduce){
+  .rocha-portal .r84-cartao,.rocha-portal .r84-btn,.rocha-portal .r84-btn-sec{transition:none}
+  .rocha-portal a.r84-cartao:hover,.rocha-portal .r84-cartao-clicavel:hover{transform:none}
+  .rocha-portal .r84-toast{animation:none}
+}
+@media print{.rocha-portal .r84-cabecalho{background:none;color:#000;padding:0}.rocha-portal .r84-cabecalho::before,.rocha-portal .r84-cabecalho::after{display:none}}

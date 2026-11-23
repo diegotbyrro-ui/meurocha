@@ -1,4 +1,5 @@
-/* Tela Atualizar conteudo do portal (R83). Tokens em docs/R83_DESIGN.md; cada var() tem fallback. */
+/* Tela Atualizar conteudo do portal (R83 + R84). Cor da area: --a (ambar), definida por data-area="atualizar"
+   em app/portal/ui/ui.css. Tokens em docs/R83_DESIGN.md; cada var() tem fallback. Sem gradientes. */
 
 .r83u-pagina {
   display: grid;
@@ -9,13 +10,6 @@
   color: var(--r-ink, #1c1c1e);
   font-size: 15px;
   line-height: 1.5;
-}
-
-.r83u-pagina h1 {
-  margin: 0 0 6px;
-  font-size: 28px;
-  line-height: 1.2;
-  color: var(--r-ink, #1c1c1e);
 }
 
 .r83u-pagina h2 {
@@ -32,14 +26,9 @@
   color: var(--r-ink, #1c1c1e);
 }
 
-.r83u-cabecalho p {
-  margin: 0;
-  color: var(--r-ink-3, #5d6066);
-}
-
 .r83u-dica {
   margin: 4px 0 0;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--r-ink-3, #5d6066);
 }
 
@@ -50,8 +39,8 @@
   color: var(--r-ink-3, #5d6066);
 }
 
-.r83u-subtitulo {
-  margin-top: 12px;
+.r83u-secao {
+  margin-top: 4px;
 }
 
 /* Avisos e rascunho */
@@ -91,6 +80,71 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
+/* Trilha dos 5 passos */
+.r83u-trilha {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.r83u-etapa {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  min-width: 0;
+  text-align: center;
+}
+
+.r83u-etapa-icone {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--r-line-strong, #b9b6af);
+  border-radius: 999px;
+  background: var(--r-surface, #ffffff);
+  color: var(--r-ink-2, #45474c);
+}
+
+.r83u-etapa-nome {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--r-ink, #1c1c1e);
+  overflow-wrap: anywhere;
+}
+
+.r83u-etapa-estado {
+  font-size: 13px;
+  color: var(--r-ink-3, #5d6066);
+}
+
+.r83u-etapa-feito .r83u-etapa-icone {
+  border-color: var(--r-ok, #146c3c);
+  background: var(--r-ok-soft, #e6f4ec);
+  color: var(--r-ok, #146c3c);
+}
+
+.r83u-etapa-feito .r83u-etapa-estado {
+  color: var(--r-ok, #146c3c);
+  font-weight: 600;
+}
+
+.r83u-etapa-atual .r83u-etapa-icone {
+  border-color: var(--a, #b45309);
+  background: var(--a, #b45309);
+  color: #ffffff;
+}
+
+.r83u-etapa-atual .r83u-etapa-estado {
+  color: var(--a, #b45309);
+  font-weight: 600;
+}
+
 .r83u-progresso {
   display: grid;
   gap: 8px;
@@ -112,7 +166,7 @@
 .r83u-barra span {
   display: block;
   height: 100%;
-  background: var(--r-brand, #a51c2c);
+  background: var(--a, #b45309);
   transition: width 0.2s ease;
 }
 
@@ -121,20 +175,9 @@
   gap: 16px;
 }
 
-.r83u-secao {
-  margin-top: 4px;
-}
-
 .r83u-lista-simples {
   margin: 0 0 8px;
   padding-left: 20px;
-}
-
-.r83u-passos {
-  margin: 0 0 8px;
-  padding-left: 22px;
-  display: grid;
-  gap: 6px;
 }
 
 /* Campos */
@@ -184,16 +227,19 @@
 .r83u-campo select:focus-visible,
 .r83u-texto-arquivo:focus-visible,
 .r83u-card:focus-within,
-.r83u-radio:focus-visible,
 .r83u-grupo summary:focus-visible,
 .r83u-detalhe summary:focus-visible {
   outline: none;
   box-shadow: var(--r-focus, 0 0 0 2px #ffffff, 0 0 0 4px #a51c2c);
 }
 
+/* Validacao ao vivo: icone + texto */
 .r83u-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   margin: 0;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -207,6 +253,9 @@
 }
 
 .r83u-erro {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
   margin: 0;
   font-weight: 600;
 }
@@ -233,33 +282,50 @@
 }
 
 .r83u-card {
+  position: relative;
+  overflow: hidden;
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 4px 12px;
+  gap: 8px 12px;
   align-items: start;
   min-height: 44px;
-  padding: 16px;
+  padding: 20px 16px 16px;
   border: 1px solid var(--r-line-strong, #b9b6af);
   border-radius: var(--r-radius, 8px);
   background: var(--r-surface, #ffffff);
   cursor: pointer;
 }
 
+/* Faixa colorida no topo: ambar = falta cadastrar, verde = tudo cadastrado */
+.r83u-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--a, #b45309);
+}
+
+.r83u-card-completo::before {
+  background: var(--r-ok, #146c3c);
+}
+
 .r83u-card:hover {
   background: var(--r-surface-2, #f8f7f5);
 }
 
-.r83u-card-ativo {
-  border-color: var(--r-brand, #a51c2c);
-  background: var(--r-brand-soft, #f6e8e9);
+.r83u-card.r83u-card-ativo {
+  border-color: var(--a, #b45309);
+  background: var(--a-soft, #fdf0e1);
 }
 
 .r83u-radio {
-  grid-row: span 2;
+  grid-row: 1 / span 3;
   width: 20px;
   height: 20px;
   margin: 2px 0 0;
-  accent-color: var(--r-brand, #a51c2c);
+  accent-color: var(--a, #b45309);
 }
 
 .r83u-card-nome {
@@ -278,6 +344,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   min-height: 44px;
   padding: 10px 16px;
   border: 1px solid transparent;
@@ -290,7 +357,9 @@
   box-sizing: border-box;
 }
 
-.r83u-btn:focus-visible {
+.r83u-btn:focus-visible,
+.r83u-pagina .r84-btn:focus-visible,
+.r83u-pagina .r84-btn-sec:focus-visible {
   outline: none;
   box-shadow: var(--r-focus, 0 0 0 2px #ffffff, 0 0 0 4px #a51c2c);
 }
@@ -335,10 +404,74 @@
   gap: 12px;
 }
 
+/* Publicar: botoes grandes com a cor da area */
+.r83u-pagina .r83u-acoes-publicar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.r83u-pagina .r83u-acoes-publicar .r83u-btn-grande {
+  min-height: 52px;
+  padding: 12px 18px;
+  font-size: 16px;
+  gap: 10px;
+}
+
+.r83u-pagina .r83u-acoes-publicar .r84-btn {
+  background: var(--a, #b45309);
+  border-color: var(--a, #b45309);
+}
+
+.r83u-pagina .r83u-acoes-publicar .r84-btn:hover {
+  background: var(--a-escuro, #92400e);
+}
+
+.r83u-pagina .r83u-acoes-publicar .r84-btn.is-feito {
+  background: var(--r-ok, #146c3c);
+  border-color: var(--r-ok, #146c3c);
+}
+
 .r83u-nav {
   display: flex;
   justify-content: space-between;
   gap: 12px;
+}
+
+/* Passos da publicacao: cartoes numerados */
+.r83u-passos-cartoes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.r83u-passo-cartao {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--r-line, #d6d4cf);
+  border-radius: 12px;
+  background: var(--r-surface, #ffffff);
+}
+
+.r83u-numero {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: var(--a, #b45309);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.r83u-passo-texto {
+  color: var(--r-ink, #1c1c1e);
 }
 
 /* Links de materiais e postagens */
@@ -392,6 +525,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
   padding: 10px 12px;
   border: 1px solid var(--r-line, #d6d4cf);
@@ -430,6 +564,10 @@
   width: 100%;
 }
 
+.r83u-adicionar .r83u-btn {
+  width: auto;
+}
+
 /* Redes sociais: tipo de cada postagem (selo de texto) */
 .r83u-badge {
   justify-self: start;
@@ -437,18 +575,10 @@
   font-weight: 600;
   line-height: 1.4;
   color: var(--r-ink-2, #45474c);
-  background: var(--r-surface-2, #f8f7f5);
+  background: var(--r-surface, #ffffff);
   border: 1px solid var(--r-line-strong, #b9b6af);
   border-radius: 6px;
   padding: 2px 8px;
-}
-
-/* Publicar */
-.r83u-status-copia {
-  min-height: 1.5em;
-  margin: 0;
-  font-weight: 600;
-  color: var(--r-ok, #146c3c);
 }
 
 .r83u-detalhe {
@@ -479,5 +609,34 @@
 
   .r83u-nav .r83u-btn {
     width: 100%;
+  }
+
+  /* Telefone: os nomes dos passos saem da tela (o titulo "Passo X de 5 · Nome" ja mostra o atual) */
+  .r83u-etapa-nome {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .r83u-etapa-estado {
+    font-size: 13px;
+  }
+
+  .r83u-assistente {
+    padding: 16px;
+  }
+
+  .r83u-pagina .r83u-acoes-publicar > * {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .r83u-barra span {
+    transition: none;
   }
 }

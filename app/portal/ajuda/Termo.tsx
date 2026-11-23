@@ -4,6 +4,7 @@ import './componentes.css';
 import type {ReactNode} from 'react';
 import {useEffect, useId, useRef, useState} from 'react';
 import {obterTermo} from '@/lib/portal-glossario.mjs';
+import Icone from '../ui/Icone';
 
 type Props = {
   id: string;
@@ -53,8 +54,8 @@ export default function Termo({id, children}: Props) {
   const painelId = `r83a-termo-painel-${reactId}`;
 
   return (
-    <span className="r83a-termo" ref={raizRef}>
-      {children ?? entrada.termo}
+    <span className="r83a-termo" ref={raizRef} data-area="ajuda">
+      {children}
       <button
         ref={botaoRef}
         type="button"
@@ -68,7 +69,10 @@ export default function Termo({id, children}: Props) {
       </button>
       {aberto ? (
         <span id={painelId} role="dialog" aria-label={entrada.termo} className="r83a-popover">
-          <strong className="r83a-popover-titulo">{entrada.termo}</strong>
+          <strong className="r83a-popover-titulo">
+            <Icone nome="pergunta" tamanho={16} />
+            <span>{entrada.termo}</span>
+          </strong>
           <span className="r83a-popover-texto">{entrada.definicao}</span>
           <button
             type="button"
