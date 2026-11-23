@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { SECOES_MATERIAIS, obterEmpreendimento } from '@/lib/empreendimentos-central.mjs';
+import { dadosCentral } from '@/lib/central-dados-servidor';
+import { obterSessao } from '@/lib/portal-guard';
 import CabecalhoPagina from '../../ui/CabecalhoPagina';
 import Icone from '../../ui/Icone';
 import CentralEmpreendimentoClient from '../CentralEmpreendimentoClient';
@@ -10,7 +12,8 @@ export const dynamic = 'force-dynamic';
 
 export default async function CentralEmpreendimentoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const emp = obterEmpreendimento(id);
+  const [dados, sessao] = await Promise.all([dadosCentral(), obterSessao()]);
+  const emp = obterEmpreendimento(id, dados);
   if (!emp) return notFound();
 
   return (
@@ -35,7 +38,7 @@ export default async function CentralEmpreendimentoPage({ params }: { params: Pr
         </Link>
       </CabecalhoPagina>
 
-      <CentralEmpreendimentoClient emp={emp} secoes={SECOES_MATERIAIS} />
+      <CentralEmpreendimentoClient emp={emp} secoes={SECOES_MATERIAIS} podeEditar={sessao?.t === 'equipe'} />
     </section>
   );
 }

@@ -602,6 +602,93 @@
   resize: vertical;
 }
 
+/* Salvar e resultado (R85): botão na cor da área, sucesso em verde com texto */
+.r83u-salvar {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+
+.r83u-pagina .r83u-btn-salvar {
+  min-height: 52px;
+  padding: 12px 18px;
+  font-size: 16px;
+  gap: 10px;
+  background: var(--a, #b45309);
+  border-color: var(--a, #b45309);
+}
+
+.r83u-pagina .r83u-btn-salvar:hover:not(:disabled) {
+  background: var(--a-escuro, #92400e);
+  border-color: var(--a-escuro, #92400e);
+}
+
+.r83u-pagina .r83u-btn-salvar:disabled {
+  opacity: 0.8;
+  cursor: progress;
+}
+
+.r83u-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 999px;
+  animation: r83u-gira 0.8s linear infinite;
+}
+
+@keyframes r83u-gira {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.r83u-sucesso {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--r-ok, #146c3c);
+  border-radius: var(--r-radius, 8px);
+  background: var(--r-ok-soft, #e6f4ec);
+  color: var(--r-ink, #1c1c1e);
+}
+
+.r83u-pagina .r83u-sucesso-titulo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: 18px;
+  color: var(--r-ok, #146c3c);
+}
+
+.r83u-bloco-interno {
+  display: grid;
+  gap: 8px;
+}
+
+.r83u-bloco-interno p {
+  margin: 0;
+}
+
+.r83u-detalhe-corpo {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  justify-items: start;
+}
+
+.r83u-detalhe-corpo p {
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .r83u-spinner {
+    animation-duration: 2.4s;
+  }
+}
+
 @media (max-width: 560px) {
   .r83u-nav {
     flex-direction: column-reverse;

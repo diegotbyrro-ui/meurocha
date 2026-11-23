@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Termo from '../ajuda/Termo';
-import { useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import Icone, { type NomeIcone } from '../ui/Icone';
 import { TIPOS_POSTAGEM } from '@/lib/empreendimentos-central.mjs';
@@ -29,6 +29,7 @@ type SecaoMateriais = { readonly id: string; readonly titulo: string; readonly i
 type Props = {
   emp: EmpreendimentoCentral;
   secoes: readonly SecaoMateriais[];
+  podeEditar?: boolean;
 };
 
 /** Filtro de postagens: 'Todos' ou um dos tipos de TIPOS_POSTAGEM. */
@@ -134,11 +135,15 @@ function BotaoCopiar({ rotulo, feito, classe, onClick }: { rotulo: string; feito
   );
 }
 
+// R85: só a equipe Rocha vê os atalhos de cadastro; o corretor vê apenas que o item ainda não está disponível.
+const PodeEditar = createContext(false);
+
 function NaoCadastrado({ empId }: { empId: string }) {
+  const podeEditar = useContext(PodeEditar);
   return (
     <div className="r82-empty">
-      <p>Ainda não cadastrado.</p>
-      <Link href={`/portal/atualizar?emp=${empId}`} className="r82-link">Cadastrar agora</Link>
+      <p>{podeEditar ? 'Ainda não cadastrado.' : 'Ainda não disponível.'}</p>
+      {podeEditar ? <Link href={`/portal/atualizar?emp=${empId}`} className="r82-link">Cadastrar agora</Link> : null}
     </div>
   );
 }
@@ -168,7 +173,7 @@ function ListaLinks({ itens, prefixo, empId }: { itens: ArquivoLink[]; prefixo: 
   );
 }
 
-export default function CentralEmpreendimentoClient({ emp, secoes }: Props) {
+export default function CentralEmpreendimentoClient({ emp, secoes, podeEditar = false }: Props) {
   const [ativa, setAtiva] = useState<string>('dados');
   const [filtro, setFiltro] = useState<string>('Todos');
   const [copiado, setCopiado] = useState<{ id: string } | null>(null);
@@ -261,7 +266,7 @@ export default function CentralEmpreendimentoClient({ emp, secoes }: Props) {
   }
 
   return (
-    <>
+    <PodeEditar.Provider value={podeEditar}>
       <nav className="r82-index" aria-label="Nesta página">
         <span className="r82-index-label">Nesta página</span>
         {INDICE_SECOES.map((item) => (
@@ -374,11 +379,13 @@ export default function CentralEmpreendimentoClient({ emp, secoes }: Props) {
               <Icone nome="megafone" tamanho={40} />
             </span>
             <p>Ainda não há postagens cadastradas.</p>
-            <p className="r82-muted-line">Cadastre os vídeos e as imagens que o corretor vai publicar.</p>
-            <Link href={`/portal/atualizar?emp=${emp.id}`} className="r84-btn">
-              <Icone nome="mais" tamanho={18} />
-              <span>Cadastrar agora</span>
-            </Link>
+            {podeEditar ? <>
+              <p className="r82-muted-line">Cadastre os vídeos e as imagens que o corretor vai publicar.</p>
+              <Link href={`/portal/atualizar?emp=${emp.id}`} className="r84-btn">
+                <Icone nome="mais" tamanho={18} />
+                <span>Cadastrar agora</span>
+              </Link>
+            </> : <p className="r82-muted-line">Em breve a equipe Rocha publica vídeos e imagens aqui.</p>}
           </div>
         ) : (
           <>
@@ -453,6 +460,6 @@ export default function CentralEmpreendimentoClient({ emp, secoes }: Props) {
           <span>{aviso.texto}</span>
         </div>
       ) : null}
-    </>
+    </PodeEditar.Provider>
   );
 }

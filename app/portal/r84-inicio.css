@@ -26,8 +26,9 @@
 /* Aviso local */
 .rocha-portal .r84i-inicio .r81-local-alert{font-size:15px;line-height:1.55;padding:14px 16px;background:var(--r-warn-soft,#fdf1d8);border-color:#e9cf8f;color:var(--r-warn,#7a4b00)}
 
-/* KPIs */
-.rocha-portal .r84i-inicio .r81-kpis{gap:16px}
+/* KPIs: três colunas; o quinto número (Corretores) ocupa duas para não sobrar uma faixa vazia */
+.rocha-portal .r84i-inicio .r81-kpis{gap:16px;grid-template-columns:repeat(3,minmax(0,1fr))}
+.rocha-portal .r84i-inicio .r81-kpi:last-child:nth-child(5){grid-column:span 2}
 .rocha-portal .r84i-inicio .r81-kpi{min-height:0;padding:20px;gap:16px;border-color:var(--r-line,#d6d4cf);border-top:4px solid var(--a,#a51c2c);border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.06);align-items:center}
 .rocha-portal .r84i-inicio .r84i-kpi-icone{width:48px;height:48px;min-width:48px;border-radius:12px}
 .rocha-portal .r84i-inicio .r81-kpi small{font-size:15px;line-height:1.4;font-weight:600;color:var(--r-ink-2,#45474c)}
@@ -103,9 +104,35 @@
 .rocha-portal .r84i-inicio .r81-access-note{background:var(--r-surface-2,#f8f7f5);border:1px solid var(--r-line,#d6d4cf);border-radius:10px;color:var(--r-ink-2,#45474c);padding:14px;margin-top:16px;align-items:center}
 .rocha-portal .r84i-inicio .r81-access-note p{font-size:14px;line-height:1.55;color:var(--r-ink-2,#45474c)}
 
+/* Início do corretor: ações grandes e coloridas */
+.rocha-portal .r84c-inicio .r84c-secao{display:flex;flex-direction:column;gap:14px}
+.rocha-portal .r84c-inicio .r84c-secao h2{font-size:20px;font-weight:600;color:var(--r-ink,#1c1c1e);margin:0}
+.rocha-portal .r84c-acoes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.rocha-portal .r84c-inicio a.r84c-acao{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:22px 20px 20px;min-height:0;box-sizing:border-box;background:var(--a-soft,#fbe9eb);border:1px solid var(--a,#a51c2c);border-radius:12px;color:var(--r-ink,#1c1c1e)}
+.rocha-portal .r84c-inicio .r84c-acao-icone{width:56px;height:56px;min-width:56px;border-radius:14px;margin-bottom:6px}
+.rocha-portal .r84c-inicio .r84c-acao strong{font-size:18px;line-height:1.3;font-weight:600;color:var(--r-ink,#1c1c1e)}
+.rocha-portal .r84c-inicio .r84c-acao small{font-size:15px;line-height:1.5;color:var(--r-ink-2,#45474c)}
+.rocha-portal .r84c-inicio .r84c-acao-cta{display:inline-flex;align-items:center;gap:8px;margin-top:auto;padding-top:6px;font-size:15px;font-weight:600;color:var(--a,#a51c2c)}
+.rocha-portal .r84c-inicio a.r84c-acao:hover .r84c-acao-cta svg{transform:translateX(3px);transition:transform .15s}
+@media(prefers-reduced-motion:reduce){.rocha-portal .r84c-inicio a.r84c-acao:hover .r84c-acao-cta svg{transform:none;transition:none}}
+.rocha-portal .r84c-inicio a.r84c-ajuda{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 18px;min-height:44px;background:var(--r-surface,#fff);border:1px solid var(--r-line,#d6d4cf);border-left:4px solid var(--a,#0e7c78);border-radius:12px;color:var(--r-ink,#1c1c1e);text-decoration:none}
+.rocha-portal .r84c-inicio a.r84c-ajuda:hover{border-color:var(--a,#0e7c78)}
+.rocha-portal .r84c-ajuda-texto{display:flex;flex-direction:column;gap:2px;flex:1;min-width:200px}
+.rocha-portal .r84c-ajuda-texto strong{font-size:16px;font-weight:600;color:var(--r-ink,#1c1c1e)}
+.rocha-portal .r84c-ajuda-texto small{font-size:15px;line-height:1.5;color:var(--r-ink-2,#45474c)}
+.rocha-portal .r84c-ajuda-cta{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--r-brand-hover,#8a1624)}
+
+/* Equipe: aviso de carregamento e erro dentro dos painéis */
+.rocha-portal .r84i-inicio .r84i-aviso{font-size:15px;color:var(--r-ink-2,#45474c);margin:0;padding:14px 0}
+.rocha-portal .r84i-inicio .r84i-kpi-nota{font-size:13px;color:var(--r-ink-3,#5d6066)}
+
 /* Celular e tablet */
 @media(max-width:1250px){
   .rocha-portal .r84i-inicio .r81-project-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rocha-portal .r84c-acoes{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:560px){
+  .rocha-portal .r84c-acoes{grid-template-columns:1fr}
 }
 @media(max-width:920px){
   .rocha-portal .r84i-inicio .r81-panel{padding:18px}
@@ -123,5 +150,6 @@
 }
 @media(max-width:420px){
   .rocha-portal .r84i-inicio .r81-kpis{grid-template-columns:1fr}
+  .rocha-portal .r84i-inicio .r81-kpi:last-child:nth-child(5){grid-column:auto}
   .rocha-portal .r84i-inicio .r81-kpi{flex-direction:row;align-items:center}
 }

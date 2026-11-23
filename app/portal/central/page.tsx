@@ -3,6 +3,8 @@ import AjudaPagina from '../ajuda/AjudaPagina';
 import CabecalhoPagina from '../ui/CabecalhoPagina';
 import Icone from '../ui/Icone';
 import { listarEmpreendimentos, statusDados } from '@/lib/empreendimentos-central.mjs';
+import { dadosCentral, ultimaAtualizacao } from '@/lib/central-dados-servidor';
+import { obterSessao } from '@/lib/portal-guard';
 import './central.css';
 
 export const dynamic = 'force-dynamic';
@@ -26,8 +28,18 @@ function Selo({ ok, textoOk, textoFalta }: { ok: boolean; textoOk: string; texto
   );
 }
 
-export default function CentralEmpreendimentosPage() {
-  const empreendimentos = listarEmpreendimentos();
+/** Data curta em pt-BR (dd/mm/aaaa), no fuso de Brasília. */
+function dataCurta(iso: string): string {
+  const data = new Date(iso);
+  if (Number.isNaN(data.getTime())) return '';
+  return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'America/Sao_Paulo' }).format(data);
+}
+
+export default async function CentralEmpreendimentosPage() {
+  const [dados, ultima, sessao] = await Promise.all([dadosCentral(), ultimaAtualizacao(), obterSessao()]);
+  const equipe = sessao?.t === 'equipe';
+  const empreendimentos = listarEmpreendimentos(dados);
+  const quando = ultima ? dataCurta(ultima.em) : '';
 
   return (
     <section className="r82-central">
@@ -38,7 +50,13 @@ export default function CentralEmpreendimentosPage() {
         descricao="Aqui ficam o CNPJ, o PIX, os materiais de venda e as postagens de cada empreendimento."
       />
 
-      <AjudaPagina id="central" titulo="Como usar esta central" passos={PASSOS_CENTRAL} />
+      {quando !== '' && (
+        <p className="r82-muted-line">
+          Atualizado em {quando}{equipe && ultima?.nome ? ` por ${ultima.nome}` : ''}
+        </p>
+      )}
+
+      <AjudaPagina id="central" titulo="Como usar esta central" passos={equipe ? PASSOS_CENTRAL : PASSOS_CENTRAL.slice(0, 2)} />
 
       {empreendimentos.length === 0 ? (
         <div className="r82-vazio">
@@ -47,10 +65,10 @@ export default function CentralEmpreendimentosPage() {
           </span>
           <p>Ainda não há empreendimentos nesta central.</p>
           <p className="r82-muted-line">Cadastre os dados de um empreendimento para ele aparecer aqui.</p>
-          <Link href="/portal/atualizar" className="r84-btn">
+          {equipe ? <Link href="/portal/atualizar" className="r84-btn">
             <span>Cadastrar dados</span>
             <Icone nome="setaDireita" tamanho={18} />
-          </Link>
+          </Link> : null}
         </div>
       ) : (
         <div className="r82-grid">
@@ -98,10 +116,10 @@ export default function CentralEmpreendimentosPage() {
                       <span>Abrir</span>
                       <Icone nome="setaDireita" tamanho={18} />
                     </Link>
-                    <Link href={`/portal/atualizar?emp=${emp.id}`} className="r84-btn-sec" aria-label={`Atualizar dados de ${emp.nome}`}>
+                    {equipe ? <Link href={`/portal/atualizar?emp=${emp.id}`} className="r84-btn-sec" aria-label={`Atualizar dados de ${emp.nome}`}>
                       <Icone nome="editar" tamanho={18} />
                       <span>Atualizar dados</span>
-                    </Link>
+                    </Link> : null}
                   </div>
                 </div>
               </article>

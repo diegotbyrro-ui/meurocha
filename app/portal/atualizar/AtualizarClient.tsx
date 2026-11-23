@@ -29,6 +29,14 @@ type Emp = {
 type Item = { id: string; nome: string };
 type Secao = { id: string; titulo: string; itens: readonly Item[] };
 type Status = { ok: boolean; texto: string };
+type Resultado = { salvos: number; descartados: string[] };
+type RespostaSalvar = {
+  ok?: boolean;
+  erro?: string;
+  salvos?: number;
+  descartados?: unknown;
+  lista?: unknown;
+};
 
 type Props = {
   inicial: Emp[];
@@ -37,12 +45,12 @@ type Props = {
   tiposPostagem: readonly string[];
   empInicial?: string;
   nomes: Record<string, string>;
-  githubUrl: string;
 };
 
 const CHAVE_RASCUNHO = 'rocha-atualizar-rascunho';
 const LIMITE_LINKS = 20;
 const MSG_HTTPS = 'O link precisa começar com https://';
+const MSG_ERRO_SALVAR = 'Não foi possível salvar agora. Confira a conexão e tente de novo. Seus dados continuam na tela.';
 const NOMES_PASSOS = ['Empreendimento', 'Pagamento', 'Materiais', 'Redes sociais', 'Publicar'];
 const ICONES_PASSOS: readonly NomeIcone[] = ['predio', 'carteira', 'imagens', 'megafone', 'upload'];
 const ESTADO_PASSO: Record<'feito' | 'atual' | 'proximo', string> = {
@@ -51,14 +59,6 @@ const ESTADO_PASSO: Record<'feito' | 'atual' | 'proximo', string> = {
   proximo: 'Próximo',
 };
 const TOTAL_PASSOS = NOMES_PASSOS.length;
-
-const PASSOS_PUBLICAR: readonly { icone: NomeIcone; texto: string }[] = [
-  { icone: 'copiar', texto: 'Clique em “Copiar arquivo”.' },
-  { icone: 'abrir', texto: 'Clique em “Abrir o arquivo no GitHub”. Ele abre em outra aba.' },
-  { icone: 'editar', texto: 'No GitHub, clique dentro do texto, aperte Ctrl+A e depois Ctrl+V.' },
-  { icone: 'checkCirculo', texto: 'Clique no botão verde “Commit changes” e confirme.' },
-  { icone: 'relogio', texto: 'Aguarde cerca de 2 minutos e atualize o portal.' },
-];
 
 const DICAS_PIX: Record<string, string> = {
   CNPJ: 'Use os 14 números do CNPJ. Ex.: 11.222.333/0001-81',
@@ -147,24 +147,6 @@ function sanearRascunho(lido: unknown[], base: Emp[]): Emp[] {
 function encurtarUrl(url: string): string {
   const semProtocolo = url.replace(/^https:\/\//, '');
   return semProtocolo.length > 56 ? `${semProtocolo.slice(0, 55)}…` : semProtocolo;
-}
-
-function copiarPeloTextarea(texto: string): boolean {
-  const area = document.createElement('textarea');
-  area.value = texto;
-  area.setAttribute('readonly', '');
-  area.style.position = 'fixed';
-  area.style.opacity = '0';
-  document.body.appendChild(area);
-  area.select();
-  let ok = false;
-  try {
-    ok = document.execCommand('copy');
-  } catch {
-    ok = false;
-  }
-  document.body.removeChild(area);
-  return ok;
 }
 
 /** Lista de links de um item, com a linha para adicionar novo link. */
@@ -465,18 +447,22 @@ export default function AtualizarClient({
   tiposPostagem,
   empInicial,
   nomes,
-  githubUrl,
 }: Props) {
   const [estado, setEstado] = useState<Emp[]>(inicial);
   const [passo, setPasso] = useState(1);
   const [selecionado, setSelecionado] = useState<string>(empInicial ?? '');
   const [tocou, setTocou] = useState(false);
   const [rascunho, setRascunho] = useState<Emp[] | null>(null);
-  const [copia, setCopia] = useState<{ sucesso: boolean; n: number } | null>(null);
+  // Ultima versao salva no portal (comeca com a publicada). Muda depois de cada salvamento.
+  const [base, setBase] = useState<Emp[]>(inicial);
+  const [salvando, setSalvando] = useState(false);
+  const [erroSalvar, setErroSalvar] = useState('');
+  const [resultado, setResultado] = useState<Resultado | null>(null);
+  const [aviso, setAviso] = useState<{ n: number; texto: string } | null>(null);
 
-  const arquivoInicial = useMemo(() => gerarArquivoDados(inicial), [inicial]);
+  const arquivoInicial = useMemo(() => gerarArquivoDados(base), [base]);
   const arquivo = useMemo(() => gerarArquivoDados(estado), [estado]);
-  const alteracoes = useMemo(() => resumoAlteracoes(inicial, estado), [inicial, estado]);
+  const alteracoes = useMemo(() => resumoAlteracoes(base, estado), [base, estado]);
   const problemas = useMemo(() => problemasDe(estado, nomes), [estado, nomes]);
 
   // Procura um rascunho salvo neste navegador. So mostra o aviso se ele for diferente do publicado.
@@ -486,12 +472,12 @@ export default function AtualizarClient({
       if (!bruto) return;
       const lido: unknown = JSON.parse(bruto);
       if (!Array.isArray(lido)) return;
-      const limpo = sanearRascunho(lido, inicial);
+      const limpo = sanearRascunho(lido, base);
       if (gerarArquivoDados(limpo) !== arquivoInicial) setRascunho(limpo);
     } catch {
       // Rascunho ilegivel: e ignorado.
     }
-  }, [arquivoInicial, inicial]);
+  }, [arquivoInicial, base]);
 
   // Salva o rascunho com atraso. So salva depois que a pessoa mexe em algum campo.
   useEffect(() => {
@@ -510,18 +496,19 @@ export default function AtualizarClient({
     return () => window.clearTimeout(timer);
   }, [estado, tocou, arquivo, arquivoInicial]);
 
-  // Some com o aviso "Arquivo copiado" depois de um tempo curto.
+  // Some com o aviso "Conteúdo salvo" depois de um tempo curto.
   useEffect(() => {
-    if (copia === null) return;
-    const timer = window.setTimeout(() => setCopia(null), 2500);
+    if (aviso === null) return;
+    const timer = window.setTimeout(() => setAviso(null), 2500);
     return () => window.clearTimeout(timer);
-  }, [copia]);
+  }, [aviso]);
 
   const emp = estado.find((e) => e.id === selecionado) ?? null;
 
   function atualizarEmp(fn: (e: Emp) => Emp) {
     if (selecionado === '') return;
     setTocou(true);
+    setResultado(null);
     setEstado((antes) => antes.map((e) => (e.id === selecionado ? fn(e) : e)));
   }
 
@@ -554,18 +541,44 @@ export default function AtualizarClient({
   const bloqueadoPorPagamento = passo === 2 && (statusCnpjAtual?.ok === false || statusPixAtual?.ok === false);
   const podeContinuar = passo === 1 ? selecionado !== '' : !bloqueadoPorPagamento;
 
-  async function copiar() {
-    let ok = false;
+  async function salvar() {
+    if (salvando) return;
+    setSalvando(true);
+    setErroSalvar('');
     try {
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(arquivo);
-        ok = true;
+      const res = await fetch('/api/portal/conteudo', {
+        method: 'PUT',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lista: estado }),
+      });
+      const corpo = (await res.json().catch(() => null)) as RespostaSalvar | null;
+      if (!res.ok || corpo?.ok !== true) {
+        setErroSalvar(typeof corpo?.erro === 'string' ? corpo.erro : MSG_ERRO_SALVAR);
+        return;
       }
+      // Usa a versao que o servidor gravou (com o que foi descartado já retirado).
+      const gravados = Array.isArray(corpo.lista) ? (corpo.lista as Emp[]) : null;
+      const novo = gravados ? estado.map((e) => gravados.find((g) => g.id === e.id) ?? e) : estado;
+      setBase(novo);
+      setEstado(novo);
+      setResultado({
+        salvos: typeof corpo.salvos === 'number' ? corpo.salvos : novo.length,
+        descartados: Array.isArray(corpo.descartados)
+          ? corpo.descartados.filter((x): x is string => typeof x === 'string')
+          : [],
+      });
+      try {
+        window.localStorage.removeItem(CHAVE_RASCUNHO);
+      } catch {
+        // Sem armazenamento disponivel: nada a remover.
+      }
+      setAviso((antes) => ({ n: (antes?.n ?? 0) + 1, texto: 'Conteúdo salvo no portal' }));
     } catch {
-      ok = false;
+      setErroSalvar(MSG_ERRO_SALVAR);
+    } finally {
+      setSalvando(false);
     }
-    if (!ok) ok = copiarPeloTextarea(arquivo);
-    setCopia((antes) => ({ sucesso: ok, n: (antes?.n ?? 0) + 1 }));
   }
 
   function baixar() {
@@ -579,8 +592,6 @@ export default function AtualizarClient({
     link.remove();
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
-
-  const copiadoOk = copia?.sucesso === true;
 
   return (
     <main className="r83u-pagina" data-area="atualizar">
@@ -597,14 +608,14 @@ export default function AtualizarClient({
           'No passo 1, escolha o empreendimento. Os cards mostram o que ainda falta cadastrar.',
           'No passo 2, preencha CNPJ e chave PIX. Os dados são conferidos enquanto você digita.',
           'Nos passos 3 e 4, cole os links de materiais e das postagens prontas para os corretores. Só aceitamos links https.',
-          'No passo 5, copie o arquivo, cole no GitHub e clique em Commit changes.',
+          'No passo 5, confira o que muda e clique em Salvar e publicar no portal. Corretores e equipe veem as mudanças logo depois.',
         ]}
       />
 
       {rascunho && (
         <section className="r83u-aviso-rascunho" aria-labelledby="r83u-rascunho-titulo">
-          <h2 id="r83u-rascunho-titulo">Você tem um rascunho não publicado</h2>
-          <p>Ele foi salvo neste navegador. Continue de onde parou ou descarte para voltar aos dados publicados.</p>
+          <h2 id="r83u-rascunho-titulo">Você tem um rascunho não salvo</h2>
+          <p>Ele foi guardado neste navegador. Continue de onde parou ou descarte para voltar aos dados salvos no portal.</p>
           <div className="r83u-acoes">
             <button type="button" className="r83u-btn r83u-btn-primario" onClick={continuarRascunho}>
               Continuar rascunho
@@ -849,12 +860,12 @@ export default function AtualizarClient({
                 ))}
               </ul>
             ) : (
-              <p className="r83u-dica">Nenhuma alteração ainda.</p>
+              <p className="r83u-dica">Nenhuma alteração para salvar.</p>
             )}
 
             {problemas.length > 0 && (
               <div className="r83u-aviso" role="status">
-                <p>Estes dados têm erro e não serão publicados até serem corrigidos:</p>
+                <p>Estes dados têm erro. Ao salvar, eles não serão gravados até serem corrigidos:</p>
                 <ul className="r83u-lista-simples">
                   {problemas.map((p) => (
                     <li key={p}>{p}</li>
@@ -863,63 +874,68 @@ export default function AtualizarClient({
               </div>
             )}
 
-            <h2 className="r83u-secao">Como publicar</h2>
-            <ol className="r83u-passos-cartoes">
-              {PASSOS_PUBLICAR.map((p, i) => (
-                <li key={p.texto} className="r83u-passo-cartao">
-                  <span className="r83u-numero" aria-hidden="true">{i + 1}</span>
-                  <span className="r84-icone-bloco" aria-hidden="true">
-                    <Icone nome={p.icone} tamanho={22} />
-                  </span>
-                  <span className="r83u-passo-texto">{p.texto}</span>
-                </li>
-              ))}
-            </ol>
-
-            <div className="r83u-acoes-publicar">
+            <div className="r83u-salvar">
               <button
                 type="button"
-                className={copiadoOk ? 'r84-btn r83u-btn-grande is-feito' : 'r84-btn r83u-btn-grande'}
-                onClick={copiar}
+                className="r84-btn r83u-btn-grande r83u-btn-salvar"
+                onClick={salvar}
+                disabled={salvando}
+                aria-busy={salvando}
               >
-                <Icone nome={copiadoOk ? 'check' : 'copiar'} tamanho={22} />
-                {copiadoOk ? 'Copiado' : 'Copiar arquivo'}
+                {salvando ? (
+                  <span className="r83u-spinner" aria-hidden="true" />
+                ) : (
+                  <Icone nome="upload" tamanho={22} />
+                )}
+                {salvando ? 'Salvando…' : 'Salvar e publicar no portal'}
               </button>
-              <a
-                className="r84-btn-sec r83u-btn-grande"
-                href={githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Icone nome="abrir" tamanho={20} />
-                Abrir o arquivo no GitHub
-              </a>
-              <button type="button" className="r84-btn-sec r83u-btn-grande" onClick={baixar}>
-                <Icone nome="baixar" tamanho={20} />
-                Baixar arquivo
-              </button>
+              {erroSalvar !== '' && (
+                <p role="alert" className="r83u-erro">
+                  <Icone nome="alerta" tamanho={16} />
+                  <span>{erroSalvar}</span>
+                </p>
+              )}
             </div>
 
+            {resultado && (
+              <section className="r83u-sucesso" aria-labelledby="r83u-sucesso-titulo">
+                <h2 id="r83u-sucesso-titulo" className="r83u-sucesso-titulo">
+                  <Icone nome="checkCirculo" tamanho={22} />
+                  Pronto! Corretores e equipe já veem as mudanças.
+                </h2>
+                {resultado.descartados.length > 0 && (
+                  <div className="r83u-bloco-interno">
+                    <p>Estes dados não foram salvos:</p>
+                    <ul className="r83u-lista-simples">
+                      {resultado.descartados.map((d, i) => (
+                        <li key={`${i}-${d}`}>{d}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </section>
+            )}
+
             <details className="r83u-detalhe">
-              <summary>Ver o texto do arquivo</summary>
-              <textarea
-                className="r83u-texto-arquivo"
-                readOnly
-                rows={20}
-                value={arquivo}
-                aria-label="Texto do arquivo central-dados.mjs"
-              />
+              <summary>Cópia de segurança</summary>
+              <div className="r83u-detalhe-corpo">
+                <p className="r83u-dica">
+                  Baixe um arquivo com os dados salvos e guarde no seu computador. Você não precisa dele para publicar.
+                </p>
+                <button type="button" className="r84-btn-sec" onClick={baixar}>
+                  <Icone nome="baixar" tamanho={20} />
+                  Baixar cópia de segurança
+                </button>
+              </div>
             </details>
           </div>
         )}
       </section>
 
-      {copia !== null && (
-        <div className="r84-toast" role="status" key={copia.n}>
-          {copia.sucesso ? <Icone nome="checkCirculo" tamanho={20} /> : null}
-          <span>
-            {copia.sucesso ? 'Arquivo copiado' : 'Não foi possível copiar sozinho. Use “Baixar arquivo”.'}
-          </span>
+      {aviso !== null && (
+        <div className="r84-toast" role="status" key={aviso.n}>
+          <Icone nome="checkCirculo" tamanho={20} />
+          <span>{aviso.texto}</span>
         </div>
       )}
 

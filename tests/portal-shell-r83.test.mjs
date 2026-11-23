@@ -14,7 +14,7 @@ test('R83: menu com todas as áreas, descrição e página atual marcada', () =>
   assert.match(layout, /r83-tema\.css/);
   assert.match(layout, /r83-shell\.css/);
   assert.match(layout, /Pular para o conteúdo/);
-  assert.match(layout, /rocha-logo-escuro\.png/);
+  assert.match(layout, /rocha-logo\.png/);
   assert.ok(existsSync('public/rocha-logo-escuro.png'));
   assert.match(read('app/portal/NavAtivo.tsx'), /aria-current/);
 });

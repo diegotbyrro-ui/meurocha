@@ -20,8 +20,9 @@ test('R81: menu lateral e mobile com quadro de tarefas, preservando gate servido
 });
 test('R81: 3 visoes reunidas na home sem indicadores ficticios',()=>{
   assert.match(page,/DashboardClient/);
-  for(const token of ['Calendário de entregas','Empreendimentos','Prioridades da equipe','Atividade recente','Ferramentas rápidas']) assert.match(dash,new RegExp(token));
-  assert.match(dash,/countTasks\(tasks\)/);
+  for(const token of ['Calendário de entregas','Empreendimentos','Minhas tarefas','Atividade recente','Ferramentas rápidas']) assert.match(dash,new RegExp(token));
+  assert.match(dash,/Tarefas em aberto/);
+  assert.match(dash,/\/api\/portal\/tarefas/);
   assert.match(dash,/bibliotecaCategorias\.length/);
   assert.match(dash,/empreendimentos\.length/);
   assert.match(page,/sem publicação automática/);
@@ -37,7 +38,7 @@ test('R81: quadro tipo Kanban com etapas, filtros, prioridades e drag/drop',()=>
   assert.match(board,/Lista/);
   assert.match(board,/Quadro/);
   assert.match(board,/Nova tarefa/);
-  assert.match(board,/writeTasks\(next\)/);
+  assert.match(board,/\/api\/portal\/tarefas/);
 });
 test('R81: contratos validam nomes, prioridades, estados e datas reais',()=>{
   assert.equal(validDate('2026-02-29'),false);
@@ -61,11 +62,11 @@ test('R81: dados invalidos, duplicados e excesso sao descartados',()=>{
   assert.equal(normalizeTasks(Array.from({length:TASK_MAX+10},(_,i)=>({...base,id:`id-${i}`}))).length,TASK_MAX);
 });
 test('R81: localStorage da equipe permanece isolado, sem APIs de tarefa e sem login ficticio',()=>{
-  assert.match(read('app/portal/tarefas/task-store.ts'),/window\.localStorage\.setItem/);
-  assert.match(board,/somente neste navegador/);
-  assert.match(dash,/navegador/);
+  assert.match(read('app/portal/tarefas/task-store.ts'),/window\.localStorage\.getItem/);
+  assert.doesNotMatch(dash,/localStorage|readTasks|TASK_EVENT/);
+  assert.match(dash,/\/api\/portal\/tarefas/);
   assert.match(TASK_STORAGE_KEY,/r81/);
-  assert.doesNotMatch(board,/fetch\(|createClient\(|service_role/);
+  assert.doesNotMatch(board,/localStorage|createClient\(|service_role/);
   assert.doesNotMatch(layout,/localStorage|mockAdmin/);
   assert.equal(existsSync(join(process.cwd(),'app/portal/tarefas/page.tsx')),true);
 });
@@ -76,5 +77,6 @@ test('R81: CSS estiliza apenas classes R81 e nao modifica o Easy Rota do Mar',()
 });
 
 test('R81 R2: callback da lista de prioridades declara RochaTask e evita TS7006',()=>{
-  assert.match(dash,/upcoming\.map\(\(t: RochaTask\)\s*=>/);
+  assert.match(dash,/function porPrazo\(a: TarefaPortal, b: TarefaPortal\)/);
+  assert.match(dash,/minhas\.slice\(0, 6\)\.map\(\(t\) =>/);
 });

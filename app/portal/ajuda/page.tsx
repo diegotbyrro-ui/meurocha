@@ -51,7 +51,7 @@ const areas: AreaAjuda[] = [
     area: 'tarefas',
     icone: 'tarefas',
     nome: 'Tarefas da equipe',
-    uso: 'Use quando precisar ver o que a equipe tem para fazer e quem está responsável por cada item.',
+    uso: 'Use quando precisar ver o que a equipe tem para fazer e quem está responsável por cada item. As tarefas são compartilhadas pelo portal, então a equipe vê as mesmas.',
   },
   {
     href: '/portal/gestao',
@@ -88,8 +88,24 @@ const perguntas = [
     resposta: 'Abra a Central dos empreendimentos e escolha o empreendimento. Em Redes sociais, todas as postagens ficam em uma lista só. Use os filtros por tipo, clique em Abrir (nova aba) e baixe o arquivo, ou clique em Copiar link. Antes de publicar, confira se a legenda e o contato são os seus.',
   },
   {
+    pergunta: 'Como o corretor entra no portal?',
+    resposta: 'Digite o número do seu CRECI, escolha a UF em que ele está registrado e clique em Entrar. O corretor não usa senha. Na primeira vez, o portal pede seu nome e WhatsApp uma única vez. Se o CRECI aparecer como bloqueado, fale com a equipe Rocha.',
+  },
+  {
+    pergunta: 'Como cadastro alguém da equipe?',
+    resposta: 'Abra a tela Equipe Rocha no menu e cadastre a pessoa com o e-mail dela. Ela entra com e-mail e senha. Quem estiver inativo não pode receber tarefas.',
+  },
+  {
+    pergunta: 'Como bloqueio um corretor?',
+    resposta: 'Abra a tela Corretores, encontre o corretor pelo nome ou pelo CRECI e escolha Bloquear. Um corretor bloqueado não consegue entrar no portal. Para liberar o acesso de novo, abra o mesmo cadastro e escolha Desbloquear.',
+  },
+  {
+    pergunta: 'Como crio ou excluo colunas no quadro de tarefas?',
+    resposta: 'As colunas são as etapas do quadro, como A fazer, Em andamento e Concluída. Quem faz parte da equipe Rocha pode criar, editar ou excluir colunas. Ao criar uma coluna, marque se ela conta como concluída: as tarefas nela deixam de aparecer em Minhas tarefas.',
+  },
+  {
     pergunta: 'Como peço acesso ao portal?',
-    resposta: 'A equipe entra com a senha de acesso da equipe, que é repassada pelo responsável pelo portal. Quem ainda não tem a senha deve pedi-la ao seu contato na Rocha.',
+    resposta: 'Corretores entram com o CRECI e a UF, sem senha. Para a equipe Rocha, o acesso é criado por quem administra o portal, com e-mail e senha. Se você ainda não tem acesso, peça ao seu contato na Rocha.',
   },
   {
     pergunta: 'Posso ver a ajuda de novo depois de escondê-la?',

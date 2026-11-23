@@ -1,0 +1,47 @@
+/* R85 - Tela de entrada (corretor por CRECI ou equipe por e-mail) e identificação no menu. */
+.rocha-portal-login.r85-login{max-width:1040px;margin:6vh auto;padding:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);overflow:hidden;border-radius:16px;text-align:left}
+.rocha-portal-login.r85-login .r85-login-marca{position:relative;isolation:isolate;overflow:hidden;background:#3d1219;color:#fff;padding:40px 36px;display:flex;flex-direction:column;gap:14px}
+.rocha-portal-login.r85-login .r85-login-marca::before{content:'';position:absolute;z-index:-1;top:0;bottom:0;right:-60px;width:260px;background:#a51c2c;clip-path:polygon(38% 0,62% 0,100% 100%,76% 100%)}
+.rocha-portal-login.r85-login .r85-login-marca .r83-login-logo{margin:0 0 12px}
+.rocha-portal-login.r85-login .r85-login-marca .r83-login-logo img{width:170px}
+.rocha-portal-login.r85-login .r85-login-marca h1{color:#fff;font-size:30px;margin:0}
+.rocha-portal-login.r85-login .r85-login-marca p{color:#f3e3e6;margin:0;font-size:16px;line-height:1.6;max-width:380px}
+.rocha-portal-login.r85-login .r85-login-marca ul{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:12px}
+.rocha-portal-login.r85-login .r85-login-marca li{display:flex;align-items:center;gap:10px;font-size:15px;color:#fff}
+.rocha-portal-login.r85-login .r85-login-marca li .r84-icone{color:#ffb3bc}
+.rocha-portal-login.r85-login .r85-login-form{padding:36px;background:#fff;display:flex;align-items:center}
+.rocha-portal-login.r85-login .r85-login-card{width:100%;display:grid;gap:14px}
+.rocha-portal-login.r85-login .r85-login-card h2{margin:0;font-size:22px;color:#1c1c1e}
+.rocha-portal-login.r85-login .r85-abas{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#f3f2ef;padding:5px;border-radius:10px}
+.rocha-portal-login.r85-login .r85-abas button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;border:0;border-radius:8px;background:transparent;color:#45474c;font:inherit;font-size:15px;font-weight:600;cursor:pointer}
+.rocha-portal-login.r85-login .r85-abas button[aria-selected="true"]{background:#fff;color:#a51c2c;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.rocha-portal-login.r85-login .r85-form{display:grid;gap:12px}
+.rocha-portal-login.r85-login .r85-form label{display:grid;gap:6px;font-size:15px;font-weight:600;color:#1c1c1e}
+.rocha-portal-login.r85-login .r85-form input,.rocha-portal-login.r85-login .r85-form select{min-height:48px;border:1px solid #b9b6af;border-radius:8px;padding:10px 12px;font:inherit;font-size:16px;color:#1c1c1e;background:#fff}
+.rocha-portal-login.r85-login .r85-linha{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:10px}
+.rocha-portal-login.r85-login .r85-entrar{width:100%;min-height:50px;font-size:16px}
+.rocha-portal-login.r85-login .r85-ajuda{margin:0;color:#45474c;font-size:15px;line-height:1.5}
+.rocha-portal-login.r85-login .r85-pequena{font-size:14px;color:#5d6066}
+.rocha-portal-login.r85-login .r85-pequena a{color:#8a1624;text-decoration:underline}
+.rocha-portal-login.r85-login .r85-opcional{font-weight:400;color:#5d6066}
+.rocha-portal-login.r85-login .r85-aviso{display:flex;align-items:flex-start;gap:8px;margin:0;padding:12px 14px;border-radius:8px;background:#fdeceb;color:#b42318;border:1px solid #f3c1bb;font-size:15px;font-weight:500}
+.rocha-portal-login.r85-login .r85-creci-fixo{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0;padding:10px 12px;background:#f8f7f5;border-radius:8px;color:#1c1c1e}
+.rocha-portal-login.r85-login .r85-link{background:none;border:0;color:#8a1624;text-decoration:underline;font:inherit;cursor:pointer;min-height:32px}
+.rocha-portal-login.r85-login button:focus-visible,.rocha-portal-login.r85-login input:focus-visible,.rocha-portal-login.r85-login select:focus-visible,.rocha-portal-login.r85-login a:focus-visible{outline:none;box-shadow:0 0 0 2px #fff,0 0 0 4px #a51c2c}
+@media(max-width:820px){
+  .rocha-portal-login.r85-login{grid-template-columns:1fr;margin:0;border-radius:0;border:0;min-height:100vh}
+  .rocha-portal-login.r85-login .r85-login-marca{padding:28px 20px}
+  .rocha-portal-login.r85-login .r85-login-marca ul{display:none}
+  .rocha-portal-login.r85-login .r85-login-form{padding:24px 20px 40px;align-items:flex-start}
+}
+
+/* Quem está logado, no menu lateral */
+.rocha-portal.r83-shell .r85-quem{margin:10px 8px 2px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.08);display:grid;gap:2px}
+.rocha-portal.r83-shell .r85-quem strong{color:#fff;font-size:15px}
+.rocha-portal.r83-shell .r85-quem small{color:#e6cfd3;font-size:13px}
+.rocha-portal-login.r85-login *{box-sizing:border-box}
+.rocha-portal-login.r85-login .r85-form input,.rocha-portal-login.r85-login .r85-form select{height:48px;width:100%}
+.rocha-portal-login.r85-login .r85-linha{align-items:end}
+.rocha-portal-login.r85-login .r85-entrar{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;font-weight:600;border:0;border-radius:8px;background:#a51c2c;color:#fff;cursor:pointer}
+.rocha-portal-login.r85-login .r85-entrar:hover{background:#8a1624}
+.rocha-portal-login.r85-login.r85-bloqueado{grid-template-columns:1fr;max-width:520px}

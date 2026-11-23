@@ -13,12 +13,14 @@ test('R78: portal fechado por cookie servidor, nao por estado do navegador',()=>
   assert.doesNotMatch(layout,/localStorage|sessionStorage|mockAdmin/);
 });
 test('R78: login seguro, segredo so no servidor, cookie httpOnly e secure em producao',()=>{
-  assert.match(auth,/ROCHA_PORTAL_PASSWORD/);
+  // R85: a senha única da equipe foi substituída por logins individuais (Supabase Auth) e CRECI.
+  assert.doesNotMatch(auth,/ROCHA_PORTAL_PASSWORD/);
   assert.match(auth,/ROCHA_PORTAL_COOKIE_SECRET/);
   assert.match(auth,/createHmac/);
   assert.match(auth,/timingSafeEqual/);
   assert.match(auth,/httpOnly: true/);
-  assert.match(auth,/sameSite: 'strict'/);
+  // R85: 'lax' para links do WhatsApp abrirem já logado; POSTs seguem protegidos por originAllowed.
+  assert.match(auth,/sameSite: 'lax'/);
   assert.match(login,/originAllowed\(request\)/);
   assert.match(login,/portalLimit\(ip\)/);
   assert.doesNotMatch(layout,/NEXT_PUBLIC_ROCHA_PORTAL_PASSWORD|NEXT_PUBLIC_ROCHA_PORTAL_COOKIE_SECRET/);

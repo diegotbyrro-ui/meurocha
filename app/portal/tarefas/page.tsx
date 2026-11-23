@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import TarefasClient from './TarefasClient';
+import { exigirEquipe } from '@/lib/portal-guard';
 
 export const metadata: Metadata = {
   title: 'Tarefas e projetos | Portal Rocha',
@@ -7,4 +8,7 @@ export const metadata: Metadata = {
 };
 export const dynamic = 'force-dynamic';
 
-export default function PortalTarefas() { return <TarefasClient />; }
+export default async function PortalTarefas() {
+  const sessao = await exigirEquipe();
+  return <TarefasClient eu={{ id: sessao.id, nome: sessao.nome }} />;
+}

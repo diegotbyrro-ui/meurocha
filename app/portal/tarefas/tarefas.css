@@ -1,0 +1,84 @@
+/* R85 - Quadro de tarefas: menu da coluna, cores, nova coluna, modal e avatar.
+   Segue docs/R83_DESIGN.md e docs/R84_VISUAL.md. Colunas e cartões usam as classes r84b-* de r83-tema.css. */
+
+.rocha-portal .tq-pagina{display:grid;gap:20px}
+.rocha-portal .r81-board.tq-board{grid-template-columns:repeat(var(--n,4),minmax(260px,1fr));align-items:start}
+.rocha-portal .tq-coluna.is-sobre{outline:2px dashed var(--e,#5d6066);outline-offset:2px}
+.rocha-portal .tq-coluna .r84b-coluna-cab{min-width:0;flex-wrap:nowrap}
+.rocha-portal .tq-coluna .r84b-coluna-cab{gap:8px}
+.rocha-portal .tq-coluna .r84b-coluna-cab h2{min-width:0;flex:1 1 auto;font-size:16px;overflow-wrap:anywhere}
+.rocha-portal .tq-coluna .r84b-pilula{flex:0 0 auto}
+
+.rocha-portal .tq-chip{margin:-4px 0 10px 20px;font-size:14px;font-weight:600;line-height:1.4;color:var(--r-ok,#146c3c)}
+
+.rocha-portal .tq-menu-wrap{position:relative;display:flex;flex:0 0 auto}
+.rocha-portal .tq-menu-btn{display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid var(--r-line-strong,#b9b6af);border-radius:8px;background:var(--r-surface,#fff);color:var(--r-ink-2,#45474c);cursor:pointer}
+.rocha-portal .tq-menu-btn:hover,.rocha-portal .tq-menu-btn[aria-expanded=true]{background:var(--r-surface-2,#f8f7f5);color:var(--r-ink,#1c1c1e)}
+/* Posição calculada ao abrir (ver TarefasClient): fixed para não ser cortado pela rolagem do quadro. */
+.rocha-portal .tq-menu{position:fixed;z-index:60;display:grid;gap:18px;overflow-y:auto;box-sizing:border-box;padding:16px;background:var(--r-surface,#fff);border:1px solid var(--r-line-strong,#b9b6af);border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.12);text-align:left;color:var(--r-ink,#1c1c1e);font-weight:400}
+
+.rocha-portal .tq-bloco{display:grid;gap:8px;margin:0;padding:0;border:0;min-width:0}
+.rocha-portal .tq-fieldset{min-width:0}
+.rocha-portal .tq-fieldset legend,.rocha-portal .tq-rotulo{font-size:15px;font-weight:600;color:var(--r-ink-2,#45474c);padding:0;margin-bottom:6px}
+.rocha-portal .tq-cores{display:flex;flex-wrap:wrap;gap:4px}
+.rocha-portal .tq-cor{display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid transparent;border-radius:8px;background:transparent;cursor:pointer}
+.rocha-portal .tq-cor:hover{background:var(--r-surface-2,#f8f7f5)}
+.rocha-portal .tq-cor[aria-pressed=true]{border-color:var(--r-ink,#1c1c1e);background:var(--r-surface-2,#f8f7f5)}
+.rocha-portal .tq-cor span{width:28px;height:28px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+
+.rocha-portal .tq-check{display:flex;align-items:flex-start;gap:10px;min-height:44px;font-size:15px;font-weight:600;color:var(--r-ink,#1c1c1e);cursor:pointer}
+.rocha-portal .tq-check input{width:20px;height:20px;margin:2px 0 0;flex:0 0 20px;accent-color:var(--r-brand,#a51c2c)}
+.rocha-portal .tq-ajuda{margin:0;font-size:14px;line-height:1.5;color:var(--r-ink-3,#5d6066)}
+.rocha-portal .tq-erro{margin:0;font-size:15px;line-height:1.5;font-weight:600;color:var(--r-err,#b42318)}
+.rocha-portal .tq-largo{width:100%;justify-content:center;min-width:0}
+.rocha-portal .tq-zona-perigo{border-top:1px solid var(--r-line,#d6d4cf);padding-top:14px}
+.rocha-portal .tq-confirmar{display:grid;gap:12px}
+.rocha-portal .tq-confirmar p{margin:0;font-size:15px;line-height:1.5;color:var(--r-ink,#1c1c1e)}
+.rocha-portal .tq-linha{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.rocha-portal .tq-espaco{flex:1 1 auto}
+
+.rocha-portal .tq-campo{display:grid;gap:6px;font-size:15px;font-weight:600;color:var(--r-ink-2,#45474c);min-width:0}
+.rocha-portal .tq-campo input,.rocha-portal .tq-campo select,.rocha-portal .tq-campo textarea{width:100%;min-height:44px;box-sizing:border-box;font:inherit;font-size:15px;font-weight:400;color:var(--r-ink,#1c1c1e);background:var(--r-surface,#fff);border:1px solid var(--r-line-strong,#b9b6af);border-radius:8px;padding:10px 12px}
+.rocha-portal .tq-campo textarea{resize:vertical;min-height:88px}
+
+.rocha-portal .tq-nova-coluna{min-width:250px;display:grid;align-content:start}
+.rocha-portal .tq-nova-botao{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:52px;padding:10px 14px;border:2px dashed var(--r-line-strong,#b9b6af);border-radius:10px;background:transparent;color:var(--r-ink-2,#45474c);font:inherit;font-size:15px;font-weight:600;cursor:pointer}
+.rocha-portal .tq-nova-botao:hover{background:var(--r-surface,#fff);border-color:var(--r-ink-3,#5d6066);color:var(--r-ink,#1c1c1e)}
+.rocha-portal .tq-nova-form{padding:14px;gap:14px;background:var(--r-surface,#fff);border:1px solid var(--r-line,#d6d4cf);border-radius:10px}
+.rocha-portal .tq-limite{padding:14px;font-size:15px;color:var(--r-ink-2,#45474c);border:1px dashed var(--r-line-strong,#b9b6af);border-radius:10px;align-self:start}
+
+.rocha-portal .tq-responsavel{align-items:center}
+.rocha-portal .tq-avatar{display:inline-grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border-radius:50%;background:var(--r-brand-soft,#f6e8e9);color:var(--r-brand-hover,#8a1624);font-size:13px;font-weight:700;line-height:1}
+.rocha-portal .tq-avatar-vazio{background:var(--r-surface-2,#f8f7f5);color:var(--r-ink-3,#5d6066);border:1px dashed var(--r-line-strong,#b9b6af)}
+.rocha-portal .tq-sem{color:var(--r-ink-3,#5d6066)}
+
+.rocha-portal .tq-aviso-erro{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 14px;border-radius:10px;background:var(--r-err-soft,#fdeceb);color:var(--r-err,#b42318);font-size:15px;font-weight:600}
+.rocha-portal .tq-aviso-erro>span{flex:1 1 200px;min-width:0}
+.rocha-portal .tq-carregando{display:grid;gap:12px}
+.rocha-portal .tq-carregando p{margin:0;font-size:15px;color:var(--r-ink-2,#45474c)}
+.rocha-portal .tq-esqueleto{display:grid;grid-template-columns:repeat(4,250px);gap:12px;overflow:hidden}
+.rocha-portal .tq-esqueleto-coluna{height:260px;background:var(--r-surface-2,#f8f7f5);border:1px solid var(--r-line,#d6d4cf);border-radius:10px}
+
+.rocha-portal .tq-fundo{position:fixed;inset:0;z-index:150;display:grid;place-items:center;padding:20px;overflow:auto;background:rgba(28,28,30,.5)}
+.rocha-portal .tq-modal{box-sizing:border-box;width:min(100%,640px);max-height:calc(100vh - 40px);overflow-y:auto;padding:24px;background:var(--r-surface,#fff);border:1px solid var(--r-line,#d6d4cf);border-radius:12px}
+.rocha-portal .tq-modal-cab{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.rocha-portal .tq-modal-cab h2{margin:0;font-size:20px;font-weight:600;color:var(--r-ink,#1c1c1e)}
+.rocha-portal .tq-fechar{display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;border-radius:8px;background:transparent;color:var(--r-ink-2,#45474c);cursor:pointer}
+.rocha-portal .tq-fechar:hover{background:var(--r-surface-2,#f8f7f5)}
+.rocha-portal .tq-form{display:grid;gap:16px}
+.rocha-portal .tq-grade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.rocha-portal .tq-modal-rodape{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-top:16px;border-top:1px solid var(--r-line,#d6d4cf)}
+
+.rocha-portal .r84-toast.tq-toast-erro{background:var(--r-err,#b42318)}
+.rocha-portal .r84-toast.tq-toast-erro .r84-icone{color:#fff}
+
+.rocha-portal .tq-menu-btn:focus-visible,.rocha-portal .tq-cor:focus-visible,.rocha-portal .tq-fechar:focus-visible,.rocha-portal .tq-nova-botao:focus-visible,
+.rocha-portal .tq-menu button:focus-visible,.rocha-portal .tq-menu input:focus-visible,.rocha-portal .tq-menu select:focus-visible,
+.rocha-portal .tq-modal button:focus-visible,.rocha-portal .tq-modal input:focus-visible,.rocha-portal .tq-modal select:focus-visible,.rocha-portal .tq-modal textarea:focus-visible,
+.rocha-portal .tq-nova-form button:focus-visible,.rocha-portal .tq-nova-form input:focus-visible,.rocha-portal .tq-check input:focus-visible{outline:none;box-shadow:var(--r-focus,0 0 0 2px #fff,0 0 0 4px #a51c2c)}
+
+@media (max-width:600px){
+  .rocha-portal .tq-grade{grid-template-columns:1fr}
+  .rocha-portal .tq-fundo{padding:0;place-items:end center}
+  .rocha-portal .tq-modal{width:100%;max-height:92vh;border-radius:12px 12px 0 0}
+}

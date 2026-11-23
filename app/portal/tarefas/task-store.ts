@@ -1,9 +1,45 @@
 'use client';
 
-import { TASK_EVENT, TASK_STORAGE_KEY, normalizeTasks, TASK_MAX } from '@/lib/portal-tarefas.mjs';
+import { TASK_STORAGE_KEY, normalizeTasks } from '@/lib/portal-tarefas.mjs';
 
-export type TaskStage = 'pendente' | 'andamento' | 'revisao' | 'concluida';
+// R85 - Tipos e funções compartilhados do quadro de tarefas (dados vêm do Supabase, via /api/portal/tarefas).
+
 export type TaskPriority = 'baixa' | 'media' | 'alta';
+
+export type Coluna = {
+  id: string;
+  nome: string;
+  cor: string;
+  ordem: number;
+  conta_como_concluida: boolean;
+};
+
+export type Tarefa = {
+  id: string;
+  titulo: string;
+  descricao: string;
+  empreendimento: string;
+  prazo: string;
+  coluna_id: string;
+  ordem: number;
+  prioridade: TaskPriority;
+  responsavel_id: string | null;
+  criado_por?: string | null;
+  criado_em?: string;
+  atualizado_em?: string;
+};
+
+export type MembroEquipe = { id: string; nome: string; setor: string };
+
+export type Quadro = {
+  colunas: Coluna[];
+  tarefas: Tarefa[];
+  equipe: MembroEquipe[];
+  inativos: { id: string; nome: string }[];
+};
+
+// Versão local antiga (R81). Só o painel inicial ainda a lê; o quadro de tarefas não usa mais o navegador.
+export type TaskStage = 'pendente' | 'andamento' | 'revisao' | 'concluida';
 export type RochaTask = {
   id: string;
   titulo: string;
@@ -25,15 +61,6 @@ export function readTasks(): RochaTask[] {
   } catch {
     return [];
   }
-}
-
-export function writeTasks(value: RochaTask[]): RochaTask[] {
-  const clean = normalizeTasks(value) as RochaTask[];
-  if (value.length > TASK_MAX) throw new Error('Limite de 250 tarefas nesta prévia local.');
-  if (clean.length !== value.length) throw new Error('Não foi possível validar todos os dados da tarefa.');
-  window.localStorage.setItem(TASK_STORAGE_KEY, JSON.stringify({ versao: 1, tasks: clean }));
-  window.dispatchEvent(new Event(TASK_EVENT));
-  return clean;
 }
 
 export function todayLocal(): string {
