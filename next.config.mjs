@@ -5,6 +5,10 @@ import path from 'node:path';
 const config = {
   poweredByHeader: false,
   reactStrictMode: true,
+  // Site: o empreendimento Easy Rota do Mar abre a página-experiência feita no portal (R86).
+  async redirects() {
+    return [{ source: '/imoveis/easy-rota-do-mar', destination: '/experiencia/easy-rota-do-mar', permanent: false }];
+  },
   async rewrites() {
     const manifestPath = path.join(process.cwd(), 'site-mirror-manifest.json');
     if (!fs.existsSync(manifestPath)) return [];
