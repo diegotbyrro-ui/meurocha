@@ -33,10 +33,11 @@ export default async function PortalLayout({children}:{children:React.ReactNode}
       <div className="r79-nav-title">PAINEL</div>
       <nav className="r79-side-nav" aria-label="Ferramentas Rocha">
         <Link href="/portal">Visão geral</Link>
-        <Link href="/portal/gestao">Empreendimentos</Link>
+        <Link href="/portal/central">Central dos empreendimentos</Link>
+        <Link href="/portal/gestao">Cadastro de empreendimentos</Link>
         <Link href="/portal/biblioteca">Biblioteca de materiais</Link>
         <Link href="/portal/tarefas">Tarefas da equipe</Link>
-        <Link href="/portal/simulador">Simulador comercial</Link>
+        <Link href="/portal/simulador">Simulador de entrada</Link>
       </nav>
       <div className="r79-sidebar-bottom">
         <div className="r79-sidebar-privacy"><strong>GESTÃO DE ACESSOS</strong><p>Somente o proprietário poderá criar ou excluir contas da equipe Rocha após a implantação da autenticação individual.</p></div>
@@ -48,10 +49,11 @@ export default async function PortalLayout({children}:{children:React.ReactNode}
         <details className="r79-mobile-menu"><summary aria-label="Abrir menu de navegação">☰ Menu</summary>
           <nav aria-label="Ferramentas Rocha no celular">
             <Link href="/portal">Visão geral</Link>
-            <Link href="/portal/gestao">Empreendimentos</Link>
+            <Link href="/portal/central">Central dos empreendimentos</Link>
+            <Link href="/portal/gestao">Cadastro de empreendimentos</Link>
             <Link href="/portal/biblioteca">Biblioteca de materiais</Link>
             <Link href="/portal/tarefas">Tarefas da equipe</Link>
-            <Link href="/portal/simulador">Simulador comercial</Link>
+            <Link href="/portal/simulador">Simulador de entrada</Link>
           </nav>
         </details>
         <strong>ROCHA <span>/</span> PORTAL COMERCIAL</strong>
