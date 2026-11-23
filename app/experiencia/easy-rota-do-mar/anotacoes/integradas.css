@@ -43,3 +43,12 @@
 .erm88-controles button:focus-visible,.erm88-controles textarea:focus-visible{outline:3px solid #63e8e8;outline-offset:2px}
 @media(max-width:900px){.erm88-controles{right:8px;top:60px;width:min(360px,calc(100vw - 16px))}.erm88-painel{max-height:calc(100dvh - 145px)}.erm88-barra strong{font-size:10px}.erm88-barra button{padding:7px 6px;font-size:10px}}
 @media print{.erm88-controles{display:none!important}}
+
+/* R89 — bloqueia interacoes de mapas e videos durante a marcacao. */
+.erm88-camada.erm89-bloqueio{pointer-events:auto;cursor:default;touch-action:none}
+.erm89-dinamico{margin:9px 0;background:#113e57;color:#c7e8f2;padding:9px;border-left:3px solid #24d0e5;font-size:11px;line-height:1.45}
+.erm89-globalButton{position:fixed;left:20px;bottom:24px;z-index:9000;background:#0b96af;color:#fff;border:1px solid #54f3ff;border-radius:11px;padding:12px 18px;font:600 14px Poppins,system-ui,sans-serif;box-shadow:0 8px 26px #001e35bb;cursor:pointer}
+.erm89-globalButton:hover{background:#0db4d0}
+.erm89-globalButton:focus-visible{outline:3px solid #fff;outline-offset:3px}
+@media(max-width:600px){.erm89-globalButton{left:10px;bottom:10px;padding:9px 12px;font-size:12px}}
+@media print{.erm89-globalButton{display:none!important}}

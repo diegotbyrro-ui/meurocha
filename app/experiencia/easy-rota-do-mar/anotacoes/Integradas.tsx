@@ -3,10 +3,10 @@
 import { createPortal } from 'react-dom';
 import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent } from 'react';
 
-// R88 — ferramenta in-page. Não altera geometria, mapa 3D, login ou banco.
+// R89 — ferramenta in-page para TODAS as telas. Não altera geometria, mapa 3D, login ou banco.
 // As coordenadas são relativas ao próprio palco visual, que recebe as mesmas
 // transformações CSS (pan/zoom) do mapa/plantas quando a camada é portaled.
-export type ContextoR88 = { id: string; titulo: string; seletor: string; transformacao?: string };
+export type ContextoR88 = { id: string; titulo: string; seletor: string; transformacao?: string; congelar?: boolean };
 export type PontoR88 = { x: number; y: number };
 export type MarcacaoR88 = {
   id: string;
@@ -27,7 +27,7 @@ type Props = {
 const CHAVE = 'meurocha-r88-setas-v1';
 const LIMITE = 120;
 const LIMITE_TEXTO = 400;
-const validId = /^(?:lazer:(?:implantacao|pavimento)|plantas:tipologias|plantas:detalhe:[1-8]:(?:3d|tecnica)|imagens:(?:areas|lazer|apartamentos):[a-z0-9-]+)$/;
+const validId = /^(?:lazer:(?:implantacao|pavimento)|plantas:tipologias|plantas:detalhe:[1-8]:(?:3d|tecnica)|imagens:(?:areas|lazer|apartamentos):[a-z0-9-]+|tela:(?:abertura|menu|(?:localizacao|lazer|plantas|imagens|videos|ficha|institucional|simulacao):[a-z0-9-]{1,40}:[0-9]{1,3}))$/;
 
 function limite(v: number) { return Math.max(0, Math.min(1, v)); }
 function pontoSeguro(value: unknown): PontoR88 | null {
@@ -102,6 +102,20 @@ export default function AnotacoesIntegradas({ contexto, aberto, onAbrirChange, o
       current?.classList.remove('erm88-ancora');
     };
   }, [contexto?.id, contexto?.seletor]); // A troca de imagem desmonta a camada antiga.
+
+  // R89: pausa videos da própria tela durante a anotação.
+  // Em mapas/iframes a camada SVG bloqueia a interação do usuário: as coordenadas
+  // são relativas ao enquadramento visto, não pontos georreferenciados.
+  useEffect(() => {
+    if (!aberto || !contexto?.congelar || !alvo) return;
+    const reproduzindo = Array.from(alvo.querySelectorAll('video')).filter(video => !video.paused && !video.ended);
+    for (const video of reproduzindo) video.pause();
+    return () => {
+      for (const video of reproduzindo) {
+        if (video.isConnected) void video.play().catch(() => undefined);
+      }
+    };
+  }, [aberto, alvo, contexto?.id, contexto?.congelar]);
 
   useEffect(() => {
     if (!formulario) return;
@@ -203,7 +217,7 @@ export default function AnotacoesIntegradas({ contexto, aberto, onAbrirChange, o
 
   return <>
     {alvo && contexto && createPortal(
-      <svg className={`erm88-camada ${aberto && modo === 'seta' ? 'erm88-desenhar' : ''}`}
+      <svg className={`erm88-camada ${aberto && modo === 'seta' ? 'erm88-desenhar' : aberto && contexto.congelar ? 'erm89-bloqueio' : ''}`}
         viewBox="0 0 1000 1000" preserveAspectRatio="none" style={contexto.transformacao ? { transform: contexto.transformacao } : undefined} aria-label="Setas e anotações sobre a imagem"
         onPointerDown={inicio} onPointerMove={mover} onPointerUp={terminar} onPointerCancel={cancelarArraste}
         onClick={event => { if (modo === 'seta') { event.preventDefault(); event.stopPropagation(); } }}>
@@ -229,16 +243,17 @@ export default function AnotacoesIntegradas({ contexto, aberto, onAbrirChange, o
       </div>
       <div className="erm88-painel">
         <div className="erm88-intro"><b>{contexto?.titulo || 'Selecione uma planta ou imagem'}</b>
-          <span>{contexto ? `${atuais.length} observação(ões) nesta imagem` : 'Este módulo não permite anotações nesta etapa.'}</span></div>
+          <span>{contexto ? `${atuais.length} observação(ões) nesta tela` : 'Preparando o editor...'}</span></div>
         {formulario && <div className="erm88-formulario">
           <label htmlFor="erm88-texto">{reposicionar ? 'Atualizar observação e seta' : 'O que deseja apontar?'}</label>
           <textarea ref={areaTexto} id="erm88-texto" rows={3} maxLength={LIMITE_TEXTO} value={campo} onChange={e => setCampo(e.target.value)} placeholder="Ex.: Verificar acesso da portaria..." />
           <div className="erm88-formBotoes"><button type="button" onClick={() => {setFormulario(false);setRascunho(null);setModo('ver');setReposicionar(null);}}>Cancelar</button><button type="button" disabled={!campo.trim()} onClick={guardar}>Salvar observação</button></div>
         </div>}
+        {contexto?.congelar && <p className="erm89-dinamico" role="note">Vídeos ficam pausados enquanto você anota. Em mapas 3D, o movimento por toque/mouse fica bloqueado. As setas são relativas à visão atual e não são coordenadas do Google Maps.</p>}
         {aviso && <p className="erm88-aviso" role="status">{aviso}</p>}
         <strong className="erm88-listaTitulo">Observações salvas · {notas.length}</strong>
         <div className="erm88-lista">
-          {notas.length === 0 && <p className="erm88-vazio">Clique em “Desenhar seta” e arraste sobre a planta para começar.</p>}
+          {notas.length === 0 && <p className="erm88-vazio">Clique em “Desenhar seta” e arraste sobre esta tela para começar.</p>}
           {notas.map(n => <div className={`erm88-item ${destaque===n.id?'selecionado':''}`} key={n.id}>
             <button type="button" className="erm88-localizar" onClick={() => mostrar(n)}>
               <span className="erm88-itemTitulo">↗ {n.titulo}</span><span>{n.texto}</span>

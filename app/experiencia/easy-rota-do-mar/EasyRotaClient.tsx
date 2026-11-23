@@ -520,11 +520,44 @@ export default function EasyRotaClient() {
       goto('imagens',aba); setImageIndex(Math.max(0,idx));
     }
   };
+  // R89: fornece um contexto para TODAS as telas, inclusive abertura e menu.
+  // Quando existe imagem estática, mantém o contexto com coordenadas da R88.
+  const r89Context: ContextoR88 = !started
+    ? { id: 'tela:abertura', titulo: 'Tela de abertura', seletor: '.erm23-splash' }
+    : centralMenuOpen
+      ? { id: 'tela:menu', titulo: 'Menu principal', seletor: '.erm25-centralMenu' }
+      : r88Context || {
+          id: `tela:${section}:${tab}:${section === 'videos' ? r76Indice : 0}`,
+          titulo: `${sections.find(item => item.id === section)?.label || section} · ${subtabs[section].find(item => item.id === tab)?.label || tab}`,
+          seletor: '.erm20-main',
+          congelar: section === 'videos' || section === 'localizacao',
+        };
+  const r89Navegar = (nota: MarcacaoR88) => {
+    if (nota.contexto === 'tela:abertura') {
+      backToSplash(); return;
+    }
+    if (nota.contexto === 'tela:menu') {
+      setStarted(true); setCentralMenuOpen(true); setSoundPrompt(false); return;
+    }
+    if (nota.contexto.startsWith('tela:')) {
+      const partes = nota.contexto.split(':');
+      const secao = sections.find(item => item.id === partes[1]);
+      const aba = secao && subtabs[secao.id].find(item => item.id === partes[2]);
+      if (secao && aba) {
+        setStarted(true); setCentralMenuOpen(false); goto(secao.id, aba.id);
+        if (secao.id === 'videos') setVideoIndex(Math.max(0, Number(partes[3]) || 0));
+      }
+      return;
+    }
+    r88Navegar(nota);
+  };
   const showLiveMarker = 'Reprodução visual baseada no vídeo. Imagem 360° e orientação geográfica real exigem arquivos próprios de captura.';
 
   return <main className="erm20 erm21 erm22 erm23" style={{ '--erm-dark': palette.dark, '--erm-deep': palette.deep, '--erm-accent': palette.accent, '--erm-cream': palette.light } as CSSProperties}>
     <audio ref={music} src={`${BRAND_ASSETS}erm-ambiente-original.mp3`} loop preload="none" aria-hidden="true" />
     <audio ref={waveClick} src={`${BRAND_ASSETS}erm-onda-natural-r28.mp3`} preload="auto" aria-hidden="true" />
+    <AnotacoesIntegradas contexto={r89Context} aberto={r88Open} onAbrirChange={setR88Open} onNavegar={r89Navegar} />
+    {(!started || centralMenuOpen) && <button type="button" className="erm89-globalButton" onClick={() => setR88Open(v => !v)} aria-label={r88Open ? 'Fechar anotações' : 'Fazer anotação'}>{r88Open ? '✕ Fechar anotações' : '↗ Fazer anotação'}</button>}
     {!started && <section className="erm20-splash erm23-splash" aria-label="Abertura Easy Rota do Mar">
       <div className="erm23-backgroundGrid" aria-hidden="true" />
       <div className="erm23-backgroundGlow" aria-hidden="true" />
@@ -586,15 +619,14 @@ export default function EasyRotaClient() {
           {platformMenu.map((n) => <button type="button" key={n.id} onClick={() => goMenu(n)} className={selectedNav === n.id ? 'active' : ''} aria-current={selectedNav === n.id ? 'page' : undefined}><span><UiIcon name={n.icon} size={17}/></span>{n.label}</button>)}
         </nav>
         <div className="erm20-sideTools">
-          <button type="button" className="erm87-sideAnnotate" disabled={!r88Context} onClick={() => setR88Open(v => !v)} title={r88Context ? "Desenhar setas diretamente nesta imagem" : "Anotações disponíveis no Masterplan, Plantas e Imagens"}><UiIcon name="arrow" size={18}/> {r88Open ? "Fechar anotações" : "Fazer anotação"}</button>
+          <button type="button" className="erm87-sideAnnotate" onClick={() => setR88Open(v => !v)} title="Fazer anotações diretamente nesta tela"><UiIcon name="arrow" size={18}/> {r88Open ? "Fechar anotações" : "Fazer anotação"}</button>
           <div className="erm22-soundTools"><button type="button" className="erm22-soundToggle" onClick={toggleMusic} aria-label={soundOn ? "Desativar música ambiente" : "Ativar música ambiente"} aria-pressed={soundOn}><UiIcon name={soundOn ? "music" : "mute"} size={19}/><span>{soundOn ? "Trilha ligada" : "Trilha desligada"}</span></button><label className="erm20-volume"><span className="erm20-srOnly">Volume da trilha sonora</span><input type="range" min="0" max="100" value={volume} onChange={(e: ChangeEvent<HTMLInputElement>) => setVolume(Number(e.target.value))} aria-label="Volume da trilha sonora" /></label>{audioError && <small role="status">Seu navegador bloqueou o áudio. Toque novamente para ativar.</small>}</div>
           <div className="erm20-toolIcons"><button onClick={() => { setCentralMenuOpen(true); setMenuOpen(false); }} aria-label="Voltar ao menu principal" type="button"><UiIcon name="home" size={20}/></button><button onClick={fullScreen} aria-label="Tela cheia" type="button">⛶</button><button type="button" aria-label="Ajuda" onClick={() => setHelp(true)}>ⓘ</button></div>
         </div>
       </aside>
 
       <section className="erm20-main">
-        <AnotacoesIntegradas contexto={r88Context} aberto={r88Open} onAbrirChange={setR88Open} onNavegar={r88Navegar} />
-        <button type="button" className="erm87-mobileAnnotate" disabled={!r88Context} onClick={() => setR88Open(v => !v)} title="Anotações diretamente nesta imagem"><UiIcon name="arrow" size={17}/> Anotar</button>
+        <button type="button" className="erm87-mobileAnnotate" onClick={() => setR88Open(v => !v)} title="Fazer anotações diretamente nesta tela"><UiIcon name="arrow" size={17}/> Anotar</button>
         {section !== 'plantas' && section !== 'lazer' && section !== 'institucional' && !(section === 'localizacao' && tab === 'ultratour') && <nav className="erm21-subTabs" aria-label="Abas da seção">{subtabs[section].map((t) => <button key={t.id} type="button" className={tab === t.id ? 'active' : ''} onClick={() => chooseTab(t.id)}>{t.label}</button>)}</nav>}
         <div className="erm20-panel" key={section}>
           {section === 'localizacao' && <div className={`erm20-content erm20-location ${tab === 'ultratour' && location3dEnabled ? 'erm59-location3dOn' : ''}`}>

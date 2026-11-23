@@ -9,7 +9,7 @@ const page = read(base+'page.tsx');
 const editor = read(base+'anotacoes/Integradas.tsx');
 const css = read(base+'anotacoes/integradas.css');
 test('R88: ferramenta aparece na tela atual sem abrir outra aba', () => {
-  assert.match(client, /<AnotacoesIntegradas contexto=\{r88Context\}/);
+  assert.match(client, /<AnotacoesIntegradas contexto=\{r89Context\}/);
   assert.match(client, /onClick=\{\(\) => setR88Open\(v => !v\)\}/);
   assert.doesNotMatch(client, /href=\{annotationHref\}/);
   assert.match(page, /import '\.\/anotacoes\/integradas\.css'/);
