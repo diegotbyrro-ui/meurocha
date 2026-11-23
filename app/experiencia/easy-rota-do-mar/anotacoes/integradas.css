@@ -1,0 +1,45 @@
+/* R88: todos os seletores limitados ao editor integrado. */
+.erm88-ancora{position:relative!important}
+.erm88-camada{position:absolute;inset:0;width:100%;height:100%;z-index:110;overflow:visible;pointer-events:none}
+.erm88-camada.erm88-desenhar{pointer-events:auto;touch-action:none;cursor:crosshair}
+.erm88-seta{stroke:#f43948;stroke-width:6;stroke-linecap:round;filter:drop-shadow(0 2px 2px #0009)}
+.erm88-previa{stroke-dasharray:13 8;opacity:.95}
+.erm88-destaque .erm88-seta{stroke:#ffe53a;stroke-width:9;filter:drop-shadow(0 1px 3px #071b30)}
+.erm88-destaque circle{fill:#d42841;stroke:#ffe53a;stroke-width:5}
+.erm88-controles{position:fixed;z-index:9010;right:12px;top:12px;width:min(360px,calc(100vw - 24px));color:#e9f7fd;font:14px/1.4 Poppins,system-ui,Arial,sans-serif;filter:drop-shadow(0 12px 28px #0007)}
+.erm88-controles *{box-sizing:border-box}
+.erm88-controles button,.erm88-controles textarea{font:inherit}
+.erm88-controles button{cursor:pointer}
+.erm88-controles button:disabled{opacity:.4;cursor:not-allowed}
+.erm88-barra{background:#063c5b;border:1px solid #33728d;border-radius:12px 12px 0 0;padding:9px;display:flex;align-items:center;gap:6px}
+.erm88-barra strong{font-size:11px;letter-spacing:.03em;margin-right:auto}
+.erm88-barra button{border:1px solid #487e96;background:#124c68;color:white;border-radius:7px;padding:7px 8px;font-size:11px;white-space:nowrap}
+.erm88-barra button.ativo{background:#b32b40;border-color:#e49ba3}
+.erm88-barra .erm88-fechar{font-size:18px;padding:3px 9px}
+.erm88-painel{background:#092c42;border:1px solid #33728d;border-top:none;border-radius:0 0 12px 12px;padding:12px;max-height:min(76vh,690px);overflow-y:auto;overscroll-behavior:contain}
+.erm88-intro{display:grid;gap:2px;padding-bottom:9px;border-bottom:1px solid #2b5a72}
+.erm88-intro b{font-size:13px;color:#ecfdff}
+.erm88-intro span,.erm88-privacidade{font-size:10px;color:#b2cedd}
+.erm88-aviso{background:#16455b;border-left:3px solid #28d0dd;margin:10px 0;padding:8px;font-size:11px}
+.erm88-listaTitulo{display:block;margin:11px 0 7px;font-size:12px}
+.erm88-lista{display:grid;gap:7px}
+.erm88-vazio{color:#acc8d7;font-size:12px;margin:12px 0}
+.erm88-item{border:1px solid #2c5c72;border-radius:8px;padding:8px;background:#0e3a51}
+.erm88-item.selecionado{border-color:#38dce2}
+.erm88-localizar{display:grid;width:100%;text-align:left;gap:4px;background:transparent;border:0;color:#edf9fc;padding:0;overflow-wrap:anywhere}
+.erm88-localizar span:last-child{font-size:12px}
+.erm88-itemTitulo{color:#8ee5e9;font-weight:bold;font-size:11px}
+.erm88-itemAcoes,.erm88-edicao{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.erm88-itemAcoes button,.erm88-edicao button,.erm88-formBotoes button,.erm88-exportar{background:#194e68;border:1px solid #4b7f95;color:white;border-radius:6px;padding:6px 9px;font-size:11px}
+.erm88-itemAcoes button:last-child{background:#67283c;border-color:#a45667}
+.erm88-formulario{border:1px solid #3996a7;border-radius:8px;padding:10px;margin-top:10px;background:#0a4355}
+.erm88-formulario label{display:block;font-weight:650;font-size:12px;margin-bottom:7px}
+.erm88-formulario textarea,.erm88-edicao textarea{width:100%;resize:vertical;background:#fff;color:#12384c;border:0;border-radius:6px;padding:9px;min-height:62px;font-size:13px}
+.erm88-formBotoes{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+.erm88-formBotoes button:last-child{background:#0c8392;border-color:#28cad6}
+.erm88-edicao textarea{flex-basis:100%}
+.erm88-exportar{display:block;width:100%;margin-top:12px;background:#136279}
+.erm88-privacidade{margin:10px 1px 0;line-height:1.45}
+.erm88-controles button:focus-visible,.erm88-controles textarea:focus-visible{outline:3px solid #63e8e8;outline-offset:2px}
+@media(max-width:900px){.erm88-controles{right:8px;top:60px;width:min(360px,calc(100vw - 16px))}.erm88-painel{max-height:calc(100dvh - 145px)}.erm88-barra strong{font-size:10px}.erm88-barra button{padding:7px 6px;font-size:10px}}
+@media print{.erm88-controles{display:none!important}}

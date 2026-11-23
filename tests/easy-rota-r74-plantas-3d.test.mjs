@@ -51,7 +51,8 @@ test('R74: seletor Planta tecnica / Planta 3D em todas as tipologias, inclusive 
   assert.match(det, />Planta técnica</);
   assert.match(det, />Planta 3D</);
   assert.doesNotMatch(client, /Perspectiva da planta|r33CardAsset/);
-  assert.equal([...client.matchAll(/plant3D \? selected3DSource : selectedPlanSource/g)].length, 2, 'Foto e ampliada usam a mesma imagem');
+  assert.match(client, /const r88Context: ContextoR88/, 'R88 seleciona o palco visual ativo');
+  assert.equal([...client.matchAll(/plant3D \? selected3DSource : selectedPlanSource/g)].length, 2, 'Foto e ampliada seguem usando a mesma fonte 2D ou 3D');
   assert.match(css, /\.erm21 \.erm33-viewSwitch\+\.erm38-sourceNote\{margin:-4px auto 8px\}/);
 });
 

@@ -1,0 +1,108 @@
+/* R87 — subtela de anotações do Easy Rota do Mar.
+   Isolada em .erm87 para não alterar o projeto 3D, plantas ou site público. */
+.erm87,.erm87 *{box-sizing:border-box}
+.erm87{--r87-azul:#003d66;--r87-fundo:#eef5f8;--r87-linha:#c7d8df;--r87-ink:#11334b;--r87-vermelho:#b32638;min-height:100svh;background:var(--r87-fundo);color:var(--r87-ink);font-family:'Segoe UI',Arial,sans-serif;font-size:15px;line-height:1.5;padding-bottom:32px}
+.erm87 button,.erm87 select,.erm87 textarea,.erm87 input{font:inherit}
+.erm87 button{cursor:pointer}
+.erm87 button:disabled{opacity:.52;cursor:not-allowed}
+.erm87 a{text-decoration:none}
+.erm87 a:focus-visible,.erm87 button:focus-visible,.erm87 select:focus-visible,.erm87 textarea:focus-visible,.erm87 input:focus-visible{outline:3px solid #00b9d6;outline-offset:3px}
+.erm87-topo{display:flex;align-items:center;justify-content:space-between;background:#002b4c;color:white;padding:12px max(20px,calc((100vw - 1480px)/2));gap:20px}
+.erm87-topoMarca{display:flex;align-items:center;gap:18px;min-width:0}
+.erm87-topoMarca img{display:block;object-fit:contain;max-width:128px;width:128px;height:auto;max-height:54px;padding:5px;background:white;border-radius:5px}
+.erm87-topoMarca span{font-size:15px;white-space:nowrap}
+.erm87-topoMarca b{color:#9cecf4;font-weight:500}
+.erm87-voltar{border:1px solid #8bbbd1;color:#fff;padding:10px 16px;border-radius:8px;font-weight:650;white-space:nowrap}
+.erm87-voltar:hover{background:#155374}
+.erm87-moldura{max-width:1520px;margin:auto;padding:26px 20px 15px}
+.erm87-cabecalho{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:18px}
+.erm87-etiqueta{color:#39617c;font-size:11px;font-weight:750;letter-spacing:.065em}
+.erm87-cabecalho h1{font-size:clamp(26px,2.3vw,36px);font-weight:700;color:#092f4b;margin:4px 0}
+.erm87-cabecalho p{font-size:14px;color:#4c6575;margin:0}
+.erm87-acoes,.erm87-formAcoes{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.erm87-btnPrincipal,.erm87-btnSec,.erm87-btnArquivo{min-height:44px;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:650;transition:background-color .15s,border-color .15s}
+.erm87-btnPrincipal{background:var(--r87-azul);border:1px solid var(--r87-azul);color:#fff}
+.erm87-btnPrincipal:hover:not(:disabled){background:#00558a}
+.erm87-btnSec{background:white;border:1px solid #89a6b5;color:#123d58}
+.erm87-btnSec:hover:not(:disabled){background:#e8f4f8}
+.erm87-3dAviso{background:#fff5dc;border-left:4px solid #b77a19;border-radius:6px;padding:12px 14px;color:#674600;font-size:13px;margin:0 0 16px}
+.erm87-escolha{display:flex;align-items:end;gap:12px;flex-wrap:wrap;margin:0 0 20px}
+.erm87-escolha>label:first-child{font-weight:650;font-size:13px;display:flex;flex-direction:column;gap:5px;flex:1 1 280px;max-width:430px}
+.erm87-escolha select{border:1px solid #92aebe;border-radius:8px;height:45px;padding:8px 10px;background:#fff;color:#12344c;max-width:100%}
+.erm87-btnArquivo{display:flex;align-items:center;justify-content:center;background:white;color:#003d66;border:1px solid #7b9fb4;cursor:pointer}
+.erm87-btnArquivo:hover{background:#e5f2f8}
+.erm87-escolha input[type=file]{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+.erm87-escolha>span{font-size:12px;color:#526a78;padding-bottom:13px}
+.erm87-grid{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(300px,.82fr);gap:18px;align-items:start}
+.erm87-painelImagem,.erm87-lateral{background:#fff;border:1px solid var(--r87-linha);border-radius:12px;box-shadow:0 1px 3px #022e4b10;min-width:0}
+.erm87-painelImagem{padding:14px}
+.erm87-nomeImagem{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px;padding:4px 3px 12px}
+.erm87-nomeImagem strong{overflow-wrap:anywhere}
+.erm87-nomeImagem span{font-size:12px;white-space:nowrap;color:#526c7d}
+.erm87-superficie{border:1px solid #acc8d5;background:#e1edf4;border-radius:8px;padding:5px;overflow:hidden}
+.erm87-falha{background:#fff3f2;color:#9c1b21;padding:14px;margin:4px 0 8px;border-radius:6px}
+.erm87-prancha{position:relative;width:100%;background:white}
+.erm87-prancha>img{width:100%;height:auto;max-width:100%;display:block;object-fit:contain;user-select:none;-webkit-user-drag:none}
+.erm87-hitZone{position:absolute;inset:0;width:100%;height:100%;padding:0;background:transparent;border:0;z-index:1;cursor:crosshair}
+.erm87-seta{position:absolute;z-index:3;width:62px;height:62px;padding:0;transform:translate(-80%,-80%);background:none;border:0;filter:drop-shadow(0 1px 3px #001b31bb);touch-action:manipulation}
+.erm87-seta.isSelected{filter:drop-shadow(0 0 4px #03b9eb)}
+.erm87-seta svg{display:block;width:100%;height:100%}
+.erm87-pontoPendente{position:absolute;z-index:2;width:18px;height:18px;border-radius:50%;border:3px solid white;background:#b32638;box-shadow:0 0 0 3px #b32638;transform:translate(-50%,-50%);pointer-events:none}
+.erm87-ajudaImagem{font-size:12px;color:#496575;margin:12px 3px 2px}
+.erm87-lateral{padding:18px;max-height:min(80vh,900px);overflow-y:auto}
+.erm87-lateral h2{font-size:18px;color:#062f4b;margin:0 0 7px}
+.erm87-ajuda{font-size:13px;color:#546c79;margin:0 0 14px}
+.erm87-posicao{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;background:#f0f7fa;border:1px solid #d4e5eb;padding:10px 12px;border-radius:8px;margin-bottom:15px}
+.erm87-lateral>label{display:block;font-weight:700;font-size:13px;margin-bottom:7px}
+.erm87-lateral textarea{display:block;width:100%;resize:vertical;min-height:105px;padding:11px;border-radius:8px;background:white;color:#123047;border:1px solid #92adbd}
+.erm87-contador{text-align:right;color:#58717d;font-size:12px;margin:4px 0 12px}
+.erm87-mover{width:100%;margin-bottom:12px}
+.erm87-mover.isActive{border-color:#a01e2d;background:#fff1f1;color:#8c1425}
+.erm87-formAcoes .erm87-btnPrincipal{flex:1}
+.erm87-erro,.erm87-sucesso{border-radius:7px;font-size:12px;padding:9px 12px;margin:12px 0}
+.erm87-erro{background:#fff0f0;color:#9b1e2c;border:1px solid #e7acb4}
+.erm87-sucesso{background:#e4f5e8;color:#146338;border:1px solid #add7bb}
+.erm87-listaTitulo{display:flex;justify-content:space-between;align-items:center;margin-top:20px;border-top:1px solid #d5e2e8;padding-top:16px}
+.erm87-listaTitulo span{font-size:12px;color:#607684}
+.erm87-lista{list-style:none;margin:9px 0 12px;padding:0;display:grid;gap:10px}
+.erm87-lista li{display:flex;gap:11px;background:#f7fbfd;border:1px solid #d8e5eb;border-radius:8px;padding:10px}
+.erm87-indice{flex:0 0 27px;width:27px;height:27px;border-radius:50%;background:var(--r87-vermelho);color:white;text-align:center;font-size:14px;font-weight:700;line-height:27px}
+.erm87-lista li>div{flex:1;min-width:0}
+.erm87-lista li p{font-size:13px;margin:0 0 8px;color:#1e4157;white-space:pre-wrap;overflow-wrap:anywhere}
+.erm87-lista li>div>div{display:flex;gap:13px}
+.erm87-lista li button{border:0;background:transparent;color:#005781;padding:3px 1px;font-size:12px;font-weight:650}
+.erm87-lista li button:last-child{color:#a31b2e}
+.erm87-vazio{font-size:13px;color:#54707e;background:#f2f7f9;border-radius:7px;padding:15px}
+.erm87-privacidade{display:block;color:#5b7480;font-size:11px;line-height:1.6;margin:15px 0 0}
+.erm87-relatorioPrint{display:none}
+/* Chamada da subtela no menu original, carregada também por /page.tsx. */
+.erm21 .erm87-sideAnnotate{display:flex;gap:9px;align-items:center;justify-content:center;min-height:41px;width:100%;padding:8px 10px;margin:0 0 9px;background:#b32638;border:1px solid #e98490;border-radius:8px;color:#fff;text-decoration:none;font-weight:700;font-size:12px;line-height:1.1;text-align:center}
+.erm21 .erm87-sideAnnotate:hover{background:#8e1d2e;color:#fff}
+.erm21 .erm87-sideAnnotate:focus-visible,.erm21 .erm87-mobileAnnotate:focus-visible{outline:3px solid #63efff;outline-offset:3px}
+.erm21 .erm87-mobileAnnotate{display:none}
+@media(max-width:1000px){.erm87-grid{grid-template-columns:minmax(0,1fr) 320px}.erm87-cabecalho{align-items:start;flex-direction:column}}
+@media(max-width:900px){.erm21 .erm87-mobileAnnotate{display:flex;position:absolute;top:56px;right:15px;z-index:14;gap:8px;align-items:center;min-height:42px;padding:9px 12px;background:#b32638;border:1px solid #e58a95;border-radius:7px;color:#fff;text-decoration:none;font-weight:700;font-size:12px;box-shadow:0 2px 7px #0005}.erm87-grid{grid-template-columns:1fr}.erm87-lateral{max-height:none;overflow:visible}}
+@media(max-width:650px){.erm87-topo{padding:10px 14px}.erm87-topoMarca{gap:8px}.erm87-topoMarca img{width:82px}.erm87-topoMarca span{font-size:11px;white-space:normal}.erm87-voltar{font-size:12px;padding:8px 9px}.erm87-moldura{padding:17px 11px}.erm87-cabecalho h1{font-size:26px}.erm87-escolha>label:first-child{max-width:none}.erm87-escolha>span{padding-bottom:0}.erm87-nomeImagem{font-size:12px}.erm87-painelImagem,.erm87-lateral{padding:11px}.erm87-prancha>.erm87-seta{width:45px;height:45px}.erm87-seta svg{width:100%;height:100%}.erm87-formAcoes{flex-wrap:wrap}.erm87-btnPrincipal,.erm87-btnSec{min-height:43px}.erm87-acoes{width:100%}.erm87-acoes>button{flex:1}}
+@media print{
+  @page{size:A4 landscape;margin:11mm}
+  html,body{background:#fff!important}
+  .erm87{background:white!important;color:#111!important;padding:0!important;font-size:11pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .erm87 .erm87-noPrint,.erm87 .erm87-lateral{display:none!important}
+  .erm87-moldura{max-width:none;padding:0;margin:0}
+  .erm87-cabecalho{display:block;margin:0 0 4mm}
+  .erm87-cabecalho h1{font-size:18pt;color:#123047;margin:0}
+  .erm87-cabecalho p{display:none}
+  .erm87-cabecalho .erm87-etiqueta{font-size:9pt}
+  .erm87-grid{display:block!important}
+  .erm87-painelImagem{padding:0;border:0;box-shadow:none;background:#fff;break-inside:avoid}
+  .erm87-nomeImagem{font-size:12pt;padding:0 0 2mm}
+  .erm87-superficie{padding:0;border:0;background:#fff;overflow:visible}
+  .erm87-prancha{width:min(100%,var(--r87-print-w,100%));max-width:100%;break-inside:avoid}
+  .erm87-prancha>img{display:block;width:100%;max-width:none;max-height:none;height:auto;object-fit:contain}
+  .erm87-seta{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .erm87-relatorioPrint{display:block;margin-top:7mm;border-top:1px solid #91afb9;padding-top:4mm;break-before:auto}
+  .erm87-relatorioPrint h2{font-size:13pt;margin:0 0 3mm;color:#003d66}
+  .erm87-relatorioPrint ol{margin:0;padding-left:7mm}
+  .erm87-relatorioPrint li{margin:0 0 2mm;white-space:pre-wrap;overflow-wrap:anywhere}
+  .erm87-impressaoAviso{font-size:8pt;color:#444;margin-top:5mm}
+}

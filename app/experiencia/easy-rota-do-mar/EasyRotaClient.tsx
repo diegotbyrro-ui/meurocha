@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type ChangeEvent, type PointerEvent } from 'react';
+import AnotacoesIntegradas, { type ContextoR88, type MarcacaoR88 } from './anotacoes/Integradas';
 
 type Section = 'localizacao' | 'lazer' | 'plantas' | 'imagens' | 'videos' | 'ficha' | 'institucional' | 'simulacao';
 type TypeKey = 'slim' | 'premium' | 'master' | 'spazzio';
@@ -348,6 +349,7 @@ export default function EasyRotaClient() {
   const [openLightbox, setOpenLightbox] = useState(false);
   const [mapChoice, setMapChoice] = useState('Mobilidade');
   const [location3dEnabled, setLocation3dEnabled] = useState(true);
+  const [r88Open, setR88Open] = useState(false);
 
   const tone = useCallback(() => {
     if (!soundOn || typeof window === 'undefined') return;
@@ -486,6 +488,38 @@ export default function EasyRotaClient() {
   }, [openLightbox, images.length]);
 
   const heroPhoto = `${BRAND_ASSETS}erm-vista-aerea.webp`;
+  // R88: a anotacao fica dentro da experiencia, sobre o palco da imagem.
+  const r88Context: ContextoR88 | null = section === 'lazer'
+    ? masterImage === 'implantacao'
+      ? { id: 'lazer:implantacao', titulo: 'Masterplan · implantação', seletor: '.erm39-mapCanvas' }
+      : { id: 'lazer:pavimento', titulo: 'Pavimento tipo', seletor: '.erm20-masterVisual', transformacao: `translate(${masterOffset.x}px,${masterOffset.y}px) scale(${masterZoom})` }
+    : section === 'plantas'
+      ? tab === 'tipologias'
+        ? { id: 'plantas:tipologias', titulo: 'Pavimento · oito terminações', seletor: '.erm34-planStage' }
+        : { id: `plantas:detalhe:${selectedEnding}:${plant3D ? '3d' : 'tecnica'}`, titulo: `${selected.name} · terminação ${selectedEnding} · ${plant3D ? '3D' : 'técnica'}`, seletor: '.erm32-planPhoto' }
+      : section === 'imagens' && image
+        ? { id: `imagens:${tab}:${image.id}`, titulo: image.name, seletor: '.erm20-galleryPhoto' }
+        : null;
+  const r88Navegar = (nota: MarcacaoR88) => {
+    const partes = nota.contexto.split(':');
+    if (partes[0] === 'lazer') {
+      setMasterImage(partes[1] === 'pavimento' ? 'pavimento' : 'implantacao');
+      setMasterZoom(1); setMasterOffset({x:0,y:0}); goto('lazer');
+    } else if (partes[0] === 'plantas') {
+      if (partes[1] === 'tipologias') goto('plantas','tipologias');
+      else {
+        const n = Number(partes[2]);
+        if (n >= 1 && n <= 8) {
+          setSelectedEnding(n); setSelectedType(endingToType[n]);
+          setPlant3D(partes[3] === '3d'); goto('plantas','plantas');
+        }
+      }
+    } else if (partes[0] === 'imagens') {
+      const aba = partes[1];
+      const idx = gallery.filter(item => item.category === aba).findIndex(item => item.id === partes[2]);
+      goto('imagens',aba); setImageIndex(Math.max(0,idx));
+    }
+  };
   const showLiveMarker = 'Reprodução visual baseada no vídeo. Imagem 360° e orientação geográfica real exigem arquivos próprios de captura.';
 
   return <main className="erm20 erm21 erm22 erm23" style={{ '--erm-dark': palette.dark, '--erm-deep': palette.deep, '--erm-accent': palette.accent, '--erm-cream': palette.light } as CSSProperties}>
@@ -552,12 +586,15 @@ export default function EasyRotaClient() {
           {platformMenu.map((n) => <button type="button" key={n.id} onClick={() => goMenu(n)} className={selectedNav === n.id ? 'active' : ''} aria-current={selectedNav === n.id ? 'page' : undefined}><span><UiIcon name={n.icon} size={17}/></span>{n.label}</button>)}
         </nav>
         <div className="erm20-sideTools">
+          <button type="button" className="erm87-sideAnnotate" disabled={!r88Context} onClick={() => setR88Open(v => !v)} title={r88Context ? "Desenhar setas diretamente nesta imagem" : "Anotações disponíveis no Masterplan, Plantas e Imagens"}><UiIcon name="arrow" size={18}/> {r88Open ? "Fechar anotações" : "Fazer anotação"}</button>
           <div className="erm22-soundTools"><button type="button" className="erm22-soundToggle" onClick={toggleMusic} aria-label={soundOn ? "Desativar música ambiente" : "Ativar música ambiente"} aria-pressed={soundOn}><UiIcon name={soundOn ? "music" : "mute"} size={19}/><span>{soundOn ? "Trilha ligada" : "Trilha desligada"}</span></button><label className="erm20-volume"><span className="erm20-srOnly">Volume da trilha sonora</span><input type="range" min="0" max="100" value={volume} onChange={(e: ChangeEvent<HTMLInputElement>) => setVolume(Number(e.target.value))} aria-label="Volume da trilha sonora" /></label>{audioError && <small role="status">Seu navegador bloqueou o áudio. Toque novamente para ativar.</small>}</div>
           <div className="erm20-toolIcons"><button onClick={() => { setCentralMenuOpen(true); setMenuOpen(false); }} aria-label="Voltar ao menu principal" type="button"><UiIcon name="home" size={20}/></button><button onClick={fullScreen} aria-label="Tela cheia" type="button">⛶</button><button type="button" aria-label="Ajuda" onClick={() => setHelp(true)}>ⓘ</button></div>
         </div>
       </aside>
 
       <section className="erm20-main">
+        <AnotacoesIntegradas contexto={r88Context} aberto={r88Open} onAbrirChange={setR88Open} onNavegar={r88Navegar} />
+        <button type="button" className="erm87-mobileAnnotate" disabled={!r88Context} onClick={() => setR88Open(v => !v)} title="Anotações diretamente nesta imagem"><UiIcon name="arrow" size={17}/> Anotar</button>
         {section !== 'plantas' && section !== 'lazer' && section !== 'institucional' && !(section === 'localizacao' && tab === 'ultratour') && <nav className="erm21-subTabs" aria-label="Abas da seção">{subtabs[section].map((t) => <button key={t.id} type="button" className={tab === t.id ? 'active' : ''} onClick={() => chooseTab(t.id)}>{t.label}</button>)}</nav>}
         <div className="erm20-panel" key={section}>
           {section === 'localizacao' && <div className={`erm20-content erm20-location ${tab === 'ultratour' && location3dEnabled ? 'erm59-location3dOn' : ''}`}>

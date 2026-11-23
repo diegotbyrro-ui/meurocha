@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import EasyRotaClient from './EasyRotaClient';
 import './easy-rota.css';
+import './anotacoes/anotacoes.css';
+import './anotacoes/integradas.css';
 
 export const metadata: Metadata = {
   title: 'Easy Rota do Mar | Experiência Interativa — Modelo 3 | Rocha',
