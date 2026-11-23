@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import AjudaPagina from '../ajuda/AjudaPagina';
 import Termo from '../ajuda/Termo';
 import {
+  MAX_POSTAGENS,
   cnpjValido,
   linkSeguro,
   normalizarEmpreendimento,
@@ -13,6 +14,7 @@ import {
 import { gerarArquivoDados, resumoAlteracoes } from '@/lib/central-gerar-arquivo.mjs';
 
 type Link = { titulo: string; url: string };
+type Postagem = { titulo: string; url: string; tipo: string };
 type Pix = { tipo: string; chave: string; favorecido: string; banco: string };
 type Emp = {
   id: string;
@@ -20,18 +22,17 @@ type Emp = {
   cnpj: string;
   pix: Pix;
   materiais: Record<string, Link[]>;
-  postagens: Record<string, Link[]>;
+  postagens: Postagem[];
 };
 type Item = { id: string; nome: string };
 type Secao = { id: string; titulo: string; itens: readonly Item[] };
-type Mes = { id: string; nome: string };
 type Status = { ok: boolean; texto: string };
 
 type Props = {
   inicial: Emp[];
   secoes: readonly Secao[];
-  meses: readonly Mes[];
   tiposPix: readonly string[];
+  tiposPostagem: readonly string[];
   empInicial?: string;
   nomes: Record<string, string>;
   githubUrl: string;
@@ -93,7 +94,7 @@ function faltas(e: Emp): string[] {
   if (!cnpjValido(e.cnpj)) falta.push('CNPJ');
   if (!pixValido(e.pix)) falta.push('PIX');
   if (!temLinks(e.materiais)) falta.push('Materiais');
-  if (!temLinks(e.postagens)) falta.push('Redes sociais');
+  if (e.postagens.length === 0) falta.push('Redes sociais');
   return falta;
 }
 
@@ -248,6 +249,126 @@ function EditorLinks({
   );
 }
 
+/** Lista unica de postagens do empreendimento, com tipo, titulo e link para cada uma. */
+function EditorPostagens({
+  postagens,
+  tiposPostagem,
+  onChange,
+}: {
+  postagens: Postagem[];
+  tiposPostagem: readonly string[];
+  onChange: (postagens: Postagem[]) => void;
+}) {
+  const [tipo, setTipo] = useState<string>(tiposPostagem[0] ?? 'Vídeo');
+  const [titulo, setTitulo] = useState('');
+  const [url, setUrl] = useState('');
+  const [erro, setErro] = useState('');
+  const cheio = postagens.length >= MAX_POSTAGENS;
+
+  function adicionar() {
+    if (cheio) {
+      setErro(`Este empreendimento já tem ${MAX_POSTAGENS} postagens. Remova uma para adicionar outra.`);
+      return;
+    }
+    const tituloLimpo = titulo.trim();
+    if (tituloLimpo === '') {
+      setErro('Dê um título à postagem. Ex.: Vídeo de apresentação');
+      return;
+    }
+    const seguro = linkSeguro(url.trim());
+    if (seguro === '') {
+      setErro(url.trim() === '' ? 'Cole o link antes de adicionar.' : MSG_HTTPS);
+      return;
+    }
+    onChange([...postagens, { titulo: tituloLimpo.slice(0, 120), url: seguro, tipo }]);
+    setTitulo('');
+    setUrl('');
+    setErro('');
+  }
+
+  return (
+    <div className="r83u-links">
+      {postagens.length === 0 ? (
+        <p className="r83u-vazio">Nenhuma postagem cadastrada ainda.</p>
+      ) : (
+        <ul className="r83u-lista-links">
+          {postagens.map((post, i) => (
+            <li key={`${post.url}-${i}`} className="r83u-link">
+              <div className="r83u-link-texto">
+                <span className="r83u-badge">{post.tipo}</span>
+                <span className="r83u-link-titulo">{post.titulo}</span>
+                <span className="r83u-link-url">{encurtarUrl(post.url)}</span>
+              </div>
+              <button
+                type="button"
+                className="r83u-btn r83u-btn-perigo"
+                aria-label={`Remover ${post.titulo}`}
+                onClick={() => onChange(postagens.filter((_, j) => j !== i))}
+              >
+                Remover
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div className="r83u-adicionar">
+        <div className="r83u-campo">
+          <label htmlFor="post-tipo">Tipo</label>
+          <select id="post-tipo" value={tipo} disabled={cheio} onChange={(ev) => setTipo(ev.target.value)}>
+            {tiposPostagem.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="r83u-campo">
+          <label htmlFor="post-titulo">Título</label>
+          <input
+            id="post-titulo"
+            type="text"
+            autoComplete="off"
+            maxLength={120}
+            value={titulo}
+            disabled={cheio}
+            onChange={(ev) => setTitulo(ev.target.value)}
+          />
+        </div>
+        <div className="r83u-campo">
+          <div className="r83u-rotulo">
+            <label htmlFor="post-url">Link de compartilhamento</label>
+            <Termo id="link-https">https</Termo>
+          </div>
+          <input
+            id="post-url"
+            type="text"
+            inputMode="url"
+            autoComplete="off"
+            placeholder="https://"
+            value={url}
+            disabled={cheio}
+            aria-invalid={erro !== '' && erro === MSG_HTTPS ? true : undefined}
+            aria-describedby={erro !== '' ? 'post-erro' : undefined}
+            onChange={(ev) => setUrl(ev.target.value)}
+          />
+        </div>
+        <button type="button" className="r83u-btn r83u-btn-primario" onClick={adicionar} disabled={cheio}>
+          Adicionar postagem
+        </button>
+      </div>
+      {erro !== '' && (
+        <p id="post-erro" role="alert" className="r83u-erro">
+          {erro}
+        </p>
+      )}
+      <p className="r83u-contagem">
+        {postagens.length} de {MAX_POSTAGENS} postagens
+      </p>
+    </div>
+  );
+}
+
 /** Grupo recolhivel de uma secao de materiais. Abre sozinho quando ja tem links. */
 function GrupoMateriais({
   secao,
@@ -283,8 +404,8 @@ function GrupoMateriais({
 export default function AtualizarClient({
   inicial,
   secoes,
-  meses,
   tiposPix,
+  tiposPostagem,
   empInicial,
   nomes,
   githubUrl,
@@ -292,7 +413,6 @@ export default function AtualizarClient({
   const [estado, setEstado] = useState<Emp[]>(inicial);
   const [passo, setPasso] = useState(1);
   const [selecionado, setSelecionado] = useState<string>(empInicial ?? '');
-  const [mesAtual, setMesAtual] = useState('01');
   const [tocou, setTocou] = useState(false);
   const [rascunho, setRascunho] = useState<Emp[] | null>(null);
   const [copiado, setCopiado] = useState('');
@@ -345,8 +465,8 @@ export default function AtualizarClient({
     atualizarEmp((e) => ({ ...e, materiais: { ...e.materiais, [itemId]: links } }));
   }
 
-  function alterarPostagens(mesId: string, links: Link[]) {
-    atualizarEmp((e) => ({ ...e, postagens: { ...e.postagens, [mesId]: links } }));
+  function alterarPostagens(postagens: Postagem[]) {
+    atualizarEmp((e) => ({ ...e, postagens }));
   }
 
   function continuarRascunho() {
@@ -408,7 +528,7 @@ export default function AtualizarClient({
         passos={[
           'No passo 1, escolha o empreendimento. Os cards mostram o que ainda falta cadastrar.',
           'No passo 2, preencha CNPJ e chave PIX. Os dados são conferidos enquanto você digita.',
-          'Nos passos 3 e 4, cole os links de materiais e das postagens do mês. Só aceitamos links https.',
+          'Nos passos 3 e 4, cole os links de materiais e das postagens prontas para os corretores. Só aceitamos links https.',
           'No passo 5, copie o arquivo, cole no GitHub e clique em Commit changes.',
         ]}
       />
@@ -632,34 +752,15 @@ export default function AtualizarClient({
 
         {passo === 4 && emp && (
           <div className="r83u-bloco">
-            <p className="r83u-dica">Escolha o mês e cole os links das postagens desse mês.</p>
-            <div className="r83u-meses" role="group" aria-label="Mês das postagens">
-              {meses.map((m) => {
-                const quantidade = emp.postagens[m.id]?.length ?? 0;
-                return (
-                  <button
-                    key={m.id}
-                    type="button"
-                    className="r83u-mes"
-                    aria-pressed={mesAtual === m.id}
-                    onClick={() => setMesAtual(m.id)}
-                  >
-                    <span className="r83u-mes-nome">{m.nome}</span>
-                    <span className="r83u-mes-qtd">
-                      {quantidade > 0 ? `${quantidade} ${quantidade === 1 ? 'link' : 'links'}` : 'Sem links'}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-            <h3 className="r83u-subtitulo">
-              Postagens de {meses.find((m) => m.id === mesAtual)?.nome ?? mesAtual}
-            </h3>
-            <EditorLinks
-              key={`${emp.id}-${mesAtual}`}
-              id={`post-${mesAtual}`}
-              links={emp.postagens[mesAtual] ?? []}
-              onChange={(links) => alterarPostagens(mesAtual, links)}
+            <p className="r83u-dica">
+              Cadastre vídeos e postagens prontos para os corretores baixarem e publicarem. Eles aparecem
+              em uma lista única, sem separação por mês.
+            </p>
+            <EditorPostagens
+              key={emp.id}
+              postagens={emp.postagens}
+              tiposPostagem={tiposPostagem}
+              onChange={alterarPostagens}
             />
           </div>
         )}

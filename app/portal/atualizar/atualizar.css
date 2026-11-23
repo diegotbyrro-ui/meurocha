@@ -430,45 +430,17 @@
   width: 100%;
 }
 
-/* Redes sociais: meses */
-.r83u-meses {
-  display: grid;
-  gap: 8px;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-}
-
-.r83u-mes {
-  display: grid;
-  gap: 2px;
-  min-height: 44px;
-  padding: 10px 12px;
-  border: 1px solid var(--r-line-strong, #b9b6af);
-  border-radius: var(--r-radius, 8px);
-  background: var(--r-surface, #ffffff);
-  color: var(--r-ink, #1c1c1e);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.r83u-mes:hover {
-  background: var(--r-surface-2, #f8f7f5);
-}
-
-.r83u-mes[aria-pressed='true'] {
-  border-color: var(--r-brand, #a51c2c);
-  background: var(--r-brand-soft, #f6e8e9);
-  font-weight: 600;
-}
-
-.r83u-mes:focus-visible {
-  outline: none;
-  box-shadow: var(--r-focus, 0 0 0 2px #ffffff, 0 0 0 4px #a51c2c);
-}
-
-.r83u-mes-qtd {
+/* Redes sociais: tipo de cada postagem (selo de texto) */
+.r83u-badge {
+  justify-self: start;
   font-size: 13px;
-  color: var(--r-ink-3, #5d6066);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--r-ink-2, #45474c);
+  background: var(--r-surface-2, #f8f7f5);
+  border: 1px solid var(--r-line-strong, #b9b6af);
+  border-radius: 6px;
+  padding: 2px 8px;
 }
 
 /* Publicar */

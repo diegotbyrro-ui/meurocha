@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { MESES, SECOES_MATERIAIS, obterEmpreendimento } from '@/lib/empreendimentos-central.mjs';
+import { SECOES_MATERIAIS, obterEmpreendimento } from '@/lib/empreendimentos-central.mjs';
 import CentralEmpreendimentoClient from '../CentralEmpreendimentoClient';
 import '../central.css';
 
@@ -10,5 +10,5 @@ export default async function CentralEmpreendimentoPage({ params }: { params: Pr
   const emp = obterEmpreendimento(id);
   if (!emp) return notFound();
 
-  return <CentralEmpreendimentoClient emp={emp} secoes={SECOES_MATERIAIS} meses={MESES} />;
+  return <CentralEmpreendimentoClient emp={emp} secoes={SECOES_MATERIAIS} />;
 }

@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 const PASSOS_CENTRAL: readonly string[] = [
   'Escolha o empreendimento na lista abaixo.',
-  'Em Abrir, veja o CNPJ, a chave PIX, os materiais de venda e as postagens do mês.',
+  'Em Abrir, veja o CNPJ, a chave PIX, os materiais de venda e as postagens para redes sociais.',
   'Se algum dado aparecer como falta cadastrar, toque em Atualizar dados e preencha o cadastro.',
 ];
 
@@ -44,7 +44,7 @@ export default function CentralEmpreendimentosPage() {
                   <li>{situacao.cnpj ? 'CNPJ: cadastrado' : 'CNPJ: falta cadastrar'}</li>
                   <li>{situacao.pix ? 'PIX: cadastrado' : 'PIX: falta cadastrar'}</li>
                   <li>{`Materiais: ${situacao.materiais} ${situacao.materiais === 1 ? 'link' : 'links'}`}</li>
-                  <li>{`Postagens: ${situacao.mesesComPostagem} ${situacao.mesesComPostagem === 1 ? 'mês' : 'meses'}`}</li>
+                  <li>{`Postagens para redes sociais: ${situacao.postagens} ${situacao.postagens === 1 ? 'postagem' : 'postagens'}`}</li>
                 </ul>
                 <div className="r82-actions">
                   <Link href={`/portal/central/${emp.id}`} className="r82-btn" aria-label={`Abrir ${emp.nome}`}>Abrir</Link>

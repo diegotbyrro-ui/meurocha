@@ -79,19 +79,20 @@
 .r82-links a>span:first-child{overflow-wrap:anywhere;min-width:0}
 .r82-open{color:var(--r-brand,#a51c2c);font-size:14px;font-weight:600;white-space:nowrap}
 
-/* Redes sociais: 12 meses */
-.r82-months{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.r82-month{background:var(--r-surface,#ffffff);border:1px solid var(--r-line,#d6d4cf);border-radius:8px;padding:16px;display:grid;gap:10px;align-content:start;min-width:0;box-shadow:0 1px 2px rgba(0,0,0,.06)}
-.r82-month.is-current{border:2px solid var(--r-brand,#a51c2c);padding:15px}
-.r82-month-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-.r82-now{font-size:14px;font-weight:700;color:var(--r-brand,#a51c2c);background:var(--r-brand-soft,#f6e8e9);border-radius:999px;padding:2px 10px;white-space:nowrap}
+/* Redes sociais: colecao unica de postagens e videos */
+.r82-filtros{display:flex;flex-wrap:wrap;gap:8px}
+.r82-filtro{display:inline-flex;align-items:center;min-height:44px;padding:8px 14px;border:1px solid var(--r-line-strong,#b9b6af);border-radius:8px;background:var(--r-surface,#ffffff);color:var(--r-ink,#1c1c1e);font:inherit;font-size:15px;font-weight:600;cursor:pointer;box-sizing:border-box}
+.r82-filtro:hover{background:var(--r-surface-2,#f8f7f5)}
+.r82-filtro[aria-pressed='true']{border:2px solid var(--r-brand,#a51c2c);background:var(--r-brand-soft,#f6e8e9);padding:7px 13px}
 
-@media (max-width:1024px){
-  .r82-months{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
+.r82-post-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.r82-post-card{background:var(--r-surface,#ffffff);border:1px solid var(--r-line,#d6d4cf);border-radius:8px;padding:16px;display:grid;gap:10px;align-content:start;min-width:0;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.r82-post-titulo{overflow-wrap:anywhere}
+.r82-post-acoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
+.r82-badge{justify-self:start;font-size:13px;font-weight:600;line-height:1.4;color:var(--r-ink-2,#45474c);background:var(--r-surface-2,#f8f7f5);border:1px solid var(--r-line-strong,#b9b6af);border-radius:6px;padding:2px 8px}
 
 @media (max-width:760px){
-  .r82-grid-2,.r82-items,.r82-months{grid-template-columns:minmax(0,1fr)}
+  .r82-grid-2,.r82-items,.r82-post-grid{grid-template-columns:minmax(0,1fr)}
   .r82-head h1{font-size:24px}
   .r82-central h2{font-size:20px}
   .r82-emp-card,.r82-card,.r82-block{padding:16px}

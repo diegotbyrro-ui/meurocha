@@ -11,7 +11,7 @@ export default Object.freeze([
       "banco": ""
     },
     "materiais": {},
-    "postagens": {}
+    "postagens": []
   },
   {
     "id": "easy-serraria",
@@ -24,7 +24,7 @@ export default Object.freeze([
       "banco": ""
     },
     "materiais": {},
-    "postagens": {}
+    "postagens": []
   },
   {
     "id": "vistas-do-sino",
@@ -37,7 +37,7 @@ export default Object.freeze([
       "banco": ""
     },
     "materiais": {},
-    "postagens": {}
+    "postagens": []
   },
   {
     "id": "eco-vitta",
@@ -50,6 +50,6 @@ export default Object.freeze([
       "banco": ""
     },
     "materiais": {},
-    "postagens": {}
+    "postagens": []
   }
 ]);

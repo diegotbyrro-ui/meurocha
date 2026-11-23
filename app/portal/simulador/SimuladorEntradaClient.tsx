@@ -142,7 +142,7 @@ function percentual(texto: string, rotulo: string): number {
   return n;
 }
 
-function mesAtualIso(): string {
+function mesCorrenteIso(): string {
   const agora = new Date();
   return `${agora.getFullYear()}-${String(agora.getMonth() + 1).padStart(2, '0')}`;
 }
@@ -175,7 +175,7 @@ function estadoInicial(empreendimentoInicial?: string): Estado {
     prazo: '420',
     fgts: '',
     subsidio: '',
-    mesAssinatura: mesAtualIso(),
+    mesAssinatura: mesCorrenteIso(),
     ato: '',
     atoParceladoValor: '',
     atoParceladoQtd: '0',

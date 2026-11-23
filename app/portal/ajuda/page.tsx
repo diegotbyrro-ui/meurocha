@@ -14,7 +14,7 @@ const areas = [
   {
     href: '/portal/central',
     nome: 'Central dos empreendimentos',
-    uso: 'Use quando precisar do CNPJ, da chave PIX, dos materiais ou das postagens de um empreendimento.',
+    uso: 'Use quando precisar do CNPJ, da chave PIX, dos materiais ou dos vídeos e postagens prontos para as redes sociais.',
   },
   {
     href: '/portal/simulador',
@@ -63,6 +63,10 @@ const perguntas = [
   {
     pergunta: 'Quem pode ver os arquivos da Biblioteca?',
     resposta: 'Os arquivos ficam guardados apenas no navegador onde foram enviados, então outras pessoas e outros computadores não os veem. Cada categoria mostra se é "Interno Rocha" ou "Previsto para corretor".',
+  },
+  {
+    pergunta: 'Como baixo uma postagem ou vídeo para publicar nas minhas redes?',
+    resposta: 'Abra a Central dos empreendimentos e escolha o empreendimento. Em Redes sociais, todas as postagens ficam em uma lista só. Use os filtros por tipo, clique em Abrir (nova aba) e baixe o arquivo, ou clique em Copiar link. Antes de publicar, confira se a legenda e o contato são os seus.',
   },
   {
     pergunta: 'Como peço acesso ao portal?',

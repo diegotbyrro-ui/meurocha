@@ -5,7 +5,7 @@ import {join} from 'node:path';
 import {empreendimentos} from '../lib/catalog.mjs';
 import {bibliotecaCategorias} from '../lib/biblioteca.mjs';
 import {
-  MESES, TIPOS_PIX, SECOES_MATERIAIS, ITENS_MATERIAIS, MAX_LINKS_POR_ITEM, DADOS_EMPREENDIMENTOS,
+  TIPOS_PIX, TIPOS_POSTAGEM, SECOES_MATERIAIS, ITENS_MATERIAIS, MAX_LINKS_POR_ITEM, MAX_POSTAGENS, DADOS_EMPREENDIMENTOS,
   somenteDigitos, cnpjValido, formatarCnpj, linkSeguro, pixValido,
   normalizarEmpreendimento, listarEmpreendimentos, obterEmpreendimento, statusDados,
 } from '../lib/empreendimentos-central.mjs';
@@ -14,15 +14,17 @@ const read = (p) => readFileSync(join(process.cwd(), p), 'utf8');
 const libSource = read('lib/empreendimentos-central.mjs');
 const linkOk = (titulo, url) => ({titulo, url});
 
-test('R82: meses, tipos PIX e secoes seguem a ordem aprovada', () => {
-  assert.equal(MESES.length, 12);
-  assert.deepEqual(MESES.map((m) => m.id), ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']);
-  assert.equal(MESES[0].nome, 'Janeiro');
-  assert.equal(MESES[11].nome, 'Dezembro');
+test('R83: postagens sao uma lista unica, sem meses; tipos e limite seguem a regra', () => {
+  assert.deepEqual([...TIPOS_POSTAGEM], ['Vídeo', 'Imagem', 'Carrossel', 'Texto']);
+  assert.equal(Object.isFrozen(TIPOS_POSTAGEM), true);
+  assert.equal(MAX_POSTAGENS, 60);
+  assert.equal(libSource.includes('MESES'), false);
+});
+
+test('R82: tipos PIX e secoes seguem a ordem aprovada', () => {
   assert.deepEqual([...TIPOS_PIX], ['CNPJ', 'E-mail', 'Telefone', 'Chave aleatória']);
   assert.deepEqual(SECOES_MATERIAIS.map((s) => s.id), ['perspectivas', 'comercial', 'videos', 'identidade', 'projetos', 'documentacao']);
   assert.deepEqual(SECOES_MATERIAIS[0].itens.map((i) => i.id), ['perspectivas-internas', 'perspectivas-externas', 'plantas']);
-  assert.equal(Object.isFrozen(MESES), true);
   assert.equal(Object.isFrozen(TIPOS_PIX), true);
   assert.equal(Object.isFrozen(SECOES_MATERIAIS), true);
 });
@@ -42,7 +44,7 @@ test('R82: dados brutos tem um registro por empreendimento do catalogo, na mesma
     assert.equal(d.cnpj, '');
     assert.deepEqual(d.pix, {tipo: 'CNPJ', chave: '', favorecido: '', banco: ''});
     assert.deepEqual(d.materiais, {});
-    assert.deepEqual(d.postagens, {});
+    assert.deepEqual(d.postagens, []);
   }
   assert.equal(Object.isFrozen(DADOS_EMPREENDIMENTOS), true);
 });
@@ -124,7 +126,7 @@ test('R82: normalizarEmpreendimento sanitiza links, CNPJ, PIX e chaves desconhec
       plantas: [linkOk('  Planta 2 quartos ', 'https://drive.google.com/a'), linkOk('ruim', 'http://x.com/a')],
       'chave-inexistente': [linkOk('x', 'https://x.com')],
     },
-    postagens: {'03': [linkOk('', 'https://x.com/p')]},
+    postagens: [{titulo: '', url: 'https://x.com/p', tipo: 'Imagem'}, {titulo: 'ruim', url: 'http://x.com/q', tipo: 'Vídeo'}],
   };
   const emp = normalizarEmpreendimento(raw);
   assert.notEqual(emp, null);
@@ -137,7 +139,57 @@ test('R82: normalizarEmpreendimento sanitiza links, CNPJ, PIX e chaves desconhec
   assert.deepEqual(emp.pix, {tipo: 'CNPJ', chave: '', favorecido: 'Fulano', banco: 'Banco X'});
   assert.deepEqual(emp.materiais.plantas, [linkOk('Planta 2 quartos', 'https://drive.google.com/a')]);
   assert.equal('chave-inexistente' in emp.materiais, false);
-  assert.deepEqual(emp.postagens['03'], [linkOk('Arquivo', 'https://x.com/p')]);
+  assert.deepEqual(emp.postagens, [{titulo: 'Postagem', url: 'https://x.com/p', tipo: 'Imagem'}]);
+});
+
+test('R83: postagens no formato antigo por mes sao achatadas na ordem das chaves', () => {
+  const emp = normalizarEmpreendimento({
+    id: 'eco-vitta',
+    postagens: {
+      '02': [{titulo: 'B1', url: 'https://b.com/1', tipo: 'Carrossel'}],
+      '01': [{titulo: 'A1', url: 'https://a.com/1', tipo: 'Vídeo'}, {titulo: 'A2', url: 'https://a.com/2'}],
+      '03': 'nao e lista',
+    },
+  });
+  assert.deepEqual(emp.postagens, [
+    {titulo: 'A1', url: 'https://a.com/1', tipo: 'Vídeo'},
+    {titulo: 'A2', url: 'https://a.com/2', tipo: 'Vídeo'},
+    {titulo: 'B1', url: 'https://b.com/1', tipo: 'Carrossel'},
+  ]);
+});
+
+test('R83: tipo invalido ou ausente vira Vídeo', () => {
+  const emp = normalizarEmpreendimento({
+    id: 'eco-vitta',
+    postagens: [
+      {titulo: 'Reels', url: 'https://a.com/1', tipo: 'Reels'},
+      {titulo: 'Sem tipo', url: 'https://a.com/2'},
+      {titulo: 'Numero', url: 'https://a.com/3', tipo: 7},
+      {titulo: 'Texto', url: 'https://a.com/4', tipo: 'Texto'},
+    ],
+  });
+  assert.deepEqual(emp.postagens.map((p) => p.tipo), ['Vídeo', 'Vídeo', 'Vídeo', 'Texto']);
+});
+
+test('R83: postagens com link http, sem host ou javascript sao descartadas', () => {
+  const emp = normalizarEmpreendimento({
+    id: 'eco-vitta',
+    postagens: [
+      {titulo: 'Http', url: 'http://x.com/a', tipo: 'Imagem'},
+      {titulo: 'Js', url: 'javascript:alert(1)', tipo: 'Imagem'},
+      {titulo: 'Vazio', url: '', tipo: 'Imagem'},
+      null,
+      {titulo: 'Ok', url: 'https://x.com/ok', tipo: 'Texto'},
+    ],
+  });
+  assert.deepEqual(emp.postagens, [{titulo: 'Ok', url: 'https://x.com/ok', tipo: 'Texto'}]);
+});
+
+test('R83: postagens sao limitadas a 60 itens', () => {
+  const lista = Array.from({length: 61}, (_, i) => ({titulo: `Post ${i}`, url: `https://x.com/${i}`, tipo: 'Imagem'}));
+  const emp = normalizarEmpreendimento({id: 'eco-vitta', postagens: lista});
+  assert.equal(emp.postagens.length, MAX_POSTAGENS);
+  assert.equal(emp.postagens[59].titulo, 'Post 59');
 });
 
 test('R82: normalizarEmpreendimento aceita CNPJ valido e formata', () => {
@@ -147,17 +199,16 @@ test('R82: normalizarEmpreendimento aceita CNPJ valido e formata', () => {
 
 test('R82: normalizarEmpreendimento limita a 20 links por item', () => {
   const links = Array.from({length: 25}, (_, i) => linkOk(`Arquivo ${i}`, `https://x.com/${i}`));
-  const emp = normalizarEmpreendimento({id: 'eco-vitta', materiais: {plantas: links}, postagens: {'01': links}});
+  const emp = normalizarEmpreendimento({id: 'eco-vitta', materiais: {plantas: links}});
   assert.equal(emp.materiais.plantas.length, MAX_LINKS_POR_ITEM);
-  assert.equal(emp.postagens['01'].length, MAX_LINKS_POR_ITEM);
   assert.equal(emp.materiais.plantas[19].titulo, 'Arquivo 19');
 });
 
-test('R82: normalizarEmpreendimento sempre devolve todos os itens e os 12 meses', () => {
+test('R82: normalizarEmpreendimento sempre devolve todos os itens de materiais e postagens como lista', () => {
   const emp = normalizarEmpreendimento({id: 'vistas-do-sino'});
   assert.deepEqual(Object.keys(emp.materiais).sort(), [...ITENS_MATERIAIS].sort());
-  assert.deepEqual(Object.keys(emp.postagens).sort(), MESES.map((m) => m.id));
   for (const lista of Object.values(emp.materiais)) assert.deepEqual(lista, []);
+  assert.deepEqual(emp.postagens, []);
 });
 
 test('R82: normalizarEmpreendimento nunca lanca e rejeita ids fora do catalogo', () => {
@@ -180,16 +231,20 @@ test('R82: listar e obter usam os dados brutos e tratam id inexistente', () => {
 
 test('R82: statusDados resume o preenchimento', () => {
   const vazio = statusDados(obterEmpreendimento('eco-vitta'));
-  assert.deepEqual(vazio, {cnpj: false, pix: false, materiais: 0, postagens: 0, mesesComPostagem: 0});
+  assert.deepEqual(vazio, {cnpj: false, pix: false, materiais: 0, postagens: 0});
   const emp = normalizarEmpreendimento({
     id: 'eco-vitta',
     cnpj: '11222333000181',
     pix: {tipo: 'Telefone', chave: '+55 82 99999-9999'},
     materiais: {plantas: [linkOk('a', 'https://a.com'), linkOk('b', 'https://b.com')]},
-    postagens: {'01': [linkOk('c', 'https://c.com')], '02': [linkOk('d', 'https://d.com'), linkOk('e', 'https://e.com')]},
+    postagens: [
+      {titulo: 'c', url: 'https://c.com', tipo: 'Vídeo'},
+      {titulo: 'd', url: 'https://d.com', tipo: 'Imagem'},
+      {titulo: 'e', url: 'https://e.com', tipo: 'Texto'},
+    ],
   });
-  assert.deepEqual(statusDados(emp), {cnpj: true, pix: true, materiais: 2, postagens: 3, mesesComPostagem: 2});
-  assert.deepEqual(statusDados(null), {cnpj: false, pix: false, materiais: 0, postagens: 0, mesesComPostagem: 0});
+  assert.deepEqual(statusDados(emp), {cnpj: true, pix: true, materiais: 2, postagens: 3});
+  assert.deepEqual(statusDados(null), {cnpj: false, pix: false, materiais: 0, postagens: 0});
 });
 
 test('R82: biblioteca lib nao faz chamadas de rede nem cria clientes', () => {

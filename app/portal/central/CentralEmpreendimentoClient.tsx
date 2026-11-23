@@ -3,8 +3,10 @@
 import Link from 'next/link';
 import Termo from '../ajuda/Termo';
 import { useEffect, useState } from 'react';
+import { TIPOS_POSTAGEM } from '@/lib/empreendimentos-central.mjs';
 
 type ArquivoLink = { titulo: string; url: string };
+type Postagem = { titulo: string; url: string; tipo: string };
 
 type EmpreendimentoCentral = {
   id: string;
@@ -16,18 +18,22 @@ type EmpreendimentoCentral = {
   cnpj: string;
   pix: { tipo: string; chave: string; favorecido: string; banco: string };
   materiais: Record<string, ArquivoLink[]>;
-  postagens: Record<string, ArquivoLink[]>;
+  postagens: Postagem[];
 };
 
 type ItemMaterial = { readonly id: string; readonly nome: string };
 type SecaoMateriais = { readonly id: string; readonly titulo: string; readonly itens: readonly ItemMaterial[] };
-type MesCentral = { readonly id: string; readonly nome: string };
 
 type Props = {
   emp: EmpreendimentoCentral;
   secoes: readonly SecaoMateriais[];
-  meses: readonly MesCentral[];
 };
+
+/** Filtro de postagens: 'Todos' ou um dos tipos de TIPOS_POSTAGEM. */
+const FILTROS: readonly string[] = ['Todos', ...TIPOS_POSTAGEM];
+
+/** Mensagem de copia, com a secao em que ela aparece. */
+type Feedback = { origem: 'dados' | 'redes'; texto: string };
 
 const INDICE_SECOES: readonly { id: string; label: string }[] = [
   { id: 'dados', label: 'Dados e pagamento' },
@@ -113,23 +119,28 @@ function ListaLinks({ itens, prefixo, empId }: { itens: ArquivoLink[]; prefixo: 
   );
 }
 
-export default function CentralEmpreendimentoClient({ emp, secoes, meses }: Props) {
-  const [feedback, setFeedback] = useState<string>('');
-  const [mesAtual, setMesAtual] = useState(-1);
-
-  useEffect(() => {
-    setMesAtual(new Date().getMonth());
-  }, []);
+export default function CentralEmpreendimentoClient({ emp, secoes }: Props) {
+  const [feedback, setFeedback] = useState<Feedback | null>(null);
+  const [filtro, setFiltro] = useState<string>('Todos');
 
   useEffect(() => {
     if (!feedback) return;
-    const timer = window.setTimeout(() => setFeedback(''), 2000);
+    const timer = window.setTimeout(() => setFeedback(null), 2000);
     return () => window.clearTimeout(timer);
   }, [feedback]);
 
-  async function copiar(texto: string) {
+  async function copiar(texto: string, origem: Feedback['origem']) {
     const ok = await copiarTexto(texto);
-    setFeedback(ok ? MSG_COPIADO : MSG_FALHA);
+    setFeedback({ origem, texto: ok ? MSG_COPIADO : MSG_FALHA });
+  }
+
+  const postagens = emp.postagens;
+  const visiveis = postagens
+    .map((post, indice) => ({ post, indice }))
+    .filter(({ post }) => filtro === 'Todos' || post.tipo === filtro);
+
+  function contarTipo(tipo: string): number {
+    return tipo === 'Todos' ? postagens.length : postagens.filter((p) => p.tipo === tipo).length;
   }
 
   const secoesMateriais = secoes.filter((secao) => secao.id !== 'videos');
@@ -183,7 +194,7 @@ export default function CentralEmpreendimentoClient({ emp, secoes, meses }: Prop
                 <span className="r82-label"><Termo id="cnpj">CNPJ</Termo></span>
                 <p className="r82-big">{emp.cnpj}</p>
                 <div>
-                  <button type="button" className="r82-btn" onClick={() => void copiar(emp.cnpj)}>Copiar CNPJ</button>
+                  <button type="button" className="r82-btn" onClick={() => void copiar(emp.cnpj, 'dados')}>Copiar CNPJ</button>
                 </div>
               </div>
             ) : (
@@ -199,7 +210,7 @@ export default function CentralEmpreendimentoClient({ emp, secoes, meses }: Prop
                 <span className="r82-label"><Termo id="pix">Chave PIX</Termo></span>
                 <p className="r82-mono">{emp.pix.chave}</p>
                 <div>
-                  <button type="button" className="r82-btn" onClick={() => void copiar(emp.pix.chave)}>Copiar chave PIX</button>
+                  <button type="button" className="r82-btn" onClick={() => void copiar(emp.pix.chave, 'dados')}>Copiar chave PIX</button>
                 </div>
               </div>
             ) : (
@@ -211,7 +222,7 @@ export default function CentralEmpreendimentoClient({ emp, secoes, meses }: Prop
         </div>
 
         <p className="r82-warning" role="note">Antes de enviar o PIX ao cliente, confirme o favorecido com o financeiro.</p>
-        <p className="r82-status" role="status">{feedback}</p>
+        <p className="r82-status" role="status">{feedback?.origem === 'dados' ? feedback.texto : ''}</p>
       </section>
 
       <section id="materiais" className="r82-section" aria-labelledby="r82-h-materiais">
@@ -239,29 +250,54 @@ export default function CentralEmpreendimentoClient({ emp, secoes, meses }: Prop
 
       <section id="redes" className="r82-section" aria-labelledby="r82-h-redes">
         <h2 id="r82-h-redes">Redes sociais</h2>
-        <p className="r82-muted-line">Postagens prontas para as redes sociais, separadas por mês. O mês atual aparece marcado com o texto Mês atual.</p>
-        <div className="r82-months">
-          {meses.map((mes, indice) => {
-            const postagens = emp.postagens[mes.id] ?? [];
-            const atual = indice === mesAtual;
-            return (
-              <article
-                key={mes.id}
-                className={`r82-month${atual ? ' is-current' : ''}`}
-                aria-current={atual ? 'date' : undefined}
-              >
-                <div className="r82-month-head">
-                  <h3>{mes.nome}</h3>
-                  {atual && <span className="r82-now">Mês atual</span>}
-                </div>
-                <p className="r82-muted-line">
-                  {postagens.length} {postagens.length === 1 ? 'postagem' : 'postagens'}
-                </p>
-                <ListaLinks itens={postagens} prefixo={mes.id} empId={emp.id} />
-              </article>
-            );
-          })}
-        </div>
+        <p className="r82-muted-line">Vídeos e postagens prontos para você baixar e publicar nas suas redes.</p>
+        <p className="r82-muted-line">Antes de publicar, confira se a legenda e o contato são os seus.</p>
+
+        {postagens.length === 0 ? (
+          <div className="r82-empty">
+            <p>Ainda não há postagens cadastradas.</p>
+            <Link href={`/portal/atualizar?emp=${emp.id}`} className="r82-link">Cadastrar agora</Link>
+          </div>
+        ) : (
+          <>
+            <div className="r82-filtros" role="group" aria-label="Filtrar postagens por tipo">
+              {FILTROS.map((tipo) => (
+                <button
+                  key={tipo}
+                  type="button"
+                  className="r82-filtro"
+                  aria-pressed={filtro === tipo}
+                  onClick={() => setFiltro(tipo)}
+                >
+                  {tipo} ({contarTipo(tipo)})
+                </button>
+              ))}
+            </div>
+
+            {visiveis.length === 0 ? (
+              <p className="r82-muted-line">Nenhuma postagem deste tipo.</p>
+            ) : (
+              <ul className="r82-post-grid">
+                {visiveis.map(({ post, indice }) => (
+                  <li key={`${indice}-${post.url}`} className="r82-post-card">
+                    <span className="r82-badge">{post.tipo}</span>
+                    <h3 className="r82-post-titulo">{post.titulo}</h3>
+                    <div className="r82-post-acoes">
+                      <a href={post.url} target="_blank" rel="noopener noreferrer" className="r82-btn-secondary">
+                        Abrir (nova aba)
+                      </a>
+                      <button type="button" className="r82-btn-secondary" onClick={() => void copiar(post.url, 'redes')}>
+                        Copiar link
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <p className="r82-status" role="status">{feedback?.origem === 'redes' ? feedback.texto : ''}</p>
+          </>
+        )}
       </section>
 
       <section id="simulador" className="r82-section" aria-labelledby="r82-h-simulador">

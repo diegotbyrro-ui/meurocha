@@ -23,6 +23,30 @@ test('R82: Central dos empreendimentos com abas do quadro do cliente', () => {
   assert.doesNotMatch(css, /^(?:\s*)(?:body|html|:root)\s*\{/m);
 });
 
+test('R83 postagens: Redes sociais é uma lista unica, sem meses, com filtro e textos de uso', () => {
+  const client = read('app/portal/central/CentralEmpreendimentoClient.tsx');
+  for (const token of [
+    'Redes sociais',
+    'Vídeos e postagens prontos para você baixar e publicar nas suas redes.',
+    'Abrir (nova aba)',
+    'Copiar link',
+    'Ainda não há postagens cadastradas.',
+    'Cadastrar agora',
+    '/portal/atualizar?emp=',
+    'Antes de publicar, confira se a legenda e o contato são os seus.',
+    'aria-pressed',
+    'r82-post-grid',
+    'r82-badge',
+  ]) assert.ok(client.includes(token), token);
+  assert.match(client, /target="_blank" rel="noopener noreferrer"/);
+  for (const p of ['app/portal/central/CentralEmpreendimentoClient.tsx', 'app/portal/central/[id]/page.tsx', 'app/portal/central/page.tsx', 'app/portal/atualizar/AtualizarClient.tsx', 'app/portal/atualizar/page.tsx', 'app/portal/central/central.css', 'app/portal/atualizar/atualizar.css']) {
+    const src = read(p);
+    assert.doesNotMatch(src, /mes(?:Atual|esComPostagem)|mesesCom|MESES|meses=|r82-month|r83u-mes\b|janeiro a dezembro/, p);
+  }
+  assert.match(read('app/portal/atualizar/AtualizarClient.tsx'), /TIPOS_POSTAGEM|tiposPostagem/);
+  assert.match(read('app/portal/atualizar/AtualizarClient.tsx'), /Adicionar postagem/);
+});
+
 test('R82: simulador de entrada no portal, com o painel R6 preservado', () => {
   const page = read('app/portal/simulador/page.tsx');
   assert.match(page, /SimuladorEntradaClient/);

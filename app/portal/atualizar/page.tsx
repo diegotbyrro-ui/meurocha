@@ -1,8 +1,8 @@
 import {
   GITHUB_EDITAR_DADOS_URL,
-  MESES,
   SECOES_MATERIAIS,
   TIPOS_PIX,
+  TIPOS_POSTAGEM,
   listarEmpreendimentos,
   paraEdicao,
 } from '@/lib/empreendimentos-central.mjs';
@@ -28,8 +28,8 @@ export default async function AtualizarConteudoPage({
     <AtualizarClient
       inicial={inicial}
       secoes={SECOES_MATERIAIS}
-      meses={MESES}
       tiposPix={TIPOS_PIX}
+      tiposPostagem={TIPOS_POSTAGEM}
       empInicial={empInicial}
       nomes={nomes}
       githubUrl={GITHUB_EDITAR_DADOS_URL}

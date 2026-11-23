@@ -13,7 +13,7 @@ const vazio = (id) => ({
   cnpj: '',
   pix: {tipo: 'CNPJ', chave: '', favorecido: '', banco: ''},
   materiais: {},
-  postagens: {},
+  postagens: [],
 });
 
 /** Escreve o arquivo gerado em um diretorio temporario e o importa de volta. */
@@ -41,7 +41,10 @@ test('R83: arquivo gerado com dados reais e importavel, links invalidos descarta
         {titulo: 'Ruim', url: 'http://x.com/a'},
       ],
     },
-    postagens: {'03': [{titulo: 'Post março', url: 'https://x.com/post'}]},
+    postagens: [
+      {titulo: 'Post março', url: 'https://x.com/post', tipo: 'Carrossel'},
+      {titulo: 'Link ruim', url: 'http://x.com/ruim', tipo: 'Texto'},
+    ],
   }];
 
   const texto = gerarArquivoDados(entrada);
@@ -57,7 +60,7 @@ test('R83: arquivo gerado com dados reais e importavel, links invalidos descarta
       cnpj: '11.222.333/0001-81',
       pix: {tipo: 'E-mail', chave: 'financeiro@rocha.com.br', favorecido: 'Rocha', banco: 'Banco X'},
       materiais: {plantas: [{titulo: 'Planta 2 quartos', url: 'https://drive.google.com/a'}]},
-      postagens: {'03': [{titulo: 'Post março', url: 'https://x.com/post'}]},
+      postagens: [{titulo: 'Post março', url: 'https://x.com/post', tipo: 'Carrossel'}],
     },
     vazio('vistas-do-sino'),
     vazio('eco-vitta'),
@@ -103,4 +106,39 @@ test('R83: resumoAlteracoes descreve mudancas em portugues, comparando por id', 
 test('R83: resumoAlteracoes sem mudancas devolve lista vazia e nunca lanca', () => {
   assert.deepEqual(resumoAlteracoes(null, null), []);
   assert.deepEqual(resumoAlteracoes('x', [null]), []);
+});
+
+test('R83: resumoAlteracoes conta postagens novas e removidas, sem meses', () => {
+  const antes = [{
+    id: 'easy-serraria',
+    postagens: [{titulo: 'Velha', url: 'https://a.com/velha', tipo: 'Vídeo'}],
+  }];
+  const depois = [{
+    id: 'easy-serraria',
+    postagens: [
+      {titulo: 'Nova 1', url: 'https://a.com/1', tipo: 'Imagem'},
+      {titulo: 'Nova 2', url: 'https://a.com/2', tipo: 'Texto'},
+      {titulo: 'Nova 3', url: 'https://a.com/3', tipo: 'Carrossel'},
+    ],
+  }];
+  const frases = resumoAlteracoes(antes, depois);
+  assert.ok(frases.includes('Easy Serraria: 3 postagens novas'));
+  assert.ok(frases.includes('Easy Serraria: 1 postagem removida'));
+  assert.equal(frases.some((f) => f.includes('mês') || f.includes('Janeiro')), false);
+});
+
+test('R83: postagens no formato antigo por mes viram lista unica no arquivo gerado', async () => {
+  const entrada = [{
+    id: 'eco-vitta',
+    postagens: {
+      '05': [{titulo: 'Maio', url: 'https://x.com/maio'}],
+      '01': [{titulo: 'Janeiro', url: 'https://x.com/jan', tipo: 'Imagem'}],
+    },
+  }];
+  const dados = await importarGerado(gerarArquivoDados(entrada));
+  const eco = dados.find((d) => d.id === 'eco-vitta');
+  assert.deepEqual(eco.postagens, [
+    {titulo: 'Janeiro', url: 'https://x.com/jan', tipo: 'Imagem'},
+    {titulo: 'Maio', url: 'https://x.com/maio', tipo: 'Vídeo'},
+  ]);
 });
